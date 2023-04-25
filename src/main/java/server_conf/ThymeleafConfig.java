@@ -1,4 +1,5 @@
 package server_conf;
+import java.io.File;
 import java.util.logging.Logger;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
@@ -37,7 +38,7 @@ public class ThymeleafConfig implements ServletContextListener {
 	private ITemplateResolver templateResolver(ServletContext servletContext) {
 		ServletContextTemplateResolver resolver = new
 				ServletContextTemplateResolver(servletContext);
-		resolver.setPrefix("/html/");
+		resolver.setPrefix( File.separator+ "html"+  File.separator);
 		resolver.setTemplateMode(TemplateMode.HTML);
 		return resolver;
 	}
