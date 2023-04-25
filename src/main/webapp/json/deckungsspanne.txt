@@ -1,0 +1,15 @@
+Fertiggerichte: 25
+Tiefkuehlware: 28
+Milchprodukte: 18
+Backwaren: 30
+Obst/Gemuese: 40
+Spirituosen: 75
+Tiernahrung: 23
+Bier: 37
+Frischfleisch: 24
+Drogerieartikel: 95
+Konserven: 33
+Kaffee/Tee: 56
+Suessigkeiten: 67
+Wurstwaren: 38
+Schreibwaren: 73

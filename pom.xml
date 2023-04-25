@@ -25,6 +25,11 @@
     	<artifactId>thymeleaf-spring5</artifactId>
     	<version>3.0.11.RELEASE</version>
 	</dependency>
+	<dependency>
+    	<groupId>nz.ac.waikato.cms.weka</groupId>
+    	<artifactId>weka-dev</artifactId>
+    	<version>3.9.1</version>
+	</dependency>
 </dependencies>
   <build>
     <plugins>
