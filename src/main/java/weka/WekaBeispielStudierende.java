@@ -1,4 +1,4 @@
-package site_handling;
+package weka;
 
 
 
@@ -186,8 +186,10 @@ public class WekaBeispielStudierende {
 
     public static void main(String[] args) throws Exception {
 
-        String path = "./";
+        String path = "src" + File.separator +"main" + File.separator+"webapp" + File.separator + "usr_data" + File.separator;
+        System.out.println(path);
         String roh = path + "kd100.csv";
+        
         String arffDat = path + "kd100.arff";
 
         Instances alleDaten;
