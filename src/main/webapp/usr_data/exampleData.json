@@ -1,9 +1,9 @@
 {
-  "Montag": 430,
-  "Dienstag": 812,
-  "Mittwoch": 276,
-  "Donnerstag": 690,
-  "Freitag": 537,
-  "Samstag": 945,
-  "Sonntag": 224
+	"Montag": 1000,
+	"Dienstag": 200,
+	"Mittwoch": 3000,
+	"Donnerstag": 10000,
+	"Freitag": 40000,
+	"Samstag": 2000,
+	"Sonntag": 10000
 }

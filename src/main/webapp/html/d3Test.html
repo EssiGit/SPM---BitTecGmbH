@@ -20,29 +20,35 @@
 	    height = 400 - margin.top - margin.bottom;
 		
 		var svg = d3.select("#my_dataviz")
-							.append("svg")
-							.attr("width", width + margin.left + margin.right)
-    						.attr("height", height + margin.top + margin.bottom)
-    						.style("background", "#dedede")
-								.append("g")
-    							.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+			.append("svg")
+			.attr("width", width + margin.left + margin.right)
+    		.attr("height", height + margin.top + margin.bottom)
+    		.style("background", "#dedede")
+			.append("g")
+    		.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 		
-		
-		let data = {
-				
-			    Montag: 1000,
-			    Dienstag: 200,
-			    Mittwoch: 3000,
-			    Donnerstag: 10000,
-			    Freitag: 40000,
-			    Samstag: 2000,
-			    Sonntag: 10000
-			}
 		
 		//beispiel Umsatzstärkster Tag
 		//JSON einlesen in zeile Z43(CSV geht auch  d3.csv(""))
-		//d3.json("data.json", function(data) {
-			let dataKeys = Object.keys(data)
+		
+		
+		d3.json("./usr_data/exampleData.json").then(function (json) {
+		    return [json].map(function (d) {
+		        return {
+		            "Montag": d.Montag,
+		            "Dienstag": d.Dienstag,
+		            "Mittwoch": d.Mittwoch,
+		            "Donnerstag": d.Donnerstag,
+		            "Freitag": d.Freitag,
+		            "Samstag": d.Samstag,
+		            "Sonntag": d.Sonntag
+		        };
+		    });
+		}).then(function getData(rawData) {
+			
+		    
+		   var data = rawData[0]
+		   let dataKeys = Object.keys(data)
 		
 			//X-Achse
 			var x = d3.scaleBand()
@@ -77,9 +83,9 @@
 	      		.attr("width", x.bandwidth())
 	     		.attr("height", function(d) { return height - y(data[d]) })
 	      		.attr("fill", "#69b3a2")
-		//})
-		
 	
+		
+		});
 
 							
 	</script>
