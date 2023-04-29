@@ -11,14 +11,14 @@ import server_conf.ThymeleafConfig;
 import org.thymeleaf.context.WebContext;
 
 
-@WebServlet("/index")
-public class Index extends HttpServlet {
+@WebServlet("/d3")
+public class D3 extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         WebContext context = new WebContext(request, response,
                 request.getServletContext());
         response.setCharacterEncoding("UTF-8");
-        ThymeleafConfig.getTemplateEngine().process("index.html", context, response.getWriter());
+        ThymeleafConfig.getTemplateEngine().process("d3Test.html", context, response.getWriter());
     }
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
