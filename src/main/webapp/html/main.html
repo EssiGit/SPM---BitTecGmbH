@@ -10,11 +10,18 @@
       <img src="images/LogoKaufDort.gif" alt="Logo">
       <div>
       
-      	<form name="main" method="post" action="main">
+      	<!--  form name="main" method="post" action="main">
     		<input type="file" name="file" id="file-input" onchange="document.forms['main'].submit()" style="display:none" />
+		<!--/form-->
+		<!--  button onclick="document.getElementById('file-input').click()">Datei Hochladen</button-->
+		
+      		
+		<form method="post" action="main" enctype="multipart/form-data">
+			<a href=main>
+				<input type="file" name="file-input" />
+				<input type="submit"class="button is-link" value="Hochladen"></input>	
+			</a>			
 		</form>
-      
-        <button onclick="document.getElementById('file-input').click()">Datei Hochladen</button>
         <div class="dropdown">
           <button>Analysen</button>
           <div class="dropdown-content">

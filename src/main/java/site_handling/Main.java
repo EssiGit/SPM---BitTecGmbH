@@ -3,6 +3,7 @@ package site_handling;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.Iterator;
 
 import javax.servlet.ServletException;
@@ -31,22 +32,38 @@ public class Main extends HttpServlet {
         ThymeleafConfig.getTemplateEngine().process("main.html", context, response.getWriter());
     }
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setCharacterEncoding("UTF-8");
+        request.setCharacterEncoding("UTF-8");
 		System.out.println("do post executed");
 		Iterator<String> paras = request.getParameterNames().asIterator();
-		
+		System.out.println(request.getContentType());
+		System.out.println(request.getParameter("file-input"));
 		while(paras.hasNext())
 		{
 			System.out.println(paras.next());
 		}
 		
-		Part filePart = request.getPart("coverfile");
+		Part filePart = request.getPart("file-input");
 		
 		System.out.println(filePart.getSize());
+		
 		String fileName = filePart.getSubmittedFileName();
 		
-		for(Part part : request.getParts()) {
-			part.write(System.getenv("PATH") + File.separator + "KaufDort_Userfiles" + File.separator +fileName);
+		System.out.println(System.getenv("HOME") + File.separator + "KaufDort_Userfiles" + File.separator +fileName);
+		
+		File DIR = new File(System.getenv("HOME") + File.separator + "KaufDort_Userfiles");
+		
+		if(!(DIR.exists())) {
+			DIR.mkdirs();
 		}
+		DIR = new File(System.getenv("HOME") + File.separator + "KaufDort_Userfiles" + File.separator +fileName);
+		if(!(DIR.exists())) {
+			System.out.println("its a new file");
+			for(Part part : request.getParts()) {
+				part.write(System.getenv("HOME") + File.separator + "KaufDort_Userfiles" + File.separator +fileName);
+			}
+		}
+
     }
 
 }

@@ -45,7 +45,12 @@
         <artifactId>jstl</artifactId>
         <version>1.2</version>
     </dependency>
-</dependencies>
+    <dependency>
+    	<groupId>BitTecGmbH-Server</groupId>
+    	<artifactId>BitTecGmbH-Server</artifactId>
+    	<version>0.0.1-SNAPSHOT</version>
+    </dependency>
+  </dependencies>
   <build>
     <plugins>
       <plugin>

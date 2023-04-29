@@ -1,6 +1,6 @@
 package weka;
 
-import java.io.File;
+import java.io.File; 
 
 import weka.WekaTools;
 import weka.core.Instances;
@@ -9,25 +9,25 @@ import weka.core.converters.ArffSaver;
 import weka.core.converters.CSVLoader;
 import weka.filters.Filter;
 import weka.filters.unsupervised.attribute.NumericCleaner;
+import java.io.FileWriter;
+import java.io.IOException;
 
 
 public class WekaAnalyser {
-	private static final String DIR = "src" + File.separator +"main" + File.separator+"webapp" + File.separator + "usr_data" + File.separator;;
+	//private static final String DIR = "src" + File.separator +"main" + File.separator+"webapp" + File.separator + "usr_data" + File.separator;
 	private WekaTools analyse = new WekaTools();
 	 Instances data;
      Instances arffDaten;
+     private String fileName;
 	
-	public WekaAnalyser(String file) throws Exception {
-		
-		String filePath = DIR + file;
+	public WekaAnalyser(String filePassed) throws Exception {
+		fileName = filePassed;
+		File DIR = new File(System.getenv("HOME") + File.separator + "KaufDort_Userfiles" + File.separator +fileName);
 
-        
-        String arffDat = DIR + "kd100.arff";
+        String arffDat = DIR + ".arff";
 
-       
-		
         CSVLoader loader = new CSVLoader();
-        loader.setSource(new File(filePath));
+        loader.setSource(DIR);
         data = loader.getDataSet();
 
         // 0 durch ? ersetzen, um fuer die Auswertung nur die Waren zu
@@ -46,6 +46,10 @@ public class WekaAnalyser {
         ArffLoader aLoader = new ArffLoader();
         aLoader.setSource(new File(arffDat));
         arffDaten = aLoader.getDataSet();
+        
+        
+        
+        
 	}
 	
 	
@@ -53,6 +57,18 @@ public class WekaAnalyser {
 	public void clusterAnalyse() throws Exception {
 
     System.out.println(">>>>>--- Clusteranalyse ueber alle Daten, 5 Cluster ---\n");
-    System.out.println(analyse.findCluster(data, 5));
+    String result = analyse.findCluster(data, 5);
+    writeWekaResult(result);
+	}
+	private void writeWekaResult(String csv) {
+	      try {
+	          FileWriter file = new FileWriter(System.getenv("HOME") + File.separator + "KaufDort_Userfiles" + File.separator + "result_" + fileName);
+	          file.write(csv);
+	          file.close();
+	       } catch (IOException e) {
+	          // TODO Auto-generated catch block
+	          e.printStackTrace();
+	       }
+		
 	}
 }
