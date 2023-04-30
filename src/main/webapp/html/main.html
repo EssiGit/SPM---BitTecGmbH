@@ -1,31 +1,57 @@
 <!DOCTYPE html>
 <html>
-<head>
-<meta charset="utf-8">
-<title>Insert title here</title>
-
-<link rel="stylesheet" href="css/style2.css">
+  <head>
+    <meta charset="UTF-8">
+    <title>KaufDort Homepage</title>
+      <link rel="stylesheet" href="css/style2.css">
 <script src="https://d3js.org/d3.v7.min.js"></script>
-
 <div id="my_dataviz"></div>
+  </head>
+  <body>
+    <nav class="navbar">
+      <img src="images/LogoKaufDort.gif" alt="Logo">
+      <div>
 
-</head>
-<body>
-	<h1>Testing...</h1>
-	<script>
-		
+      	<!--  form name="main" method="post" action="main">
+    		<input type="file" name="file" id="file-input" onchange="document.forms['main'].submit()" style="display:none" />
+		<!--/form-->
+		<!--  button onclick="document.getElementById('file-input').click()">Datei Hochladen</button-->
 
-		var margin = {top: 30, right: 30, bottom: 70, left: 60},
-	    width = 460 - margin.left - margin.right,
-	    height = 400 - margin.top - margin.bottom;
+
+		<form method="post" action="main" enctype="multipart/form-data">
+			<a href=main>
+				<input type="file" name="file-input" />
+				<input type="submit"class="button is-link" value="Hochladen"></input>	
+			</a>			
+		</form>
+        <div class="dropdown">
+          <button>Analysen</button>
+          <div class="dropdown-content">
+            <button>File1</button>
+            <button>File2</button>
+            <button>File3</button>
+            <button>File4</button>
+            <button>File5</button>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <div class="chart-container">
+      <div class="chart" data-name="analyse1" id="analyse1"></div>
+      
+      <script>
+      
+      var margin = {top: 30, right: 30, bottom: 70, left: 60},
+	    width = 1200 - margin.left - margin.right,
+	    height = 600 - margin.top - margin.bottom;
 		
-		var svg = d3.select("#my_dataviz")
+		var svg = d3.select("#analyse1")
 			.append("svg")
 			.attr("width", width + margin.left + margin.right)
-    		.attr("height", height + margin.top + margin.bottom)
-    		.style("background", "#dedede")
+  		.attr("height", height + margin.top + margin.bottom)
+  		.style("background", "#dedede")
 			.append("g")
-    		.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+  		.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 		
 		
 		//beispiel Umsatzstärkster Tag
@@ -86,10 +112,10 @@
 	
 		
 		});
-
-							
-	</script>
-
-
-</body>
+      
+      </script>
+      
+      
+    </div>
+  </body>
 </html>
