@@ -54,7 +54,7 @@
       console.log(message)
       
       
-		var svg = d3.select(/*[[${cluster.titel}]]*/)
+		var svg = d3.select(/*[[${cluster.getTableName}]]*/)
 			.append("svg")
 			.attr("width", width + margin.left + margin.right)
   		.attr("height", height + margin.top + margin.bottom)
@@ -81,7 +81,7 @@
 		    });
 		}).then(function getData(rawData) {
 			
-		 	var Values = /*[[${cluster.Values}]]*/ ""; //as array[][] example: [[fertigware, Getränke .....],[1000,2000,110000]]
+		 	var Values = /*[[${cluster.getValues}]]*/ ""; //as array[][] example: [[fertigware, Getränke .....],[1000,2000,110000]]
 			
 		
 			//X-Achse

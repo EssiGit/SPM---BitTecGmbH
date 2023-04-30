@@ -35,7 +35,8 @@ public class WekaServlet extends HttpServlet {
         ThymeleafConfig.getTemplateEngine().process("main.html", context, response.getWriter());
     }
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String fileName = request.getParameter("fileName");
+		//String fileName = request.getParameter("fileName");
+		String fileName = "kd100.csv";
         WebContext context = new WebContext(request, response,
                 request.getServletContext());
         FileHandler filehandler = new FileHandler();
