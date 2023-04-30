@@ -16,3 +16,9 @@ public class Weka_test {
 
 	 }
 }
+//TODO
+/*Pfad als thymeleaf variable
+ *Button File namen als thymeleaf
+ *weka über button click
+ *über thymeleaf variable für analysedaten schicken x y und name als objekt mit arrayListe
+ */

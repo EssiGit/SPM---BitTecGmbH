@@ -67,7 +67,7 @@ public class WekaAnalyser {
 	}
 	private void writeWekaResult(String csv) {
 	      try {
-	          FileWriter file = new FileWriter(System.getProperty("user.home") + File.separator + "KaufDort_Userfiles" + File.separator + "result_" + fileName);
+	          FileWriter file = new FileWriter(System.getProperty("user.home") + File.separator + "KaufDort_Userfiles" + File.separator + "result_cluster_" + fileName);
 	          file.write(csv);
 	          file.close();
 	       } catch (IOException e) {
