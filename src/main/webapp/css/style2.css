@@ -57,6 +57,7 @@
 
       .chart {
         position: relative;
+        font-size: 30px;
         width: calc(100% -20px);
         height: 300px;
         margin: 10px;

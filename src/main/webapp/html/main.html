@@ -12,38 +12,33 @@
       <img src="images/LogoKaufDort.gif" alt="Logo">
       <div>
 
-      	<!--  form name="main" method="post" action="main">
-    		<input type="file" name="file" id="file-input" onchange="document.forms['main'].submit()" style="display:none" />
-		<!--/form-->
-		<!--  button onclick="document.getElementById('file-input').click()">Datei Hochladen</button-->
-
-
-		<form method="post" action="main" enctype="multipart/form-data">
-			<a href=main>
-				<input type="file" name="file-input" />
-				<input type="submit"class="button is-link" value="Hochladen"></input>	
-			</a>			
+      	<form name="main" method="post" action="main" enctype="multipart/form-data">
+    		<input type="file" name="file-input" id="file-input" onchange="document.forms['main'].submit()" style="display:none" />
 		</form>
+		<button onclick="document.getElementById('file-input').click()">Datei Hochladen</button>
+
         <div class="dropdown">
           <button>Analysen</button>
           <div class="dropdown-content">
-            <button>File1</button>
-            <button>File2</button>
-            <button>File3</button>
-            <button>File4</button>
-            <button>File5</button>
+            <button type="submit"  th:value="${button1}">File1</button>
+            <button type="submit"  th:value="${button2}">File2</button>
+            <button type="submit"  th:value="${button3}">File3</button>
+            <button type="submit"  th:value="${button4}">File4</button>
+            <button type="submit"  th:value="${button5}">File5</button>
           </div>
         </div>
       </div>
     </nav>
+    
+    
     <div class="chart-container">
       <div class="chart" data-name="analyse1" id="analyse1"></div>
       
       <script>
       
-      var margin = {top: 30, right: 30, bottom: 70, left: 60},
-	    width = 1200 - margin.left - margin.right,
-	    height = 600 - margin.top - margin.bottom;
+      var margin = {top: 30, right: 30, bottom: 100, left: 100},
+	    width = 1400 - margin.left - margin.right,
+	    height = 800 - margin.top - margin.bottom;
 		
 		var svg = d3.select("#analyse1")
 			.append("svg")
@@ -88,17 +83,17 @@
 	    		.call(d3.axisBottom(x))
 	    		.selectAll("text")
 	      			.attr("transform", "translate(-10,0)rotate(-45)")
-	      			.style("text-anchor", "end");
+	      			.style("text-anchor", "end")
+					.style("font-size","25px");
 		
 			//Y Achse erstellen
 			var y = d3.scaleLinear()
 	    		.domain([0, 50000])
-	    		.range([ height, 0]);
-			
+	    		.range([ height, 0])
 			//Y Achse hinzufuegen
 	  		svg.append("g")
-	    		.call(d3.axisLeft(y));
-		
+	    		.call(d3.axisLeft(y))
+				.style("font-size","25px");
 			//Balken Hinzufuegen
 	 		 svg.selectAll("bar")
 	    		.data(dataKeys)
