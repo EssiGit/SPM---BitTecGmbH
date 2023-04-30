@@ -34,12 +34,12 @@ public class WekaServlet extends HttpServlet {
         WebContext context = new WebContext(request, response,
                 request.getServletContext());
         FileHandler filehandler = new FileHandler();
-        
+        //request.
         String[] buttonVal = filehandler.getFileNames();
         for(int i=1;i<=5;i++) {
         	context.setVariable("button"+i,buttonVal[i-1]);
         }
-        ThymeleafConfig.getTemplateEngine().process("main.html", context, response.getWriter());
+        
 		try {
 			WekaAnalyser weka = new WekaAnalyser(fileName);
 			Weka_resultFile resFile = new Weka_resultFile(weka.clusterAnalyse(),1);
@@ -48,8 +48,8 @@ public class WekaServlet extends HttpServlet {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		ThymeleafConfig.getTemplateEngine().process("main.html", context, response.getWriter());
 		
+		ThymeleafConfig.getTemplateEngine().process("main.html", context, response.getWriter());
     }
 	
 }

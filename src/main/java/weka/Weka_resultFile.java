@@ -105,4 +105,12 @@ public class Weka_resultFile {
 	public String getTableName() {
 		return tableName;
 	}
+	public String[][] getValues() {
+		String[][] returnVal = new String[2][yData.size()];
+		for(int i = 0; i<yData.size();i++) {			 
+			returnVal[0][i] = xNames.get(i);
+			returnVal[1][i] = String.valueOf(yData.get(i));
+		}
+		return returnVal;
+	}
 }
