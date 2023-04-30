@@ -41,8 +41,8 @@
     
     
     <div class="chart-container">
-    <th:block th:each="cluster : ${results}">
-      <div class="chart" data-name="analyse1" th:id="${cluster.tableName}"></div>
+    <th:block th:each="cluster , iterStat: ${results}">
+      <div class="chart" data-name="analyse1" th:id="${iterStat.index + 1}"></div>
       
       <script th:inline="javascript">
       
@@ -50,11 +50,11 @@
 	    width = 1800 - margin.left - margin.right,
 	    height = 800 - margin.top - margin.bottom;
 		
-      var message = /*[[${cluster.tableName}]]*/ "";
+      var message = /*[[${iterStat.index}]]*/ "";
       console.log(message)
       
-      	const hash = "#"
-		var svg = d3.select(hash.concat(/*[[${cluster.tableName}]]*/))
+      	const hash = "#\\"
+		var svg = d3.select(hash.concat(/*[[${iterStat.index + 1}]]*/))
 			.append("svg")
 			.attr("width", width + margin.left + margin.right)
   		.attr("height", height + margin.top + margin.bottom)
