@@ -50,7 +50,7 @@
 	    width = 1800 - margin.left - margin.right,
 	    height = 800 - margin.top - margin.bottom;
 		
-      var message = /*[[${iterStat.index}]]*/ "";
+      var message = /*[[${iterStat.index + 1}]]*/ "";
       console.log(message)
       
       	const hash = "#\\"
@@ -67,19 +67,7 @@
 		//JSON einlesen in zeile Z43(CSV geht auch  d3.csv(""))
 		
 		
-		d3.json("./usr_data/exampleData.json").then(function (json) {
-		    return [json].map(function (d) {
-		        return {
-		            "Montag": d.Montag,
-		            "Dienstag": d.Dienstag,
-		            "Mittwoch": d.Mittwoch,
-		            "Donnerstag": d.Donnerstag,
-		            "Freitag": d.Freitag,
-		            "Samstag": d.Samstag,
-		            "Sonntag": d.Sonntag
-		        };
-		    });
-		}).then(function getData(rawData) {
+		
 			
 		 	var Values = /*[[${cluster.getValues()}]]*/ ""; 
 			
@@ -119,7 +107,7 @@
 	      		.attr("fill", "#69b3a2")
 	
 		
-		});
+	
       
       </script>
       
