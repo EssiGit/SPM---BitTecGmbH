@@ -65,7 +65,7 @@ public class Main extends HttpServlet {
 				part.write(System.getProperty("user.home") + File.separator + "KaufDort_Userfiles" + File.separator +fileName);
 			}
 		}
-
+		this.doGet(request,response);
     }
 
 }
