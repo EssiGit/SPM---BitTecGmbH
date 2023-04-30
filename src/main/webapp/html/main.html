@@ -42,7 +42,7 @@
     
     <div class="chart-container">
     <th:block th:each="cluster : ${results}">
-      <div class="chart" data-name="analyse1" th:id="${cluster.tablename}"></div>
+      <div class="chart" data-name="analyse1" th:id="${cluster.tableName}"></div>
       
       <script th:inline="javascript">
       
@@ -50,11 +50,11 @@
 	    width = 1800 - margin.left - margin.right,
 	    height = 800 - margin.top - margin.bottom;
 		
-      var message = /*[[${cluster.tablename}]]*/ "";
+      var message = /*[[${cluster.tableName}]]*/ "";
       console.log(message)
       
-      
-		var svg = d3.select(/*[[${cluster.getTableName}]]*/)
+      	const hash = "#"
+		var svg = d3.select(hash.concat(/*[[${cluster.tableName}]]*/))
 			.append("svg")
 			.attr("width", width + margin.left + margin.right)
   		.attr("height", height + margin.top + margin.bottom)
@@ -81,7 +81,7 @@
 		    });
 		}).then(function getData(rawData) {
 			
-		 	var Values = /*[[${cluster.getValues}]]*/ ""; //as array[][] example: [[fertigware, Getränke .....],[1000,2000,110000]]
+		 	var Values = /*[[${cluster.getValues()}]]*/ ""; 
 			
 		
 			//X-Achse

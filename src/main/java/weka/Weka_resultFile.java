@@ -13,7 +13,7 @@ public class Weka_resultFile {
 	private ArrayList<Integer> yData = new ArrayList<>();
 	private ArrayList<String> xNames = new ArrayList<>();
 	private String yName;
-	private String tableName;
+	public String tableName;
 	private int lineNumber;
 
 	public Weka_resultFile(File resultData, int lineNumber) throws FileNotFoundException, IOException {
