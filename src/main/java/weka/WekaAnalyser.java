@@ -12,8 +12,6 @@ import weka.filters.Filter;
 import weka.filters.unsupervised.attribute.NumericCleaner;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class WekaAnalyser {
 	//private static final String DIR = "src" + File.separator +"main" + File.separator+"webapp" + File.separator + "usr_data" + File.separator;
@@ -64,7 +62,7 @@ public class WekaAnalyser {
     try (BufferedReader reader = new BufferedReader(new FileReader(DIR))) {
 		result = reader.readLine();
 	}
-    result = result.concat(analyse.findCluster(data, 5));
+    result = result.concat("\n" + analyse.findCluster(data, 5));
     writeWekaResult(result);
 	}
 	private void writeWekaResult(String csv) {
