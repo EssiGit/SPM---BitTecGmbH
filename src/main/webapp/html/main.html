@@ -20,7 +20,10 @@
         <div class="dropdown">
           <button>Analysen</button>
           <div class="dropdown-content">
+          
+         	 <form name="main" method="post" action="WekaServlet" enctype="multipart/form-data">
             <button type="submit"  th:text="${button1}"></button>
+            </form>
             <button type="submit"  th:text="${button2}"></button>
             <button type="submit"  th:text="${button3}"></button>
             <button type="submit"  th:text="${button4}"></button>
@@ -34,7 +37,7 @@
     
     
     <div class="chart-container">
-    <th:block th:each="cluster : ${clusters}">
+    <th:block th:each="cluster : ${results}">
       <div class="chart" data-name="analyse1" th:id="${cluster.titel}"></div>
       
       <script th:inline="javascript">
