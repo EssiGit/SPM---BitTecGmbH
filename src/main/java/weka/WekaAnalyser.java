@@ -1,7 +1,8 @@
 package weka;
 
-import java.io.File; 
-
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import weka.WekaTools;
 import weka.core.Instances;
 import weka.core.converters.ArffLoader;
@@ -11,7 +12,8 @@ import weka.filters.Filter;
 import weka.filters.unsupervised.attribute.NumericCleaner;
 import java.io.FileWriter;
 import java.io.IOException;
-
+import java.util.ArrayList;
+import java.util.List;
 
 public class WekaAnalyser {
 	//private static final String DIR = "src" + File.separator +"main" + File.separator+"webapp" + File.separator + "usr_data" + File.separator;
@@ -19,10 +21,11 @@ public class WekaAnalyser {
 	 Instances data;
      Instances arffDaten;
      private String fileName;
+     private File DIR;
 	
 	public WekaAnalyser(String filePassed) throws Exception {
 		fileName = filePassed;
-		File DIR = new File(System.getProperty("user.home") + File.separator + "KaufDort_Userfiles" + File.separator +fileName);
+		DIR = new File(System.getProperty("user.home") + File.separator + "KaufDort_Userfiles" + File.separator +fileName);
 
         String arffDat = DIR + ".arff";
 
@@ -57,7 +60,11 @@ public class WekaAnalyser {
 	public void clusterAnalyse() throws Exception {
 
     System.out.println(">>>>>--- Clusteranalyse ueber alle Daten, 5 Cluster ---\n");
-    String result = analyse.findCluster(data, 5);
+    String result = "";
+    try (BufferedReader reader = new BufferedReader(new FileReader(DIR))) {
+		result = reader.readLine();
+	}
+    result = result.concat(analyse.findCluster(data, 5));
     writeWekaResult(result);
 	}
 	private void writeWekaResult(String csv) {
