@@ -53,8 +53,11 @@ public class WekaServlet extends HttpServlet {
 			File resultSet = weka.clusterAnalyse();
 			int lines = getLines(resultSet);
 			for(int i=1;i<lines;i++) {
-			Weka_resultFile resFile = new Weka_resultFile(resultSet,i);
+				Weka_resultFile resFile = new Weka_resultFile(resultSet,i);
 				wekaFiles.add(resFile);
+			}
+			for(Weka_resultFile test : wekaFiles) {
+				System.out.println(test.getTableName());
 			}
 			context.setVariable("results", wekaFiles);
 		} catch (Exception e) {

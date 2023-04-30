@@ -85,9 +85,9 @@ public class Weka_resultFile {
 	}
 	
 	private void setupTableName(File resultData) throws IOException {
-		String result = readFileLine(resultData, 2);
+		String result = readFileLine(resultData, lineNumber);
 		String[] resultArr = result.split(",");
-		for(int i =0;i<9;i++) {
+		for(int i =0;i<3;i++) { //9 for all
 				tableName = tableName.concat("," + resultArr[i]);
 		}
 		tableName = setTableName(tableName);
