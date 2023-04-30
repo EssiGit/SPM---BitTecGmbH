@@ -6,7 +6,7 @@ public class Weka_test {
 	 public static void main(String[] args) throws Exception {
 		 
 	/*
-	 * Test Beispiel für Weka ausführung. Daten werden über Website hochgeladen und unter usr_data gespeichert. 
+	 * Test Beispiel für Weka ausführung. Daten werden über Website hochgeladen und unter auf dem Computer gespeichert. 
 	 * Dann an ein WekaAnalyer Objekt übergeben und analysiert.
 	 * Diese Klasse kann ohne Server zum testen ausgeführt werden
 	 */

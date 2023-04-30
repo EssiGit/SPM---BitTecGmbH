@@ -22,7 +22,7 @@ public class WekaAnalyser {
 	
 	public WekaAnalyser(String filePassed) throws Exception {
 		fileName = filePassed;
-		File DIR = new File(System.getenv("HOME") + File.separator + "KaufDort_Userfiles" + File.separator +fileName);
+		File DIR = new File(System.getProperty("user.home") + File.separator + "KaufDort_Userfiles" + File.separator +fileName);
 
         String arffDat = DIR + ".arff";
 
@@ -62,7 +62,7 @@ public class WekaAnalyser {
 	}
 	private void writeWekaResult(String csv) {
 	      try {
-	          FileWriter file = new FileWriter(System.getenv("HOME") + File.separator + "KaufDort_Userfiles" + File.separator + "result_" + fileName);
+	          FileWriter file = new FileWriter(System.getProperty("user.home") + File.separator + "KaufDort_Userfiles" + File.separator + "result_" + fileName);
 	          file.write(csv);
 	          file.close();
 	       } catch (IOException e) {
