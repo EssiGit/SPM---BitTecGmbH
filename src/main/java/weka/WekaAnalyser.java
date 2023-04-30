@@ -55,7 +55,7 @@ public class WekaAnalyser {
 	
 	
 	
-	public void clusterAnalyse() throws Exception {
+	public File clusterAnalyse() throws Exception {
 
     System.out.println(">>>>>--- Clusteranalyse ueber alle Daten, 5 Cluster ---\n");
     String result = "";
@@ -64,6 +64,7 @@ public class WekaAnalyser {
 	}
     result = result.concat("\n" + analyse.findCluster(data, 5));
     writeWekaResult(result);
+    return new File(System.getProperty("user.home") + File.separator + "KaufDort_Userfiles" + File.separator + "Result_Files" + File.separator +  "result_cluster_" + fileName);
 	}
 	private void writeWekaResult(String csv) {
 	      try {

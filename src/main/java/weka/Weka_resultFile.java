@@ -10,13 +10,14 @@ import java.util.ArrayList;
 
 public class Weka_resultFile {
 
-	ArrayList<Integer> yData = new ArrayList<>();
-	ArrayList<String> xNames = new ArrayList<>();
-	String yName;
-	String tableName;
+	private ArrayList<Integer> yData = new ArrayList<>();
+	private ArrayList<String> xNames = new ArrayList<>();
+	private String yName;
+	private String tableName;
+	private int lineNumber;
 
-	public Weka_resultFile(File resultData) throws FileNotFoundException, IOException {
-
+	public Weka_resultFile(File resultData, int lineNumber) throws FileNotFoundException, IOException {
+		this.lineNumber = lineNumber;
 
 		String[] tmpName = resultData.getName().split("_");
 		tableName = tmpName[1];

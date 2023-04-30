@@ -16,9 +16,9 @@ public class Weka_test {
 	String fileName = "kd100.csv";
 	FileHandler fileHandler = new FileHandler();
 	WekaAnalyser test = new WekaAnalyser("kd1000.csv");
-	test.clusterAnalyse();
-	File testFile = new File(System.getProperty("user.home") + File.separator + "KaufDort_Userfiles" + File.separator + "Result_Files" + File.separator +  "result_cluster_" + fileName);
-	Weka_resultFile temp = new Weka_resultFile(testFile);
+	
+	
+	Weka_resultFile temp = new Weka_resultFile(test.clusterAnalyse(), 1);
 	System.out.println(fileHandler.getFileNames()[1]);
 	 }
 }

@@ -10,19 +10,23 @@ public class FileHandler {
 
 
 	public String[] getFileNames() {
+
 		String fileNames = "";
 		int i = 0;
-		
-		for(File files : DIR.listFiles()) {
-			String extension = FilenameUtils.getExtension(files.getAbsolutePath());
-			if(extension.equals("csv")) {
-				if(i==0) {
-					fileNames = fileNames.concat(files.getName());
-					i++;
-				}else {
-					fileNames = fileNames.concat("," + files.getName());
+		if(DIR.exists()) {
+			for(File files : DIR.listFiles()) {
+				String extension = FilenameUtils.getExtension(files.getAbsolutePath());
+				if(extension.equals("csv")) {
+					if(i==0) {
+						fileNames = fileNames.concat(files.getName());
+						i++;
+					}else {
+						fileNames = fileNames.concat("," + files.getName());
+					}
 				}
 			}
+		}else {
+			fileNames = "Empty";
 		}
 		String[] allFiles = fileNames.split(",");
 		allFiles = setButtonValues(allFiles);
