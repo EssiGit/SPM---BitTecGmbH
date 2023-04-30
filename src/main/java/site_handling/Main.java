@@ -25,6 +25,8 @@ import org.thymeleaf.context.WebContext;
 		)
 public class Main extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	
+	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         WebContext context = new WebContext(request, response,
                 request.getServletContext());
@@ -49,18 +51,18 @@ public class Main extends HttpServlet {
 		
 		String fileName = filePart.getSubmittedFileName();
 		
-		System.out.println(System.getenv("HOME") + File.separator + "KaufDort_Userfiles" + File.separator +fileName);
+		System.out.println(System.getProperty("user.home") + File.separator + "KaufDort_Userfiles" + File.separator +fileName);
 		
-		File DIR = new File(System.getenv("HOME") + File.separator + "KaufDort_Userfiles");
+		File DIR = new File(System.getProperty("user.home") + File.separator + "KaufDort_Userfiles");
 		
 		if(!(DIR.exists())) {
 			DIR.mkdirs();
 		}
-		DIR = new File(System.getenv("HOME") + File.separator + "KaufDort_Userfiles" + File.separator +fileName);
+		DIR = new File(System.getProperty("user.home") + File.separator + "KaufDort_Userfiles" + File.separator +fileName);
 		if(!(DIR.exists())) {
 			System.out.println("its a new file");
 			for(Part part : request.getParts()) {
-				part.write(System.getenv("HOME") + File.separator + "KaufDort_Userfiles" + File.separator +fileName);
+				part.write(System.getProperty("user.home") + File.separator + "KaufDort_Userfiles" + File.separator +fileName);
 			}
 		}
 
