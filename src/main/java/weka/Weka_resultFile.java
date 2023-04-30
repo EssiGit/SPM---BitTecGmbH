@@ -17,7 +17,7 @@ public class Weka_resultFile {
 	private int lineNumber;
 
 	public Weka_resultFile(File resultData, int lineNumber) throws FileNotFoundException, IOException {
-		this.lineNumber = lineNumber;
+		this.lineNumber = (lineNumber+1);
 
 		String[] tmpName = resultData.getName().split("_");
 		tableName = tmpName[1];
@@ -74,7 +74,7 @@ public class Weka_resultFile {
 		}
 	}
 	private void setupYData(File resultData) throws IOException {
-		String result = readFileLine(resultData, 2);
+		String result = readFileLine(resultData, lineNumber);
 		String[] resultArr = result.split(",");
 		for(int i =9;i<resultArr.length;i++) {
 

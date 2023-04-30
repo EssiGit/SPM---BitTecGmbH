@@ -52,9 +52,8 @@
 		
       var message = /*[[${iterStat.index + 1}]]*/ "";
       console.log(message)
-      
-      	const hash = "#\\"
-		var svg = d3.select(hash.concat(/*[[${iterStat.index + 1}]]*/))
+ 
+		var svg = d3.select(/*"#\\" + [[${iterStat.index + 1}]]*/)
 			.append("svg")
 			.attr("width", width + margin.left + margin.right)
   		.attr("height", height + margin.top + margin.bottom)
