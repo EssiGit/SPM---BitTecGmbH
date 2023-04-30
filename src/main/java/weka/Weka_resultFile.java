@@ -49,14 +49,14 @@ public class Weka_resultFile {
 		return table;
 	}
 
-	private String readFileLine(File resultFile, int lineNumber) throws IOException {
+	private String readFileLine(File resultFile,int customLine) throws IOException {
 
 		try (BufferedReader reader = new BufferedReader(new FileReader(resultFile))) {
 			int readingLine = 1;
 			String line;
 			String returnVal = "";
 			while((line = reader.readLine()) != null) {
-				if(lineNumber == readingLine) {
+				if(customLine == readingLine) {
 					returnVal = line;
 				}
 				readingLine++;

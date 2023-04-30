@@ -1,6 +1,10 @@
 package site_handling;
 
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;   
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -12,6 +16,7 @@ import org.thymeleaf.context.WebContext;
 import weka.WekaAnalyser;
 import weka.Weka_resultFile;
 import helpers.FileHandler;
+import java.util.ArrayList;
 
 
 @WebServlet("/WekaServlet")
@@ -42,8 +47,15 @@ public class WekaServlet extends HttpServlet {
         
 		try {
 			WekaAnalyser weka = new WekaAnalyser(fileName);
-			Weka_resultFile resFile = new Weka_resultFile(weka.clusterAnalyse(),1);
-			//context.setVariable("results", results);
+			ArrayList<Weka_resultFile> wekaFiles = new ArrayList<>();
+
+			File resultSet = weka.clusterAnalyse();
+			int lines = getLines(resultSet);
+			for(int i=1;i<lines;i++) {
+			Weka_resultFile resFile = new Weka_resultFile(resultSet,i);
+				wekaFiles.add(resFile);
+			}
+			context.setVariable("results", wekaFiles);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -51,5 +63,14 @@ public class WekaServlet extends HttpServlet {
 		
 		ThymeleafConfig.getTemplateEngine().process("main.html", context, response.getWriter());
     }
+	private int getLines(File file) throws FileNotFoundException, IOException { 
+		try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+			int readingLine = 0;
+			while((reader.readLine()) != null) {
+				readingLine++;
+			}
+			return readingLine;
+		}
+	}
 	
 }
