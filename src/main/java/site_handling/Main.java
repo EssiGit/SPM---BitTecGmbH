@@ -5,8 +5,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.Iterator;
-import java.util.List;
-
 import helpers.FileHandler;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -15,9 +13,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
-import java.util.ArrayList;
+
 import server_conf.ThymeleafConfig;
-import java.util.Arrays;
+
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 
@@ -37,11 +35,10 @@ public class Main extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
         FileHandler filehandler = new FileHandler();
        
-        List<String> buttonVal = new ArrayList<>();
-        buttonVal = Arrays.asList(filehandler.getFileNames());
-        //for(int i=1;i<=5;i++) {
-        	context.setVariable("buttons",buttonVal);
-        //}
+        String[] buttonVal = filehandler.getFileNames();
+        for(int i=1;i<=5;i++) {
+        	context.setVariable("button"+i,buttonVal[i-1]);
+        }
         ThymeleafConfig.getTemplateEngine().process("main.html", context, response.getWriter());
     }
 	
