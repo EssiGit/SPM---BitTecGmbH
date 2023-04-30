@@ -1,11 +1,13 @@
 package site_handling;
 
 
-import java.io.File;
+import java.io.File; 
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.Iterator;
+import java.util.List;
 
+import helpers.FileHandler;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
@@ -13,8 +15,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
-
+import java.util.ArrayList;
 import server_conf.ThymeleafConfig;
+import java.util.Arrays;
+import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 
 @WebServlet("/main")
@@ -31,12 +35,24 @@ public class Main extends HttpServlet {
         WebContext context = new WebContext(request, response,
                 request.getServletContext());
         response.setCharacterEncoding("UTF-8");
+        FileHandler filehandler = new FileHandler();
+       
+        List<String> buttonVal = new ArrayList<>();
+        buttonVal = Arrays.asList(filehandler.getFileNames());
+        //for(int i=1;i<=5;i++) {
+        	context.setVariable("buttons",buttonVal);
+        //}
         ThymeleafConfig.getTemplateEngine().process("main.html", context, response.getWriter());
     }
+	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setCharacterEncoding("UTF-8");
         request.setCharacterEncoding("UTF-8");
+        WebContext context = new WebContext(request, response,
+                request.getServletContext());
+        
 		System.out.println("do post executed");
+
 		Iterator<String> paras = request.getParameterNames().asIterator();
 		System.out.println(request.getContentType());
 		System.out.println(request.getParameter("file-input"));
@@ -56,7 +72,8 @@ public class Main extends HttpServlet {
 		File DIR = new File(System.getProperty("user.home") + File.separator + "KaufDort_Userfiles");
 		
 		if(!(DIR.exists())) {
-			DIR.mkdirs();
+			File tmp = new File(System.getProperty("user.home") + File.separator + "KaufDort_Userfiles"+ File.separator + "Result_Files");
+			tmp.mkdirs();
 		}
 		DIR = new File(System.getProperty("user.home") + File.separator + "KaufDort_Userfiles" + File.separator +fileName);
 		if(!(DIR.exists())) {
@@ -67,5 +84,7 @@ public class Main extends HttpServlet {
 		}
 		this.doGet(request,response);
     }
+	
+
 
 }
