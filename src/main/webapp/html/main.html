@@ -72,14 +72,13 @@
 		    });
 		}).then(function getData(rawData) {
 			
-		    
-		   var data = rawData[0]
-		   let dataKeys = Object.keys(data)
+		 	var Values = /*[[${cluster.Values}]]*/ ""; //as array[][] example: [[fertigware, Getränke .....],[1000,2000,110000]]
+			
 		
 			//X-Achse
 			var x = d3.scaleBand()
 	    		.range([ 0, width ])
-	    		.domain(dataKeys)
+	    		.domain(Values[0])
 	   	 		.padding(0.2);
 		
 			//X Achse zum svg hinzufuegen
@@ -101,13 +100,13 @@
 				.style("font-size","25px");
 			//Balken Hinzufuegen
 	 		 svg.selectAll("bar")
-	    		.data(dataKeys)
+	    		.data(Values)
 	   			.enter()
 	   			.append("rect")
-	     		.attr("x", function(d) { return x(d) })
-	      		.attr("y", function(d) { return y(data[d]) })
+	     		.attr("x", function(d, i) { return x(d[0][i]) })
+	      		.attr("y", function(d, i) { return y(d[1][i]) }) 
 	      		.attr("width", x.bandwidth())
-	     		.attr("height", function(d) { return height - y(data[d]) })
+	     		.attr("height", function(d, i) { return height - y(d[1][i]) })
 	      		.attr("fill", "#69b3a2")
 	
 		
