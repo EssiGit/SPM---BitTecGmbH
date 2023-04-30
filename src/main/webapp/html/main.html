@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
   <head>
     <meta charset="UTF-8">
     <title>KaufDort Homepage</title>
       <link rel="stylesheet" href="css/style2.css">
 <script src="https://d3js.org/d3.v7.min.js"></script>
-<div id="my_dataviz"></div>
+
   </head>
   <body>
     <nav class="navbar">
@@ -13,7 +13,7 @@
       <div>
 
       	<form name="main" method="post" action="main" enctype="multipart/form-data">
-    		<input type="file" name="file-input" id="file-input" onchange="document.forms['main'].submit()" style="display:none" />
+    		<input type="file" name="file-input" id="file-input" onchange="document.forms['main'].submit()" style="display:none" accept=".csv"/>
 		</form>
 		<button onclick="document.getElementById('file-input').click()">Datei Hochladen</button>
 
@@ -32,15 +32,20 @@
     
     
     <div class="chart-container">
-      <div class="chart" data-name="analyse1" id="analyse1"></div>
+    <th:block th:each="cluster : ${clusters}">
+      <div class="chart" data-name="analyse1" th:id="${cluster.titel}"></div>
       
-      <script>
+      <script th:inline="javascript">
       
-      var margin = {top: 30, right: 30, bottom: 100, left: 100},
-	    width = 1400 - margin.left - margin.right,
+      var margin = {top: 30, right: 30, bottom: 120, left: 100},
+	    width = 1800 - margin.left - margin.right,
 	    height = 800 - margin.top - margin.bottom;
 		
-		var svg = d3.select("#analyse1")
+      var message = /*[[${cluster.titel}]]*/ "";
+      console.log(message)
+      
+      
+		var svg = d3.select(/*[[${cluster.titel}]]*/)
 			.append("svg")
 			.attr("width", width + margin.left + margin.right)
   		.attr("height", height + margin.top + margin.bottom)
@@ -112,5 +117,6 @@
       
       
     </div>
+    </th:block>
   </body>
 </html>
