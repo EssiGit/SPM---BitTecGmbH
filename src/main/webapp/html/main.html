@@ -63,7 +63,7 @@
 		
 		
 		
-			
+			var tableName = /*[[${cluster.tableName}]]*/ ""; 
 		 	var xValues = /*[[${cluster.getXnames()}]]*/ ""; 
 			var yValues = /*[[${cluster.getYdata()}]]*/ ""; 
 			
@@ -108,7 +108,8 @@
     		.attr('x', width / 2 + margin.left)
     		.attr('y', margin.top / 2)
     		.attr('text-anchor', 'middle')
-    		.text('My Bar Chart');
+    		.text(tableName)
+	 		.style("font-size","25px");
 		 
 	
 	 		
