@@ -8,7 +8,7 @@
 
   </head>
   <body>
-    <nav class="navbar">
+    <nav class="navbar" >
       <img src="images/LogoKaufDort.gif" alt="Logo">
       <div>
 
@@ -21,15 +21,18 @@
           <button>Analysen</button>
           <div class="dropdown-content">
           
+
          	 <form name="button1" method="post" action="WekaServlet" >     	 
             <input type="submit" name = "button1" th:text="${button1}" value="button1" style="display:none"></input>
             </form>
             <button type="submit" name = "button1" th:text="${button1}" value="button1"></button>
-         	 <form name="button2" method="post" action="WekaServlet" >     	 
+            
+         	<form name="button2" method="post" action="WekaServlet" >     	 
             <input type="submit" name = "button2" th:text="${button2}" value="button2" style="display:none"></input>
             </form>
             <button type="submit" name = "button2" th:text="${button2}" value="button2"></button>
-         	 <form name="button3" method="post" action="WekaServlet" >     	 
+            
+         	<form name="button3" method="post" action="WekaServlet" >     	 
             <input type="submit" name = "button3" th:text="${button3}" value="button3" style="display:none"></input>
             </form>
             <button type="submit" name = "button3" th:text="${button3}" value="button3"></button>
@@ -43,18 +46,16 @@
     </nav>
     
     
-    <div class="chart-container">
-    <th:block th:each="cluster , iterStat: ${results}">
-      <div class="chart" data-name="analyse1" th:id="${iterStat.index}"></div>
+    <div class="chart-container" id="my_dataviz">
+    <th:block th:each="cluster : ${results}">
       
       <script th:inline="javascript">
 
-      var margin = {top: 30, right: 30, bottom: 120, left: 100},
+      var margin = {top: 30, right: 30, bottom: 180, left: 100},
 	    width = 1800 - margin.left - margin.right,
 	    height = 800 - margin.top - margin.bottom;
  
-      	var id = /*[[${iterStat.index}]]*/ "";
-		var svg = d3.select("#" + id)
+		var svg = d3.selectAll("#my_dataviz")
 			.append("svg")
 			.attr("width", width + margin.left + margin.right)
   		.attr("height", height + margin.top + margin.bottom)
@@ -68,15 +69,15 @@
 		
 		
 		
-			
-		 	var xValues = /*[[${cluster.getxValues()}]]*/ ""; 
-			var yValues = /*[[${cluster.getyValues()}]]*/ ""; 
+			var tableName = /*[[${cluster.tableName}]]*/ ""; 
+		 	var xValues = /*[[${cluster.getXnames()}]]*/ ""; 
+			var yValues = /*[[${cluster.getYdata()}]]*/ ""; 
 			
 			
 			//X-Achse
 			var x = d3.scaleBand()
 	    		.range([ 0, width ])
-	    		.domain(Values[0])
+	    		.domain(xValues)
 	   	 		.padding(0.2);
 			console.log("test");
 			//X Achse zum svg hinzufuegen
@@ -90,7 +91,7 @@
 			 console.log("test");
 			//Y Achse erstellen
 			var y = d3.scaleLinear()
-	    		.domain([0, 50000])
+	    		.domain([0, 300])
 	    		.range([ height, 0])
 			//Y Achse hinzufuegen
 	  		svg.append("g")
@@ -101,20 +102,28 @@
 	    		.data(xValues)
 	   			.enter()
 	   			.append("rect")
-	     		.attr("x", function(d) { console.log(i); return x(d) })
+	     		.attr("x", function(d) { return x(d) })
 	     		.data(yValues)
-	      		.attr("y", function(d, i) { return y(parseInt(d[1][i]) ) }) 
+	      		.attr("y", function(d) { return y(d) })
 	      		.attr("width", x.bandwidth())
-	     		.attr("height", function(d, i) { console.log(i); return height - y( parseInt(d[1][i])) })
+	     		.attr("height", function(d) { return height - y(d) })
 	      		.attr("fill", "#69b3a2")
 	
-		 console.log("test");
+	      	//add text
+	      	svg.append('text')
+    		.attr('x', width / 2 + margin.left)
+    		.attr('y', margin.top / 2)
+    		.attr('text-anchor', 'middle')
+    		.text(tableName)
+	 		.style("font-size","25px");
+		 
 	
 	 		
       </script>
       
-      
+      </div>
     </div>
     </th:block>
+    
   </body>
 </html>
