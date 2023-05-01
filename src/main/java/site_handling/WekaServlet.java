@@ -59,7 +59,6 @@ public class WekaServlet extends HttpServlet {
 		fileName = "kd100.csv";
 
         FileHandler filehandler = new FileHandler();
-        //request.
         String[] buttonVal = filehandler.getFileNames();
         for(int i=1;i<=5;i++) {
         	context.setVariable("button"+i,buttonVal[i-1]);
