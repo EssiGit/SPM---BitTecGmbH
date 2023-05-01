@@ -49,11 +49,15 @@
 		    
 		   var data = rawData[0]
 		   let dataKeys = Object.keys(data)
-		
+			console.log(typeof dataKeys)
+			console.log(typeof dataKeys[0])
+			
+			
+			let Values = [ ["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag"],["141","11","50","13","12","42","39","35","28","75","47","11","19","22","61","26"] ];
 			//X-Achse
 			var x = d3.scaleBand()
 	    		.range([ 0, width ])
-	    		.domain(dataKeys)
+	    		.domain(Values[0])
 	   	 		.padding(0.2);
 		
 			//X Achse zum svg hinzufuegen
@@ -66,7 +70,7 @@
 		
 			//Y Achse erstellen
 			var y = d3.scaleLinear()
-	    		.domain([0, 50000])
+	    		.domain([0, 300])
 	    		.range([ height, 0]);
 			
 			//Y Achse hinzufuegen
@@ -75,13 +79,14 @@
 		
 			//Balken Hinzufuegen
 	 		 svg.selectAll("bar")
-	    		.data(dataKeys)
+	    		.data(Values[0])
 	   			.enter()
 	   			.append("rect")
 	     		.attr("x", function(d) { return x(d) })
-	      		.attr("y", function(d) { return y(data[d]) })
+	     		.data(Values[1])
+	      		.attr("y", function(d, i) { console.log(d); return y(parseInt(Values[i])) })
 	      		.attr("width", x.bandwidth())
-	     		.attr("height", function(d) { return height - y(data[d]) })
+	     		.attr("height", function(d, i) { console.log(d); return y(parseInt(Values[i])) })
 	      		.attr("fill", "#69b3a2")
 	
 		
