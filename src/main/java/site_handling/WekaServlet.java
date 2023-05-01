@@ -18,6 +18,7 @@ import weka.Weka_resultFile;
 import helpers.FileHandler;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.Map;
 
 @WebServlet("/WekaServlet")
 public class WekaServlet extends HttpServlet {
@@ -45,6 +46,10 @@ public class WekaServlet extends HttpServlet {
         	}
         }
         fileName = request.getParameter("button2");
+        Map<String,String[]> tmp = request.getParameterMap();
+        for(Map.Entry<String,String[]> entry : tmp.entrySet()){
+        	System.out.println(entry.getKey() + " : " + entry.getValue());
+        }
         Enumeration<String> paras;
         paras = request.getParameterNames();
         while (paras.hasMoreElements()) {
