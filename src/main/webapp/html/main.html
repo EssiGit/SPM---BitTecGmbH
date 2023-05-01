@@ -20,14 +20,17 @@
         <div class="dropdown">
           <button>Analysen</button>
           <div class="dropdown-content">
-          
-         	 <form name="button1" method="post" action="WekaServlet">
+
+         	 <form name="button1" method="post" action="WekaServlet" >
+			<input type="hidden" id="button1" name="button1" th:value="${button1}">
             <button type="submit"  name="button1" th:value="${button1}"  th:text="${button1}"></button>
             </form>
              <form name="button2" method="post" action="WekaServlet">
+             <input type="hidden" id="button2" name="button2" th:value="${button2}">
             <button type="submit"  name="button2" th:value="${button2}" th:text="${button2}"></button>
             </form>
              <form name="button3" method="post" action="WekaServlet"> 
+             <input type="hidden" id="button3" name="button3" th:value="${button3}">
             <button type="submit" name="button3" th:value="${button3}"  th:text="${button3}"></button >
             </form>
             <button type="submit"  th:text="${button4}"></button>

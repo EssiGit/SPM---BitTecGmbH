@@ -45,7 +45,7 @@ public class WekaServlet extends HttpServlet {
         		System.out.println("context: " + fileName);
         	}
         }
-        fileName = request.getParameter("button2");
+        /*fileName = request.getParameter("button2");
         Map<String,String[]> tmp = request.getParameterMap();
         for(Map.Entry<String,String[]> entry : tmp.entrySet()){
         	System.out.println(entry.getKey() + " : " + entry.getValue());
@@ -55,8 +55,8 @@ public class WekaServlet extends HttpServlet {
         while (paras.hasMoreElements()) {
             System.out.println("test: " + paras.nextElement());
         }
-        System.out.println("is empty? " + fileName);
-		fileName = "kd100.csv";
+        System.out.println("is empty? " + fileName);*/
+		//fileName = "kd100.csv";
 
         FileHandler filehandler = new FileHandler();
         String[] buttonVal = filehandler.getFileNames();
