@@ -42,18 +42,16 @@
     
     <div class="chart-container">
     <th:block th:each="cluster , iterStat: ${results}">
-      <div class="chart" data-name="analyse1" th:id="${iterStat.index + 1}"></div>
+      <div class="chart" data-name="analyse1" th:id="${iterStat.index}"></div>
       
       <script th:inline="javascript">
-      
+
       var margin = {top: 30, right: 30, bottom: 120, left: 100},
 	    width = 1800 - margin.left - margin.right,
 	    height = 800 - margin.top - margin.bottom;
-		
-      var message = /*[[${iterStat.index + 1}]]*/ "";
-      console.log(message)
  
-		var svg = d3.select(/*"#\\" + [[${iterStat.index + 1}]]*/)
+      	var id = /*[[${iterStat.index}]]*/ "";
+		var svg = d3.select("#" + id)
 			.append("svg")
 			.attr("width", width + margin.left + margin.right)
   		.attr("height", height + margin.top + margin.bottom)
@@ -68,15 +66,16 @@
 		
 		
 			
-		 	var Values = /*[[${cluster.getValues()}]]*/ ""; 
-			console.log(Values[0])
-			console.log(Values[1])
+		 	var xValues = /*[[${cluster.getxValues()}]]*/ ""; 
+			var yValues = /*[[${cluster.getyValues()}]]*/ ""; 
+			
+			
 			//X-Achse
 			var x = d3.scaleBand()
 	    		.range([ 0, width ])
 	    		.domain(Values[0])
 	   	 		.padding(0.2);
-		
+			console.log("test");
 			//X Achse zum svg hinzufuegen
 			svg.append("g")
 	    		.attr("transform", "translate(0," + height + ")")
@@ -85,7 +84,7 @@
 	      			.attr("transform", "translate(-10,0)rotate(-45)")
 	      			.style("text-anchor", "end")
 					.style("font-size","25px");
-		
+			 console.log("test");
 			//Y Achse erstellen
 			var y = d3.scaleLinear()
 	    		.domain([0, 50000])
@@ -96,18 +95,19 @@
 				.style("font-size","25px");
 			//Balken Hinzufuegen
 	 		 svg.selectAll("bar")
-	    		.data(Values)
+	    		.data(xValues)
 	   			.enter()
 	   			.append("rect")
-	     		.attr("x", function(d, i) { return x(d[0][i]) })
-	      		.attr("y", function(d, i) { return y(d[1][i]) }) 
+	     		.attr("x", function(d) { console.log(i); return x(d) })
+	     		.data(yValues)
+	      		.attr("y", function(d, i) { return y(parseInt(d[1][i]) ) }) 
 	      		.attr("width", x.bandwidth())
-	     		.attr("height", function(d, i) { return height - y(d[1][i]) })
+	     		.attr("height", function(d, i) { console.log(i); return height - y( parseInt(d[1][i])) })
 	      		.attr("fill", "#69b3a2")
 	
-		
+		 console.log("test");
 	
-      
+	 		
       </script>
       
       
