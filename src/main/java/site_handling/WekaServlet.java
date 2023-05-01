@@ -17,7 +17,7 @@ import weka.WekaAnalyser;
 import weka.Weka_resultFile;
 import helpers.FileHandler;
 import java.util.ArrayList;
-
+import java.util.Enumeration;
 
 @WebServlet("/WekaServlet")
 public class WekaServlet extends HttpServlet {
@@ -35,10 +35,24 @@ public class WekaServlet extends HttpServlet {
         ThymeleafConfig.getTemplateEngine().process("main.html", context, response.getWriter());
     }
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		//String fileName = request.getParameter("fileName");
-		String fileName = "kd100.csv";
         WebContext context = new WebContext(request, response,
                 request.getServletContext());
+		String fileName = "";
+        for(int i=1;i<=5;i++) {
+        	if(request.getParameter("button"+i) != null) {
+        		fileName = request.getParameter("button"+i);
+        		System.out.println("context: " + fileName);
+        	}
+        }
+        fileName = request.getParameter("button2");
+        Enumeration<String> paras;
+        paras = request.getParameterNames();
+        while (paras.hasMoreElements()) {
+            System.out.println("test: " + paras.nextElement());
+        }
+        System.out.println("is empty? " + fileName);
+		fileName = "kd100.csv";
+
         FileHandler filehandler = new FileHandler();
         //request.
         String[] buttonVal = filehandler.getFileNames();

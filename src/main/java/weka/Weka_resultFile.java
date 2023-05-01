@@ -93,11 +93,19 @@ public class Weka_resultFile {
 		tableName = setTableName(tableName);
 	}
 	
-	public ArrayList<String> getXnames(){
-		return xNames;
+	public String[] getXnames(){
+		String[] tmp = new String[xNames.size()];
+		for(int i = 0;i<xNames.size();i++) {
+			tmp[i] = xNames.get(i);
+		}
+		return tmp;
 	}
-	public ArrayList<Integer> getYdata(){
-		return yData;
+	public int[] getYdata(){
+		int[] tmp = new int[yData.size()];
+		for(int i = 0;i<yData.size();i++) {
+			tmp[i] = yData.get(i);
+		}
+		return tmp;
 	}
 	public String getYname(){
 		return yName;
