@@ -47,8 +47,7 @@ public class Main extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         WebContext context = new WebContext(request, response,
                 request.getServletContext());
-        
-		System.out.println("do post executed");
+        FileHandler filehandler = new FileHandler();
 
 		Iterator<String> paras = request.getParameterNames().asIterator();
 		System.out.println(request.getContentType());
@@ -66,19 +65,9 @@ public class Main extends HttpServlet {
 		
 		System.out.println(System.getProperty("user.home") + File.separator + "KaufDort_Userfiles" + File.separator +fileName);
 		
-		File DIR = new File(System.getProperty("user.home") + File.separator + "KaufDort_Userfiles");
+		File DIR = new File(System.getProperty("user.home") + File.separator + "KaufDort_Userfiles" + File.separator +fileName);
 		
-		if(!(DIR.exists())) {
-			File tmp = new File(System.getProperty("user.home") + File.separator + "KaufDort_Userfiles"+ File.separator + "Result_Files");
-			tmp.mkdirs();
-		}
-		DIR = new File(System.getProperty("user.home") + File.separator + "KaufDort_Userfiles" + File.separator +fileName);
-		if(!(DIR.exists())) {
-			System.out.println("its a new file");
-			for(Part part : request.getParts()) {
-				part.write(System.getProperty("user.home") + File.separator + "KaufDort_Userfiles" + File.separator +fileName);
-			}
-		}
+		filehandler.setUpDIR(DIR, request);
 		this.doGet(request,response);
     }
 	
