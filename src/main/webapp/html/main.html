@@ -15,7 +15,7 @@
       	<form name="main" method="post" action="main" enctype="multipart/form-data">
     		<input type="file" name="file-input" id="file-input" onchange="document.forms['main'].submit()" style="display:none" accept=".csv"/>
 		</form>
-		<button onclick="document.getElementById('file-input').click()">Datei Hochladen</button>
+		<button onclick="document.getElementById('file-input').click()">Datei hochladen</button>
 
         <div class="dropdown">
           <button>Analysen</button>
@@ -41,10 +41,19 @@
         </div>
       </div>
     </nav>
+ 
+    <nav class="navbar-2" th:if="${results != null}">
+      <a class="active" href="#">Umsatzstärkstertag/Uhrzeit</a>
+      <a href="#">Kundenhäufigkeit</a>
+      <a href="#">Umsatzstärkste Einkaufsuhrzeit pro Tag</a>
+      <a href="#">Kundengruppen</a>
+      </nav>
     
     
     <div class="chart-container" id="my_dataviz">
     <th:block th:each="cluster : ${results}">
+      
+      
       
       <script th:inline="javascript">
 
