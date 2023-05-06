@@ -14,7 +14,12 @@
     <nav class="navbar" >
       <img src="images/LogoKaufDort.gif" alt="Logo">
       <div>
-	
+
+		<!-- Marketing button -->
+		<form action="./MarketingServlet">
+    		<button type="submit">Marketingmaßnahmen</button>
+		</form>
+		
 		<!-- Upload-button -->
       	<form name="main" method="post" action="main" enctype="multipart/form-data">
     		<input type="file" name="file-input" id="file-input" onchange="document.forms['main'].submit()" style="display:none" accept=".csv"/>
@@ -56,8 +61,21 @@
         </div>
       </div>
     </nav>
- 
- 	<!-- Zweite Navigationbar -->
+
+
+	<!-- Ausgeben eines Fehlers -->
+	<input type="checkbox" id="show-dialog" th:checked="${error != null}" />
+	<div id="modal-backdrop">
+		<div id="modal-window">
+			<h1>Error</h1>
+			<p th:text="${error}"></p>
+			<button id="close-button"
+				onclick="document.getElementById('show-dialog').checked = false">Close</button>
+		</div>
+	</div>
+
+
+	<!-- Zweite Navigationbar -->
     <nav class="navbar-2" th:if="${results != null}">
       <a class="nav2-item active" href="./WekaServlet?resultID=1">Umsatzstärkstertag/Uhrzeit</a>
       <a class="nav2-item" href="./WekaServlet?resultID=2">Kundenhäufigkeit</a>

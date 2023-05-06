@@ -10,7 +10,11 @@
       .navbar img {
         height: 40px;
       }
-
+      
+      .navbar form{
+        display: inline;
+      }
+      
       .navbar button {
         background-color: #007bff;
         color: white;
@@ -104,4 +108,52 @@
       /* Hide the link that should open and close the navbar on small screens */
       .navbar-2 .icon {
         display: none;
+      }
+      
+/* Style for modal backdrop */
+      #modal-backdrop {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: none;
+        z-index: 1;
+      }
+      
+      /* Style for modal window */
+      #modal-window {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: white;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        text-align: center;
+        display: none;
+        z-index: 2;
+      }
+      
+      /* Style for checkbox */
+      #show-dialog {
+        display: none;
+      }
+      
+      /* Style for close button */
+      #close-button {
+        display: block;
+        margin-top: 20px;
+        
+      }
+      
+      /* Show dialog when checkbox is checked */
+      #show-dialog:checked ~ #modal-backdrop {
+        display: block;
+      }
+      
+      #show-dialog:checked ~ #modal-backdrop #modal-window {
+        display: block;
       }
