@@ -85,7 +85,7 @@
       }
       
       /* Style for the second navbar links */
-      .navbar-2 a {
+      .nav2-item {
         float: left;
         color: white;
         text-align: center;
@@ -97,7 +97,7 @@
       }
 
       /* Style for the active class */
-      .active {
+      .nav2-item.active {
         background-color: #4CAF50;
       }
 

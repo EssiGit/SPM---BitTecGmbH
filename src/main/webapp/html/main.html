@@ -8,48 +8,82 @@
 
   </head>
   <body>
+  
+ 
+  	<!-- Navigationsbar -->
     <nav class="navbar" >
       <img src="images/LogoKaufDort.gif" alt="Logo">
       <div>
-
+	
+		<!-- Upload-button -->
       	<form name="main" method="post" action="main" enctype="multipart/form-data">
     		<input type="file" name="file-input" id="file-input" onchange="document.forms['main'].submit()" style="display:none" accept=".csv"/>
 		</form>
 		<button onclick="document.getElementById('file-input').click()">Datei hochladen</button>
 
+
+		<!-- Dropdown -->
         <div class="dropdown">
           <button>Analysen</button>
           <div class="dropdown-content">
-
+          
          	 <form name="button1" method="post" action="WekaServlet" >
-			<input type="hidden" id="button1" name="button1" th:value="${button1}">
-            <button type="submit"  name="button1" th:value="${button1}"  th:text="${button1}"></button>
+				<input type="hidden" name="button1" th:value="${button1}">
+            	<button type="submit" th:text="${button1}"></button>
             </form>
+            
              <form name="button2" method="post" action="WekaServlet">
-             <input type="hidden" id="button2" name="button2" th:value="${button2}">
-            <button type="submit"  name="button2" th:value="${button2}" th:text="${button2}"></button>
+             	<input type="hidden" name="button2" th:value="${button2}">
+            	<button type="submit" th:text="${button2}"></button>
             </form>
+            
              <form name="button3" method="post" action="WekaServlet"> 
-             <input type="hidden" id="button3" name="button3" th:value="${button3}">
-            <button type="submit" name="button3" th:value="${button3}"  th:text="${button3}"></button >
+             	<input type="hidden" name="button3" th:value="${button3}">
+            	<button type="submit" th:text="${button3}"></button >
             </form>
-            <button type="submit"  th:text="${button4}"></button>
-            <button type="submit"  th:text="${button5}"></button>
+            
+            <form name="button4" method="post" action="WekaServlet"> 
+            	<input type="hidden" name="button4" th:value="${button4}">
+            	<button type="submit"  th:text="${button4}"></button>
+            </form>
+            
+            <form name="button5" method="post" action="WekaServlet"> 
+            	<input type="hidden" name="button5" th:value="${button5}">
+            	<button type="submit"  th:text="${button5}"></button>
+            </form>
             
           </div>
-          
         </div>
       </div>
     </nav>
  
+ 	<!-- Zweite Navigationbar -->
     <nav class="navbar-2" th:if="${results != null}">
-      <a class="active" href="#">Umsatzstärkstertag/Uhrzeit</a>
-      <a href="#">Kundenhäufigkeit</a>
-      <a href="#">Umsatzstärkste Einkaufsuhrzeit pro Tag</a>
-      <a href="#">Kundengruppen</a>
+      <a class="nav2-item active">Umsatzstärkstertag/Uhrzeit</a>
+      <a class="nav2-item">Kundenhäufigkeit</a>
+      <a class="nav2-item">Umsatzstärkste Einkaufsuhrzeit pro Tag</a>
+      <a class="nav2-item">Kundengruppen</a>
       </nav>
     
+    <!-- Ändert Die Farbe eines Buttons nachdem der User draufklickt -->
+    <script>
+  
+    const navbar2Buttons = document.querySelectorAll('.nav2-item');
+
+    navbar2Buttons.forEach(button => {
+      button.addEventListener('click', () => {
+      
+        navbar2Buttons.forEach(btn => {
+          btn.classList.remove('active');
+        });
+
+        button.classList.add('active');
+      });
+    });
     
+    </script>
+    
+    <!-- Laden der Grafiken -->
     <div class="chart-container" id="my_dataviz">
     <th:block th:each="cluster : ${results}">
       
@@ -61,62 +95,59 @@
 	    width = 1800 - margin.left - margin.right,
 	    height = 800 - margin.top - margin.bottom;
  
+        //Grafik an chart-container hängen
 		var svg = d3.selectAll("#my_dataviz")
 			.append("svg")
 			.attr("width", width + margin.left + margin.right)
-  		.attr("height", height + margin.top + margin.bottom)
-  		.style("background", "#dedede")
+  			.attr("height", height + margin.top + margin.bottom)
+  			.style("background", "#dedede")
 			.append("g")
-  		.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-		
-		
-		//beispiel Umsatzstärkster Tag
-		//JSON einlesen in zeile Z43(CSV geht auch  d3.csv(""))
-		
-		
-		
-			var tableName = /*[[${cluster.tableName}]]*/ ""; 
-		 	var xValues = /*[[${cluster.getXnames()}]]*/ ""; 
-			var yValues = /*[[${cluster.getYdata()}]]*/ ""; 
+  			.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+		//Ergebnisse x,y Values als array
+		var tableName = /*[[${cluster.tableName}]]*/ ""; 
+		var xValues = /*[[${cluster.getXnames()}]]*/ ""; 
+		var yValues = /*[[${cluster.getYdata()}]]*/ ""; 
 			
-			
-			//X-Achse
-			var x = d3.scaleBand()
+		//X-Achse
+		var x = d3.scaleBand()
 	    		.range([ 0, width ])
 	    		.domain(xValues)
 	   	 		.padding(0.2);
-			console.log("test");
-			//X Achse zum svg hinzufuegen
-			svg.append("g")
-	    		.attr("transform", "translate(0," + height + ")")
-	    		.call(d3.axisBottom(x))
-	    		.selectAll("text")
-	      			.attr("transform", "translate(-10,0)rotate(-45)")
-	      			.style("text-anchor", "end")
-					.style("font-size","25px");
-			 console.log("test");
-			//Y Achse erstellen
-			var y = d3.scaleLinear()
-	    		.domain([0, 300])
-	    		.range([ height, 0])
-			//Y Achse hinzufuegen
-	  		svg.append("g")
-	    		.call(d3.axisLeft(y))
+			
+		//X Achse zum svg hinzufuegen
+		svg.append("g")
+	    	.attr("transform", "translate(0," + height + ")")
+	    	.call(d3.axisBottom(x))
+	    	.selectAll("text")
+	      		.attr("transform", "translate(-10,0)rotate(-45)")
+	      		.style("text-anchor", "end")
 				.style("font-size","25px");
-			//Balken Hinzufuegen
-	 		 svg.selectAll("bar")
-	    		.data(xValues)
-	   			.enter()
-	   			.append("rect")
-	     		.attr("x", function(d) { return x(d) })
-	     		.data(yValues)
-	      		.attr("y", function(d) { return y(d) })
-	      		.attr("width", x.bandwidth())
-	     		.attr("height", function(d) { return height - y(d) })
-	      		.attr("fill", "#69b3a2")
+			
+		//Y Achse erstellen
+		var y = d3.scaleLinear()
+	    	.domain([0, 300])
+	    	.range([ height, 0])
+	    	
+		//Y Achse hinzufuegen
+	  	svg.append("g")
+	    	.call(d3.axisLeft(y))
+			.style("font-size","25px");
+			
+		//Balken Hinzufuegen
+	 	svg.selectAll("bar")
+	    	.data(xValues)
+	   		.enter()
+	   		.append("rect")
+	     	.attr("x", function(d) { return x(d) })
+	     	.data(yValues)
+	      	.attr("y", function(d) { return y(d) })
+	      	.attr("width", x.bandwidth())
+	     	.attr("height", function(d) { return height - y(d) })
+	      	.attr("fill", "#69b3a2")
 	
-	      	//add text
-	      	svg.append('text')
+		//Überschrift der Grafik
+	    svg.append('text')
     		.attr('x', width / 2 + margin.left)
     		.attr('y', margin.top / 2)
     		.attr('text-anchor', 'middle')
