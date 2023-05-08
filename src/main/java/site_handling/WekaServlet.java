@@ -27,6 +27,7 @@ public class WekaServlet extends HttpServlet {
         WebContext context = new WebContext(request, response,
                 request.getServletContext());
         response.setCharacterEncoding("UTF-8");
+        request.setCharacterEncoding("UTF-8");
         FileHandler filehandler = new FileHandler();
        
         String[] buttonVal = filehandler.getFileNames();
@@ -36,7 +37,9 @@ public class WekaServlet extends HttpServlet {
         ThymeleafConfig.getTemplateEngine().process("main.html", context, response.getWriter());
     }
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        WebContext context = new WebContext(request, response,
+        response.setCharacterEncoding("UTF-8");
+        request.setCharacterEncoding("UTF-8");
+		WebContext context = new WebContext(request, response,
                 request.getServletContext());
 		String fileName = "";
         for(int i=1;i<=5;i++) {
