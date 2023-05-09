@@ -67,7 +67,12 @@
 		</div>
 	</nav>
 
-	<img class="loading_inv" id="loadingimg" src="images/sanduhr.gif"> 
+
+	<div class="loading" id="loading">
+		<img src="images/sanduhr.gif" id="loadingimg">
+	</div>
+
+
 
 
 	<!-- Ausgeben eines Fehlers -->
@@ -200,29 +205,40 @@
 
 
 
-<!-- 	<script>
-const forms = document.querySelectorAll('form');
-const loading = document.getElementById('loadingimg');
+	<script>
 
+	const loading = document.getElementById('loading');
+	const loadingimg = document.getElementById('loadingimg');
+	console.log(loadingimg);
+	/* beim drücken von "zurueck" im browser wird die Sanduhr versteckt */
+	window.addEventListener( "pageshow", function ( event ) {
+		  var historyTraversal = event.persisted || 
+		                         ( typeof window.performance != "undefined" && 
+		                              window.performance.navigation.type === 2 );
+		  if ( historyTraversal ) {
+			loading.style.display = "none";
+		    window.location.reload();
+		  }
+		});
+	
+	
+	/* Lädt die Sanduhr */
+	const forms = document.querySelectorAll('form');
 
-forms.forEach(form => {
-	console.log(form)
-  form.addEventListener('submit', function(){
-    // Prevent the default form submission behavior
-    event.preventDefault();
-    
-        loading.style.display = "block";
-    
-    
+	forms.forEach(form => {
+		
+  		form.addEventListener('submit', function(){
    
-    
-    // Log a message to the console
-    console.log('Form submitted');
+    		event.preventDefault();
+    		loading.style.display = "flex";
+
+    		loadingimg.style.display = "flex";
+    		form.submit();
     
   });
 });
 
-</script> -->
+</script>
 
 
 
