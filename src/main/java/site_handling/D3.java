@@ -18,7 +18,7 @@ public class D3 extends HttpServlet {
         WebContext context = new WebContext(request, response,
                 request.getServletContext());
         response.setCharacterEncoding("UTF-8");
-        ThymeleafConfig.getTemplateEngine().process("d3Test.html", context, response.getWriter());
+        ThymeleafConfig.getTemplateEngine().process("animation.html", context, response.getWriter());
     }
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 

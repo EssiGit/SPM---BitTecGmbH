@@ -1,160 +1,173 @@
 .navbar {
-        background-color: white;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 10px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      }
+	background-color: white;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 10px;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
 
-      .navbar img {
-        height: 40px;
-      }
-      
-      .navbar form{
-        display: inline;
-      }
-      
-      .navbar button {
-        background-color: #007bff;
-        color: white;
-        border: none;
-        border-radius: 4px;
-        padding: 10px 15px;
-        margin-left: 10px;
-        cursor: pointer;
-      }
+.navbar img {
+	height: 40px;
+}
 
-      /* History dropdown styles */
-      .dropdown {
-        position: relative;
-        display: inline-block;
-      }
+.navbar form {
+	display: inline;
+}
 
-      .dropdown-content {
-        display: none;
-        position: absolute;
-        z-index: 1;
-      }
+.navbar button {
+	background-color: #007bff;
+	color: white;
+	border: none;
+	border-radius: 4px;
+	padding: 10px 15px;
+	margin-left: 10px;
+	cursor: pointer;
+}
 
-      .dropdown-content button {
-        background-color: #f9f9f9;
-        color: black;
-        padding: 10px 15px;
-        border: none;
-        cursor: pointer;
-        width: 100%;
-        text-align: left;
-      }
+/* History dropdown styles */
+.dropdown {
+	position: relative;
+	display: inline-block;
+}
 
-      .dropdown:hover .dropdown-content {
-        display: block;
-      }
+.dropdown-content {
+	display: none;
+	position: absolute;
+	z-index: 1;
+}
 
-      /* Chart container styles */
-      .chart-container {
-        display: flex;
-        flex-wrap: wrap;
-        margin-top: 20px;
-        justify-content: center;
-      }
+.dropdown-content button {
+	background-color: #f9f9f9;
+	color: black;
+	padding: 10px 15px;
+	border: none;
+	cursor: pointer;
+	width: 100%;
+	text-align: left;
+}
 
-      .chart {
-        position: relative;
-        font-size: 30px;
-        width: calc(100% -20px);
-        height: 300px;
-        margin: 10px;
-        background-color: #ffffff;
-        border-radius: 4px;
-      }
+.dropdown:hover .dropdown-content {
+	display: block;
+}
 
-      .chart::before {
-        content: attr(data-name);
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        text-align: center;
-        font-weight: bold;
-      }
-      
+/* Chart container styles */
+.chart-container {
+	display: flex;
+	flex-wrap: wrap;
+	margin-top: 20px;
+	justify-content: center;
+}
+
+.chart {
+	position: relative;
+	font-size: 30px;
+	width: calc(100% -20px);
+	height: 300px;
+	margin: 10px;
+	background-color: #ffffff;
+	border-radius: 4px;
+}
+
+.chart::before {
+	content: attr(data-name);
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	text-align: center;
+	font-weight: bold;
+}
+
 .navbar-2 {
-        display: flex;
-        justify-content: space-between;
-        background-color: #333;
-        overflow: hidden;
-        position: sticky;
-        top: 0;
-      }
-      
-      /* Style for the second navbar links */
-      .nav2-item {
-        float: left;
-        color: white;
-        text-align: center;
-        padding: 14px 16px;
-        text-decoration: none;
-        font-size: 17px;
-        width: calc(100% / 4);
-        box-sizing: border-box;
-      }
+	display: flex;
+	justify-content: space-between;
+	background-color: #333;
+	overflow: hidden;
+	position: sticky;
+	top: 0;
+}
 
-      /* Style for the active class */
-      .nav2-item.active {
-        background-color: #4CAF50;
-      }
+/* Style for the second navbar links */
+.nav2-item {
+	float: left;
+	color: white;
+	text-align: center;
+	padding: 14px 16px;
+	text-decoration: none;
+	font-size: 17px;
+	width: calc(100%/ 4);
+	box-sizing: border-box;
+}
 
-      /* Hide the link that should open and close the navbar on small screens */
-      .navbar-2 .icon {
-        display: none;
-      }
-      
+/* Style for the active class */
+.nav2-item.active {
+	background-color: #4CAF50;
+}
+
+/* Hide the link that should open and close the navbar on small screens */
+.navbar-2 .icon {
+	display: none;
+}
+
 /* Style for modal backdrop */
-      #modal-backdrop {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.5);
-        display: none;
-        z-index: 1;
-      }
-      
-      /* Style for modal window */
-      #modal-window {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        background-color: white;
-        padding: 20px;
-        border-radius: 5px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-        text-align: center;
-        display: none;
-        z-index: 2;
-      }
-      
-      /* Style for checkbox */
-      #show-dialog {
-        display: none;
-      }
-      
-      /* Style for close button */
-      #close-button {
-        display: block;
-        margin-top: 20px;
-        
-      }
-      
-      /* Show dialog when checkbox is checked */
-      #show-dialog:checked ~ #modal-backdrop {
-        display: block;
-      }
-      
-      #show-dialog:checked ~ #modal-backdrop #modal-window {
-        display: block;
-      }
-          
+#modal-backdrop {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.5);
+	display: none;
+	z-index: 1;
+}
+
+/* Style for modal window */
+#modal-window {
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	background-color: white;
+	padding: 20px;
+	border-radius: 5px;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+	text-align: center;
+	display: none;
+	z-index: 2;
+}
+
+/* Style for checkbox */
+#show-dialog {
+	display: none;
+}
+
+/* Style for close button */
+#close-button {
+	display: block;
+	margin-top: 20px;
+}
+
+/* Show dialog when checkbox is checked */
+#show-dialog:checked ~ #modal-backdrop {
+	display: block;
+}
+
+#show-dialog:checked ~ #modal-backdrop #modal-window {
+	display: block;
+}
+
+.loading_inv {
+	display: none;
+	position: absolute;
+	top: 0;
+	left: 0;
+	transform: translate(-50%, -50%);
+}
+
+.loading_vis {
+	position: absolute;
+	top: 0;
+	left: 0;
+	transform: translate(-50%, -50%);
+}

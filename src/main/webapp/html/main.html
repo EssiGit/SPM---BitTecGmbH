@@ -9,6 +9,7 @@
 </head>
 <body>
 
+	<div id="loader" class="center"></div>
 
 	<!-- Navigationsbar -->
 	<nav class="navbar">
@@ -65,6 +66,9 @@
 			</div>
 		</div>
 	</nav>
+
+	<img class="loading_inv" id="loadingimg" src="images/sanduhr.gif"> 
+
 
 	<!-- Ausgeben eines Fehlers -->
 	<input type="checkbox" id="show-dialog" th:checked="${error != null}" />
@@ -193,6 +197,36 @@
       </script>
 	</div>
 	</th:block>
+
+
+
+	<script>
+const forms = document.querySelectorAll('form');
+const loading = document.getElementById('loadingimg');
+
+
+forms.forEach(form => {
+	console.log(form)
+  form.addEventListener('submit', function(){
+    // Prevent the default form submission behavior
+    event.preventDefault();
+    
+        loading.style.display = "block";
+    
+    
+   
+    
+    // Log a message to the console
+    console.log('Form submitted');
+    
+  });
+});
+
+</script>
+
+
+
+
 
 </body>
 </html>
