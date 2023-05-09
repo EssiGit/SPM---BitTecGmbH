@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>KaufDort Homepage</title>
+<link rel="stylesheet" href="css/style2.css">
+<script src="https://d3js.org/d3.v7.min.js"></script>
+
+</head>
+<body>
+
+	<!-- Navigationsbar -->
+	<nav class="navbar">
+		<a href="./main"><img src="images/LogoKaufDort.gif" alt="Logo"></a>
+		<div>
+
+			<!-- Marketing button -->
+			<form action="./MarketingServlet">
+				<button type="submit">Marketingmaßnahmen</button>
+			</form>
+
+			<!-- Upload-button -->
+			<form name="main" method="post" action="main"
+				enctype="multipart/form-data">
+				<input type="file" name="file-input" id="file-input"
+					onchange="document.forms['main'].submit()" style="display: none"
+					accept=".csv" />
+			</form>
+			<button onclick="document.getElementById('file-input').click()">Datei
+				hochladen</button>
+
+
+			<!-- Dropdown -->
+			<div class="dropdown">
+				<button>Analysen</button>
+				<div class="dropdown-content">
+
+					<form name="button1" method="post" action="WekaServlet">
+						<input type="hidden" name="button1" th:value="${button1}">
+						<button type="submit" th:text="${button1}"></button>
+					</form>
+
+					<form name="button2" method="post" action="WekaServlet">
+						<input type="hidden" name="button2" th:value="${button2}">
+						<button type="submit" th:text="${button2}"></button>
+					</form>
+
+					<form name="button3" method="post" action="WekaServlet">
+						<input type="hidden" name="button3" th:value="${button3}">
+						<button type="submit" th:text="${button3}"></button>
+					</form>
+
+					<form name="button4" method="post" action="WekaServlet">
+						<input type="hidden" name="button4" th:value="${button4}">
+						<button type="submit" th:text="${button4}"></button>
+					</form>
+
+					<form name="button5" method="post" action="WekaServlet">
+						<input type="hidden" name="button5" th:value="${button5}">
+						<button type="submit" th:text="${button5}"></button>
+					</form>
+
+				</div>
+			</div>
+		</div>
+	</nav>
+
+
+	<!-- Sanduhr versteckt im hintergrund halten -->
+	<div class="loading" id="loading">
+		<img src="images/sanduhr.gif" id="loadingimg">
+	</div>
+
+	<!-- Ausgeben eines Fehlers -->
+	<input type="checkbox" id="show-dialog" th:checked="${error != null}" />
+	<div id="modal-backdrop">
+		<div id="modal-window">
+			<h1>Error</h1>
+			<p th:text="${error}"></p>
+			<button id="close-button"
+				onclick="document.getElementById('show-dialog').checked = false">Close</button>
+		</div>
+	</div>
+
+	<!-- Marketingmaßnahmen -->
+		<h1>Marketing massssnahmen</h1>
+		<ul>
+			<li>Gestaltung ansprechender Schaufenster, um das Interesse
+				von Passanten zu wecken und neue Kunden zu gewinnen.</li>
+			<li>Durchführung von Rabattaktionen, Verlosungen oder anderen
+				Promotionen, um Kunden anzulocken und die Umsätze zu steigern.</li>
+			<li>Angebot von kostenlosen Produktproben, um Kunden von neuen
+				Produkten zu überzeugen und die Markentreue zu stärken.</li>
+			<li>Durchführung von Kundenumfragen, um Feedback zu erhalten
+				und das Angebot an Produkten und Dienstleistungen zu optimieren.</li>
+			<li>Organisation von Events wie Verkostungen oder Workshops,
+				um Kunden in den Laden zu locken und das Image des Ladens zu
+				stärken.</li>
+			<li>Einrichtung eines Treueprogramms, um bestehende Kunden an
+				den Laden zu binden und die Wiederholungskäufe zu steigern.</li>
+		</ul>
+
+			<script>
+
+	const loading = document.getElementById('loading');
+	const loadingimg = document.getElementById('loadingimg');
+	console.log(loadingimg);
+	/* beim drücken von "zurueck" im browser wird die Sanduhr versteckt */
+	window.addEventListener( "pageshow", function ( event ) {
+		  var historyTraversal = event.persisted || 
+		                         ( typeof window.performance != "undefined" && 
+		                              window.performance.navigation.type === 2 );
+		  if ( historyTraversal ) {
+			loading.style.display = "none";
+			loadingimg.style.display = "none";
+		    window.location.reload();
+		  }
+		});
+	
+	
+	/* Lädt die Sanduhr */
+	const forms = document.querySelectorAll('form');
+
+	forms.forEach(form => {
+		
+  		form.addEventListener('submit', function(){
+   
+    		event.preventDefault();
+    		loading.style.display = "flex";
+    		loadingimg.style.display = "flex";
+    		form.submit();
+    
+  });
+});
+	</script>
+</body>
+</html>
