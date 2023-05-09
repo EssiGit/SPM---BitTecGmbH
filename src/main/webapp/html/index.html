@@ -3,25 +3,36 @@
 <html lang="de" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-  <meta charset="utf-8">
-  <meta name="login" content="login">
-  <meta name="author" content="Gruppe X">
-  <title>KaufDa Login</title>
-  <link rel="stylesheet" href="css/style.css">
+<meta charset="utf-8">
+<meta name="login" content="login">
+<meta name="author" content="Gruppe X">
+<title>KaufDa Login</title>
+<link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
-  
-  <form name="login" method="post" action="Index">
-    <h1> Anmelden </h1>
-    <label>Nutzername</label>
-    <input type="text" name="nutzername" placeholder="Nutzername"><br>
+	
 
-    <label>Passwort</label>
-    <input type="password" name="password" placeholder="Passwort"><br>
-    <a class="log"><button type="submit">Login</button></a>
+	<br>
 
-  </form>
+	<form name="login" method="post" action="index">
+		
+		<h1>Anmelden</h1>
+		
+		<th:block th:if="${error == null}">
+		<div class="alert">
+		<span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+		Passwort und Nutzername stimmen nicht überein!
+		</div>
+		</th:block>
+		
+		
+		<label>Nutzername</label> <input type="text" name="nutzername"
+			placeholder="Nutzername"><br> <label>Passwort</label> <input
+			type="password" name="password" placeholder="Passwort"><br>
+		<a class="log"><button type="submit">Login</button></a>
+
+	</form>
 
 </body>
 </html>

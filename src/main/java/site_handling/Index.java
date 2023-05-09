@@ -21,7 +21,7 @@ public class Index extends HttpServlet {
         ThymeleafConfig.getTemplateEngine().process("index.html", context, response.getWriter());
     }
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+			System.out.println("testing post");
     }
 
 }
