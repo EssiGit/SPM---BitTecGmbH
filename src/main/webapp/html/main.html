@@ -1,67 +1,70 @@
 <!DOCTYPE html>
 <html lang="de" xmlns:th="http://www.thymeleaf.org">
-  <head>
-    <meta charset="UTF-8">
-    <title>KaufDort Homepage</title>
-      <link rel="stylesheet" href="css/style2.css">
+<head>
+<meta charset="UTF-8">
+<title>KaufDort Homepage</title>
+<link rel="stylesheet" href="css/style2.css">
 <script src="https://d3js.org/d3.v7.min.js"></script>
 
-  </head>
-  <body>
-  
- 
-  	<!-- Navigationsbar -->
-    <nav class="navbar" >
-      <a href="./main"><img src="images/LogoKaufDort.gif" alt="Logo" ></a>
-      <div>
-
-		<!-- Marketing button -->
-		<form action="./MarketingServlet">
-    		<button type="submit">Marketingmaßnahmen</button>
-		</form>
-		
-		<!-- Upload-button -->
-      	<form name="main" method="post" action="main" enctype="multipart/form-data">
-    		<input type="file" name="file-input" id="file-input" onchange="document.forms['main'].submit()" style="display:none" accept=".csv"/>
-		</form>
-		<button onclick="document.getElementById('file-input').click()">Datei hochladen</button>
+</head>
+<body>
 
 
-		<!-- Dropdown -->
-        <div class="dropdown">
-          <button>Analysen</button>
-          <div class="dropdown-content">
-          
-         	 <form name="button1" method="post" action="WekaServlet" >
-				<input type="hidden" name="button1" th:value="${button1}">
-            	<button type="submit" th:text="${button1}"></button>
-            </form>
-            
-             <form name="button2" method="post" action="WekaServlet">
-             	<input type="hidden" name="button2" th:value="${button2}">
-            	<button type="submit" th:text="${button2}"></button>
-            </form>
-            
-             <form name="button3" method="post" action="WekaServlet"> 
-             	<input type="hidden" name="button3" th:value="${button3}">
-            	<button type="submit" th:text="${button3}"></button >
-            </form>
-            
-            <form name="button4" method="post" action="WekaServlet"> 
-            	<input type="hidden" name="button4" th:value="${button4}">
-            	<button type="submit"  th:text="${button4}"></button>
-            </form>
-            
-            <form name="button5" method="post" action="WekaServlet"> 
-            	<input type="hidden" name="button5" th:value="${button5}">
-            	<button type="submit"  th:text="${button5}"></button>
-            </form>
-            
-          </div>
-        </div>
-      </div>
-    </nav>
+	<!-- Navigationsbar -->
+	<nav class="navbar">
+		<a href="./main"><img src="images/LogoKaufDort.gif" alt="Logo"></a>
+		<div>
 
+			<!-- Marketing button -->
+			<form action="./MarketingServlet">
+				<button type="submit">Marketingmaßnahmen</button>
+			</form>
+
+			<!-- Upload-button -->
+			<form name="main" method="post" action="main"
+				enctype="multipart/form-data">
+				<input type="file" name="file-input" id="file-input"
+					onchange="document.forms['main'].submit()" style="display: none"
+					accept=".csv" />
+			</form>
+			<button onclick="document.getElementById('file-input').click()">Datei
+				hochladen</button>
+
+
+			<!-- Dropdown -->
+			<div class="dropdown">
+				<button>Analysen</button>
+				<div class="dropdown-content">
+
+					<form name="button1" method="post" action="WekaServlet">
+						<input type="hidden" name="button1" th:value="${button1}">
+						<button type="submit" th:text="${button1}"></button>
+					</form>
+
+					<form name="button2" method="post" action="WekaServlet">
+						<input type="hidden" name="button2" th:value="${button2}">
+						<button type="submit" th:text="${button2}"></button>
+					</form>
+
+					<form name="button3" method="post" action="WekaServlet">
+						<input type="hidden" name="button3" th:value="${button3}">
+						<button type="submit" th:text="${button3}"></button>
+					</form>
+
+					<form name="button4" method="post" action="WekaServlet">
+						<input type="hidden" name="button4" th:value="${button4}">
+						<button type="submit" th:text="${button4}"></button>
+					</form>
+
+					<form name="button5" method="post" action="WekaServlet">
+						<input type="hidden" name="button5" th:value="${button5}">
+						<button type="submit" th:text="${button5}"></button>
+					</form>
+
+				</div>
+			</div>
+		</div>
+	</nav>
 
 	<!-- Ausgeben eines Fehlers -->
 	<input type="checkbox" id="show-dialog" th:checked="${error != null}" />
@@ -76,15 +79,16 @@
 
 
 	<!-- Zweite Navigationbar -->
-    <nav class="navbar-2" th:if="${results != null}">
-      <a class="nav2-item active" href="./WekaServlet?resultID=1">Umsatzstärkstertag/Uhrzeit</a>
-      <a class="nav2-item" href="./WekaServlet?resultID=2">Kundenhäufigkeit</a>
-      <a class="nav2-item" href="./WekaServlet?resultID=3">Umsatzstärkste Einkaufsuhrzeit pro Tag</a>
-      <a class="nav2-item" href="./WekaServlet?resultID=4">Kundengruppen</a>
-      </nav>
-    
-    <!-- Ändert Die Farbe eines Buttons nachdem der User draufklickt -->
-    <script>
+	<nav class="navbar-2" th:if="${results != null}">
+		<a class="nav2-item active" href="./WekaServlet?resultID=1">Umsatzstärkstertag/Uhrzeit</a>
+		<a class="nav2-item" href="./WekaServlet?resultID=2">Kundenhäufigkeit</a>
+		<a class="nav2-item" href="./WekaServlet?resultID=3">Umsatzstärkste
+			Einkaufsuhrzeit pro Tag</a> <a class="nav2-item"
+			href="./WekaServlet?resultID=4">Kundengruppen</a>
+	</nav>
+
+	<!-- Ändert Die Farbe eines Buttons nachdem der User draufklickt -->
+	<script>
   
     const navbar2Buttons = document.querySelectorAll('.nav2-item');
 
@@ -100,14 +104,14 @@
     });
     
     </script>
-    
-    <!-- Laden der Grafiken -->
-    <div class="chart-container" id="my_dataviz">
-    <th:block th:each="cluster : ${results}">
-      
-      
-      
-      <script th:inline="javascript">
+
+	<!-- Laden der Grafiken -->
+	<div class="chart-container" id="my_dataviz">
+		<th:block th:each="cluster : ${results}">
+
+
+
+			<script th:inline="javascript">
 
       var margin = {top: 30, right: 30, bottom: 180, left: 100},
 	    width = 1800 - margin.left - margin.right,
@@ -187,9 +191,8 @@
 	
 	 		
       </script>
-      
-      </div>
-    </th:block>
-    
-  </body>
+	</div>
+	</th:block>
+
+</body>
 </html>
