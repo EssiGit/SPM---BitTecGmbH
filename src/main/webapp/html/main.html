@@ -126,13 +126,25 @@
 		var tableName = /*[[${cluster.tableName}]]*/ ""; 
 		var xValues = /*[[${cluster.getXnames()}]]*/ ""; 
 		var yValues = /*[[${cluster.getYdata()}]]*/ ""; 
-			
+		var yName =	/*[[${cluster.getYname()}]]*/ "";
+		
+		
+		
+		
 		//X-Achse
 		var x = d3.scaleBand()
 	    		.range([ 0, width ])
 	    		.domain(xValues)
 	   	 		.padding(0.2);
-			
+		
+		//Y-Beschriftung	
+		svg.append('text')
+		.attr('x', -75)
+		.attr('y', 0)
+		.attr('text-anchor', 'left')
+		.text(yName)
+ 		.style("font-size","25px");
+		
 		//X Achse zum svg hinzufuegen
 		svg.append("g")
 	    	.attr("transform", "translate(0," + height + ")")
@@ -145,7 +157,7 @@
 		//Y Achse erstellen
 		var y = d3.scaleLinear()
 	    	.domain([0, 300])
-	    	.range([ height, 0])
+	    	.range([ height, 20])
 	    	
 		//Y Achse hinzufuegen
 	  	svg.append("g")
