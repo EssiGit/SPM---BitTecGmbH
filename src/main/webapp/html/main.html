@@ -71,52 +71,81 @@
 		<img src="images/sanduhr.gif" id="loadingimg">
 	</div>
 
-			<!-- Ausgeben eines Fehlers -->
-			<input type="checkbox" id="show-dialog" th:checked="${error != null}" />
-			<div id="modal-backdrop">
-				<div id="modal-window">
-					<h1>Error</h1>
-					<p th:text="${error}"></p>
-					<button id="close-button"
-						onclick="document.getElementById('show-dialog').checked = false">Close</button>
-				</div>
-			</div>
+	<!-- Ausgeben eines Fehlers -->
+	<input type="checkbox" id="show-dialog" th:checked="${error != null}" />
+	<div id="modal-backdrop">
+		<div id="modal-window">
+			<h1>Error</h1>
+			<p th:text="${error}"></p>
+			<button id="close-button"
+				onclick="document.getElementById('show-dialog').checked = false">Close</button>
+		</div>
+	</div>
 
 
-			<!-- Zweite Navigationbar -->
-			<nav class="navbar-2" th:if="${results != null}">
-				<a class="nav2-item active" href="./WekaServlet?resultID=1">Umsatzstärkstertag/Uhrzeit</a>
-				<a class="nav2-item" href="./WekaServlet?resultID=2">Kundenhäufigkeit</a>
-				<a class="nav2-item" href="./WekaServlet?resultID=3">Umsatzstärkste
-					Einkaufsuhrzeit pro Tag</a> <a class="nav2-item"
-					href="./WekaServlet?resultID=4">Kundengruppen</a>
-			</nav>
+	<!-- Zweite Navigationbar -->
+	<nav class="navbar-2" th:if="${results != null}">
+		<a class="nav2-item active" href="./WekaServlet?resultID=1">Umsatzstärkstertag/Uhrzeit</a>
+		<a class="nav2-item" href="./WekaServlet?resultID=2">Kundenhäufigkeit</a>
+		<a class="nav2-item" href="./WekaServlet?resultID=3">Umsatzstärkste Einkaufsuhrzeit pro Tag</a> 
+		<a class="nav2-item" id="kundengruppen-link" href="#">Kundengruppen</a>
+	</nav>
 
-			<!-- Ändert Die Farbe eines Buttons nachdem der User draufklickt -->
-			<script>
+	<div class="dropdown2" id="drop2">
+		<a href="#">Umsatz</a> 
+		<a href="#">Kilometer</a> 
+		<a href="#">Uhrzeit</a> 
+		<a href="#">whatever</a>
+	</div>
+
+	<script>
+document.addEventListener('DOMContentLoaded', function() {
+  var kundengruppenLink = document.getElementById('kundengruppen-link');
+  var dropdown = document.getElementById('drop2');
+
+  kundengruppenLink.addEventListener('mouseenter', function() {
+    dropdown.style.display = 'block';
+  });
+
+  kundengruppenLink.addEventListener('mouseleave', function() {
+    dropdown.style.display = 'none';
+  });
   
-    const navbar2Buttons = document.querySelectorAll('.nav2-item');
+  dropdown.addEventListener('mouseenter', function() {
+    dropdown.style.display = 'block';
+  });
+  
+  dropdown.addEventListener('mouseleave', function() {
+    dropdown.style.display = 'none';
+  });
+});
 
-    navbar2Buttons.forEach(button => {
-      button.addEventListener('click', () => {
+
+	<!-- Ändert Die Farbe eines Buttons nachdem der User draufklickt -->
+		
+  
+    			const navbar2Buttons = document.querySelectorAll('.nav2-item');
+
+    			navbar2Buttons.forEach(button => {
+      				button.addEventListener('click', () => {
       
-        navbar2Buttons.forEach(btn => {
-          btn.classList.remove('active');
-        });
+       					navbar2Buttons.forEach(btn => {
+          					btn.classList.remove('active');
+        				});
 
-        button.classList.add('active');
-      });
-    });
+        				button.classList.add('active');
+      				});
+    			});
     
     </script>
 
-			<!-- Laden der Grafiken -->
-			<div class="chart-container" id="my_dataviz">
-				<th:block th:each="cluster : ${results}">
+	<!-- Laden der Grafiken -->
+	<div class="chart-container" id="my_dataviz">
+		<th:block th:each="cluster : ${results}">
 
 
 
-					<script th:inline="javascript">
+			<script th:inline="javascript">
 
       var margin = {top: 30, right: 30, bottom: 180, left: 100},
 	    width = 1800 - margin.left - margin.right,
@@ -196,12 +225,12 @@
 	
 	 		
       </script>
-			</div>
-		</th:block>
+	</div>
+	</th:block>
 
 
 
-		<script>
+	<script>
 
 	const loading = document.getElementById('loading');
 	const loadingimg = document.getElementById('loadingimg');

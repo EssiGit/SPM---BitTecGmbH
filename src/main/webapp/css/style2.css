@@ -1,3 +1,4 @@
+body{margin: 0px;}
 
 .navbar {
 	background-color: white;
@@ -52,6 +53,30 @@
 	display: block;
 }
 
+.dropdown2 {
+	position: absolute;
+	z-index: 1;
+	right: 0;
+	height: 212px;
+	display: none;
+	background: #333;
+	width: calc(100%/ 4)
+}
+
+.dropdown2 a {
+	display: block;
+	color: white;
+	height: 25px;
+	text-align: center;
+	padding: 14px 16px;
+	text-decoration: none;
+	font-size: 17px;
+}
+
+.dropdown2 a:hover {
+	background: grey;
+}
+
 /* Chart container styles */
 .chart-container {
 	display: flex;
@@ -82,10 +107,10 @@
 
 .navbar-2 {
 	display: flex;
+	margin: 0px;
 	justify-content: space-between;
 	background-color: #333;
 	overflow: hidden;
-	position: sticky;
 	top: 0;
 }
 
@@ -177,3 +202,5 @@
   max-width: 100%;
   max-height: 100%;
 }
+
+
