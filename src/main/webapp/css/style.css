@@ -74,7 +74,8 @@ a{
 .log{
     color: white;
     text-decoration: none;
-    
+    font-size: 17px;
+    text-align: center;
 }
 
 .alert {
