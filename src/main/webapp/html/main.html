@@ -20,17 +20,27 @@
 			</form>
 
 			<!-- Upload-button -->
-			<form name="main" method="post" action="main"
+			<form name="main" id="upload" method="post" action="main"
 				enctype="multipart/form-data">
 				<input type="file" name="file-input" id="file-input"
-					onchange="document.forms['main'].submit()" style="display: none"
+					onchange="SubmitForm('upload');" style="display: none"
 					accept=".csv" />
 			</form>
-			<button onclick="document.getElementById('file-input').click()">Datei
-				hochladen</button>
+			<button onclick="document.getElementById('file-input').click()">Datei hochladen</button>
 
-
-			<!-- Dropdown -->
+			<!-- dispatch event für eventlistener -->
+			<script>
+			function SubmitForm(formId) {
+			    var oForm = document.getElementById(formId);
+			    if (oForm) {
+			        oForm.dispatchEvent(new Event('submit')); 
+			    }
+			    else {
+			        alert("DEBUG - could not find element " + formId);
+			    }
+			}
+			</script> 
+			<!-- Dropdown Für Analysen-->
 			<div class="dropdown">
 				<button>Analysen</button>
 				<div class="dropdown-content">
@@ -90,7 +100,8 @@
 		<a class="nav2-item" href="./WekaServlet?resultID=3">Umsatzstärkste Einkaufsuhrzeit pro Tag</a> 
 		<a class="nav2-item" id="kundengruppen-link" href="#">Kundengruppen</a>
 	</nav>
-
+	
+	<!-- dropdown Kundngruppen -->
 	<div class="dropdown2" id="drop2">
 		<a href="#">Umsatz</a> 
 		<a href="#">Kilometer</a> 
@@ -99,6 +110,7 @@
 	</div>
 
 	<script>
+	/* Dropdown2 für Kundengruppen */
 document.addEventListener('DOMContentLoaded', function() {
   var kundengruppenLink = document.getElementById('kundengruppen-link');
   var dropdown = document.getElementById('drop2');
