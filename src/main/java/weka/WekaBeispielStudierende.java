@@ -2,20 +2,28 @@ package weka;
 
 
 
-import weka.associations.Apriori; 
+import weka.associations.Apriori;  
 import weka.associations.AssociationRule;
+import weka.classifiers.Classifier;
+import weka.classifiers.functions.LinearRegression;
 import weka.classifiers.rules.ZeroR;
 import weka.clusterers.SimpleKMeans;
 import weka.core.Instances;
 import weka.core.converters.ArffLoader;
 import weka.core.converters.ArffSaver;
 import weka.core.converters.CSVLoader;
+import weka.core.converters.ConverterUtils.DataSource;
 import weka.filters.Filter;
 import weka.filters.unsupervised.attribute.NumericCleaner;
 import weka.filters.unsupervised.attribute.NumericToNominal;
-
+import weka.filters.unsupervised.attribute.Remove;
+import weka.filters.unsupervised.attribute.NominalToBinary;
 import java.io.File;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import weka.filters.unsupervised.instance.RemoveWithValues;
+import javax.swing.plaf.synth.SynthOptionPaneUI;
 
 
 
@@ -236,7 +244,7 @@ public class WekaBeispielStudierende {
         System.out.println(">>>>>--- Top-Wert ermitteln ----\n");
         System.out.println("Haeufigste Altersgruppe: " + dt.findMaximum(arffDaten, 1) + " Jahre\n");
 
-
+        System.out.println("Haeufigste Altersgruppe: " + dt.findMaximum(arffDaten, 1) + " Jahre\n");
         // Clusteranalyse mit 5 Clustern ueber alle Daten
         System.out.println(">>>>>--- Clusteranalyse ueber alle Daten, 5 Cluster ---\n");
         System.out.println(dt.findCluster(alleDaten, 5));
@@ -256,7 +264,7 @@ public class WekaBeispielStudierende {
         for (int i = 0; i < 10; i++) {
             nurWaren.deleteAttributeAt(0); // ein einzelnes Attribut rausnehmen
         }
-
+       
         // Assoziationsanalyse der gekauften Waren
         System.out.println(">>>>>--- Apriori-Analyse (Waren die zusammen gekauft wurden) ---\n");
         String[] aprioriResult = dt.makeApriori(nurWaren);
@@ -270,7 +278,140 @@ public class WekaBeispielStudierende {
         for (int i = 0; i <= 8; i++) {
             System.out.println(dt.attDistributionAbsolute(nurKunden, i));
         }
+        System.out.println("test: ");
 
+        
+        Instances nurTageZeiten= new Instances(alleDaten);
+        for (int i = 0; i < 5; i++) {
+        	nurTageZeiten.deleteAttributeAt(0); // ein einzelnes Attribut rausnehmen
+        }
+        for (int i = 0; i < 18; i++) {
+        	nurTageZeiten.deleteAttributeAt(2); // ein einzelnes Attribut rausnehmen
+        }
+        System.out.println(nurTageZeiten.toString());
+
+        // Setze den Index des Attributs für den Einkaufstag (Annahme: Attributindex 5)
+        int einkaufstagIndex = 5;
+
+        // Entferne Instanzen mit dem Wert "Samstag" im Einkaufstag
+        RemoveWithValues removeWithValues = new RemoveWithValues();
+        removeWithValues.setAttributeIndex(String.valueOf(einkaufstagIndex));
+        removeWithValues.setNominalIndices("1"); // Index der Option für "Samstag" im Einkaufstag-Attribut
+        removeWithValues.setInputFormat(nurTageZeiten);
+        Instances filteredData = Filter.useFilter(nurTageZeiten, removeWithValues);
+        System.out.println("help" + filteredData.toString());
+        String[] aprioriResultTage = dt.makeApriori(filteredData);
+        for (int i = 0; i < aprioriResultTage.length; i++) {
+            System.out.println(aprioriResultTage[i]);
+        }
+        //"-C", "Samstag" , "-L",String.valueOf(einkaufstagIndex + 1)};
+        System.out.println("now its time!");
+     // Lade die Daten aus einer CSV-Datei
+		/*DataSource source = new DataSource(arffDaten);
+		Instances data = source.getDataSet();
+
+        // Setze den Index des Attributs für die Uhrzeit (Annahme: Attributindex 6)
+        int uhrzeitIndex = 6;
+
+        // Entferne alle anderen Attribute, die nicht für die Vorhersage benötigt werden
+        String[] options = new String[]{"-R", "1-5,8-25"};
+        Remove remove = new Remove();
+        remove.setOptions(options);
+        remove.setInputFormat(data);
+        Instances filteredData = Filter.useFilter(data, remove);
+
+        // Setze das Zielattribut auf den Umsatz (Annahme: Letztes Attribut)
+        filteredData.setClassIndex(filteredData.numAttributes() - 1);
+
+        // Wandele die Einkaufsuhrzeit in numerische Werte um
+        NominalToBinary nominalToBinary = new NominalToBinary();
+        nominalToBinary.setAttributeIndices(String.valueOf(uhrzeitIndex )+ ",7");
+        nominalToBinary.setInputFormat(filteredData);
+        filteredData = Filter.useFilter(filteredData, nominalToBinary);
+
+        // Erstelle ein lineares Regressionsmodell
+        Classifier classifier = new LinearRegression();
+        classifier.buildClassifier(filteredData);
+
+        // Erstelle eine Map zur Speicherung der Umsatzsummen für jede Uhrzeit
+        Map<Integer, Double> uhrzeitUmsatzMap = new HashMap<>();
+
+        // Iteriere über die Instanzen und berechne die Vorhersage für jede Uhrzeit
+        for (int i = 0; i < filteredData.numInstances(); i++) {
+            double uhrzeit = filteredData.instance(i).value(uhrzeitIndex);
+            double umsatz = classifier.classifyInstance(filteredData.instance(i));
+
+            // Aktualisiere die Umsatzsumme für die entsprechende Uhrzeit
+            if (uhrzeitUmsatzMap.containsKey((int) uhrzeit)) {
+                umsatz += uhrzeitUmsatzMap.get((int) uhrzeit);
+            }
+            uhrzeitUmsatzMap.put((int) uhrzeit, umsatz);
+        }
+
+        // Suche die umsatzstärkste Uhrzeit pro Tag
+        for (int i = 0; i < 24; i++) {
+            double maxUmsatz = 0.0;
+            int umsatzstarkeUhrzeit = -1;
+            for (int j = i; j < i + 24; j++) {
+            	 double umsatz = uhrzeitUmsatzMap.getOrDefault(j % 24, 0.0);
+                 if (umsatz > maxUmsatz) {
+                     maxUmsatz = umsatz;
+                     umsatzstarkeUhrzeit = j % 24;
+                 }
+             }
+             System.out.println("Tag " + (i + 1) + ": Umsatzstärkste Uhrzeit: " + umsatzstarkeUhrzeit);
+         }
     }
+    public void umsatzstärksteUhrzeit(Instances arffDaten) throws Exception {
+    	
+		DataSource source = new DataSource(arffDaten);
+		Instances data = source.getDataSet();
+
+		// Setze den Index des Attributs für die Uhrzeit (Annahme: Attributindex 0)
+		int uhrzeitIndex = 0;
+
+		// Entferne alle anderen Attribute, die nicht für die Vorhersage benötigt werden
+		String[] options = new String[]{"-R", "1-" + (data.numAttributes() - 1)};
+		Remove remove = new Remove();
+		remove.setOptions(options);
+		remove.setInputFormat(data);
+		Instances filteredData = Filter.useFilter(data, remove);
+
+		// Setze das Zielattribut auf den Umsatz (Annahme: Letztes Attribut)
+		filteredData.setClassIndex(filteredData.numAttributes() - 1);
+
+		// Erstelle ein lineares Regressionsmodell
+		Classifier classifier = new LinearRegression();
+		classifier.buildClassifier(filteredData);
+
+		// Erstelle eine Map zur Speicherung der Umsatzsummen für jede Uhrzeit
+		Map<Integer, Double> uhrzeitUmsatzMap = new HashMap<>();
+
+		// Iteriere über die Instanzen und berechne die Vorhersage für jede Uhrzeit
+		for (int i = 0; i < filteredData.numInstances(); i++) {
+			double uhrzeit = filteredData.instance(i).value(uhrzeitIndex);
+			double umsatz = classifier.classifyInstance(filteredData.instance(i));
+
+			// Aktualisiere die Umsatzsumme für die entsprechende Uhrzeit
+			if (uhrzeitUmsatzMap.containsKey(uhrzeit)) {
+				umsatz += uhrzeitUmsatzMap.get(uhrzeit);
+			}
+			uhrzeitUmsatzMap.put((int) uhrzeit, umsatz);
+		}
+
+		// Suche die umsatzstärkste Uhrzeit pro Tag
+		for (int i = 0; i < 24; i++) {
+			double maxUmsatz = 0.0;
+			int umsatzstarkeUhrzeit = -1;
+			for (int j = i; j < i + 24; j++) {
+				double umsatz = uhrzeitUmsatzMap.getOrDefault(j % 24, 0.0);
+				if (umsatz > maxUmsatz) {
+					maxUmsatz = umsatz;
+					umsatzstarkeUhrzeit = j % 24;
+				}
+			}
+			System.out.println("Tag " + (i + 1) + ": Umsatzstärkste Uhrzeit: " + umsatzstarkeUhrzeit);
+		}*/
+	}
 }
 

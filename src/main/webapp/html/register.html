@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
     <meta name="registrieren" content="registrieren">
@@ -9,20 +9,27 @@
 </head>
 <body>
 
-    <form name="register" method="post" action="Register">
+    <form name="register" method="post" action="register">
+    
         <h1> Registrierung</h1>
-
-        <label>Ihr Name</label>
-        <input type="text" name="username" placeholder="Vor- und Nachname">
+        
+		<th:block th:if="${error == 1}">
+			<div class="alert">
+			<span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+			Nutzername existiert bereits!
+			</div>
+		</th:block>
+		
+		
+        <label>Ihr Nutzername</label>
+        <input type="text" name="username" placeholder="Username">
     
         <label>Passwort</label>
         <input type="password" name="password" placeholder="Passwort">
 
 		<label>Passwort erneut eingeben</label>
         <input type="password" name="passwordrepeat" placeholder="Passwort">
-        
-        <button type="submit" class="log">registrieren</button>
-    
+        	<button type="submit" class="log">registrieren</button>
         
       </form>
     

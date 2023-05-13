@@ -44,35 +44,50 @@
 			<div class="dropdown">
 				<button>Analysen</button>
 				<div class="dropdown-content">
-
-					<form name="button1" method="post" action="WekaServlet">
-						<input type="hidden" name="button1" th:value="${button1}">
-						<button type="submit" th:text="${button1}"></button>
+					<form name="buttons" id="buttonForm" method="post"
+						action="WekaServlet">
+						<input type="hidden" id="selectedButton" name="selectedButton">
+						<th:block th:each="button, buttonStatus : ${buttons}">
+							<span th:unless="${button == 'Empty'}">
+								<button type="button" th:text="${button}"
+									onclick="selectButton(this)"></button>
+							</span>
+							<span th:if="${button == 'Empty'}">
+								<button disabled th:text="${button}"></button>
+							</span>
+						</th:block>
 					</form>
-
-					<form name="button2" method="post" action="WekaServlet">
-						<input type="hidden" name="button2" th:value="${button2}">
-						<button type="submit" th:text="${button2}"></button>
-					</form>
-
-					<form name="button3" method="post" action="WekaServlet">
-						<input type="hidden" name="button3" th:value="${button3}">
-						<button type="submit" th:text="${button3}"></button>
-					</form>
-
-					<form name="button4" method="post" action="WekaServlet">
-						<input type="hidden" name="button4" th:value="${button4}">
-						<button type="submit" th:text="${button4}"></button>
-					</form>
-
-					<form name="button5" method="post" action="WekaServlet">
-						<input type="hidden" name="button5" th:value="${button5}">
-						<button type="submit" th:text="${button5}"></button>
-					</form>
-
 				</div>
 			</div>
+
+			<script>
+  				function selectButton(button) {
+    				var selectedButtonInput = document.getElementById("selectedButton");
+    				selectedButtonInput.value = button.textContent;
+    				document.getElementById("buttonForm").submit();
+  				}
+			</script>
+			<!--  div class="dropdown-content">
+					<form name="buttons" method="post" action="WekaServlet">
+						<th:block th:each="button, buttonStatus : ${buttons}">
+
+							<span th:unless="${button == 'Empty'}"> <input
+								type="hidden" th:name="'button-' + ${buttonStatus.index}" th:value="${button}">
+								<button type="submit" th:text="${button}"></button>
+							</span>
+
+							<span th:if="${button == 'Empty'}">
+								<button disabled th:text="${button}"></button>
+							</span>
+
+
+						</th:block>
+					</form>
+
+
+				</div-->
 		</div>
+		
 	</nav>
 
 
@@ -97,15 +112,14 @@
 	<nav class="navbar-2" th:if="${results != null}">
 		<a class="nav2-item active" href="./WekaServlet?resultID=1">Umsatzstärkstertag/Uhrzeit</a>
 		<a class="nav2-item" href="./WekaServlet?resultID=2">Kundenhäufigkeit</a>
-		<a class="nav2-item" href="./WekaServlet?resultID=3">Umsatzstärkste Einkaufsuhrzeit pro Tag</a> 
-		<a class="nav2-item" id="kundengruppen-link" href="#">Kundengruppen</a>
+		<a class="nav2-item" href="./WekaServlet?resultID=3">Umsatzstärkste
+			Einkaufsuhrzeit pro Tag</a> <a class="nav2-item" id="kundengruppen-link"
+			href="#">Kundengruppen</a>
 	</nav>
-	
+
 	<!-- dropdown Kundngruppen -->
 	<div class="dropdown2" id="drop2">
-		<a href="#">Umsatz</a> 
-		<a href="#">Kilometer</a> 
-		<a href="#">Uhrzeit</a> 
+		<a href="#">Umsatz</a> <a href="#">Kilometer</a> <a href="#">Uhrzeit</a>
 		<a href="#">whatever</a>
 	</div>
 

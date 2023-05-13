@@ -11,11 +11,15 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
 import server_conf.ThymeleafConfig;
 import org.thymeleaf.context.WebContext;
 import weka.WekaAnalyser;
 import weka.Weka_resultFile;
 import helpers.FileHandler;
+import helpers.User;
+
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Map;
@@ -24,54 +28,41 @@ import java.util.Map;
 public class WekaServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        WebContext context = new WebContext(request, response,
-                request.getServletContext());
-        response.setCharacterEncoding("UTF-8");
-        request.setCharacterEncoding("UTF-8");
-        FileHandler filehandler = new FileHandler();
-       
-        String[] buttonVal = filehandler.getFileNames();
-        for(int i=1;i<=5;i++) {
-        	context.setVariable("button"+i,buttonVal[i-1]);
-        }
-        ThymeleafConfig.getTemplateEngine().process("main.html", context, response.getWriter());
-    }
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.setCharacterEncoding("UTF-8");
-        request.setCharacterEncoding("UTF-8");
 		WebContext context = new WebContext(request, response,
-                request.getServletContext());
-		String fileName = "";
-        for(int i=1;i<=5;i++) {
-        	if(request.getParameter("button"+i) != null) {
-        		fileName = request.getParameter("button"+i);
-        		System.out.println("context: " + fileName);
-        	}
-        }
-        /*fileName = request.getParameter("button2");
-        Map<String,String[]> tmp = request.getParameterMap();
-        for(Map.Entry<String,String[]> entry : tmp.entrySet()){
-        	System.out.println(entry.getKey() + " : " + entry.getValue());
-        }
-        Enumeration<String> paras;
-        paras = request.getParameterNames();
-        while (paras.hasMoreElements()) {
-            System.out.println("test: " + paras.nextElement());
-        }
-        System.out.println("is empty? " + fileName);*/
-		//fileName = "kd100.csv";
+				request.getServletContext());
+		response.setCharacterEncoding("UTF-8");
+		request.setCharacterEncoding("UTF-8");
+		HttpSession session = request.getSession();
+		String buttonValue = request.getParameter("selectedButton");
+		System.out.println("context: " + buttonValue);
+		FileHandler filehandler = new FileHandler((User)session.getAttribute("User"));
+		String[] buttonVal = filehandler.getFileNames();
+		context.setVariable("buttons",buttonVal);
+		ThymeleafConfig.getTemplateEngine().process("main.html", context, response.getWriter());
+	}
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		HttpSession session = request.getSession();
 
-        FileHandler filehandler = new FileHandler();
-        String[] buttonVal = filehandler.getFileNames();
-        for(int i=1;i<=5;i++) {
-        	context.setVariable("button"+i,buttonVal[i-1]);
-        }
-        
+		response.setCharacterEncoding("UTF-8");
+		request.setCharacterEncoding("UTF-8");
+		WebContext context = new WebContext(request, response,
+				request.getServletContext());
+		String buttonValue = request.getParameter("selectedButton");
+		System.out.println("butt: " + buttonValue);
+		System.out.println((String)session.getAttribute("selButton"));
+		if(buttonValue == null) {
+			buttonValue = (String)session.getAttribute("selButton");
+		}
+		System.out.println("context: " + buttonValue);
+		FileHandler filehandler = new FileHandler((User)session.getAttribute("User"));
+		String[] buttonVal = filehandler.getFileNames();
+		context.setVariable("buttons",buttonVal);
+
 		try {
-			WekaAnalyser weka = new WekaAnalyser(fileName);
+			WekaAnalyser weka = new WekaAnalyser(buttonValue,(User)session.getAttribute("User"));
 			ArrayList<Weka_resultFile> wekaFiles = new ArrayList<>();
 
-			File resultSet = weka.clusterAnalyse();
+			File resultSet = weka.clusterAnalyse(filehandler);
 			int lines = getLines(resultSet);
 			for(int i=1;i<lines;i++) {
 				Weka_resultFile resFile = new Weka_resultFile(resultSet,i);
@@ -85,9 +76,9 @@ public class WekaServlet extends HttpServlet {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		ThymeleafConfig.getTemplateEngine().process("main.html", context, response.getWriter());
-    }
+	}
 	private int getLines(File file) throws FileNotFoundException, IOException { 
 		try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
 			int readingLine = 0;
@@ -97,5 +88,5 @@ public class WekaServlet extends HttpServlet {
 			return readingLine;
 		}
 	}
-	
+
 }
