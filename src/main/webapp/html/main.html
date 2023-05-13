@@ -4,7 +4,10 @@
 <meta charset="UTF-8">
 <title>KaufDort Homepage</title>
 <link rel="stylesheet" href="css/style2.css">
+<!-- lade d3 lib -->
 <script src="https://d3js.org/d3.v7.min.js"></script>
+<!-- lade ajax lib -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 </head>
 <body>
@@ -87,154 +90,139 @@
 	<nav class="navbar-2" th:if="${results != null}">
 		<a class="nav2-item active" href="./WekaServlet?resultID=1">Umsatzstärkstertag/Uhrzeit</a>
 		<a class="nav2-item" href="./WekaServlet?resultID=2">Kundenhäufigkeit</a>
-		<a class="nav2-item" href="./WekaServlet?resultID=3">Umsatzstärkste Einkaufsuhrzeit pro Tag</a> 
-		<a class="nav2-item" id="kundengruppen-link" href="#">Kundengruppen</a>
+		<a class="nav2-item" href="./WekaServlet?resultID=3">Umsatzstärkste
+			Einkaufsuhrzeit pro Tag</a> <a class="nav2-item" id="kundengruppen-link"
+			href="#">Kundengruppen</a>
 	</nav>
 
 	<div class="dropdown2" id="drop2">
-		<a href="#">Umsatz</a> 
-		<a href="#">Kilometer</a> 
-		<a href="#">Uhrzeit</a> 
+		<a href="#">Umsatz</a> <a href="#">Kilometer</a> <a href="#">Uhrzeit</a>
 		<a href="#">whatever</a>
 	</div>
 
+
+
+
+
+
 	<script>
-document.addEventListener('DOMContentLoaded', function() {
-  var kundengruppenLink = document.getElementById('kundengruppen-link');
-  var dropdown = document.getElementById('drop2');
-
-  kundengruppenLink.addEventListener('mouseenter', function() {
-    dropdown.style.display = 'block';
-  });
-
-  kundengruppenLink.addEventListener('mouseleave', function() {
-    dropdown.style.display = 'none';
-  });
-  
-  dropdown.addEventListener('mouseenter', function() {
-    dropdown.style.display = 'block';
-  });
-  
-  dropdown.addEventListener('mouseleave', function() {
-    dropdown.style.display = 'none';
-  });
-});
-
-
-	<!-- Ändert Die Farbe eines Buttons nachdem der User draufklickt -->
+	
+	
+	function createChart(tableName, yName, xValues, yValues){
+	
+	console.log("function called");
 		
-  
-    			const navbar2Buttons = document.querySelectorAll('.nav2-item');
+	var margin = {top: 30, right: 30, bottom: 180, left: 100},
+    width = 1800 - margin.left - margin.right,
+    height = 800 - margin.top - margin.bottom;
 
-    			navbar2Buttons.forEach(button => {
-      				button.addEventListener('click', () => {
-      
-       					navbar2Buttons.forEach(btn => {
-          					btn.classList.remove('active');
-        				});
+    //Grafik an chart-container hängen
+	var svg = d3.selectAll("#my_dataviz")
+		.append("svg")
+		.attr("width", width + margin.left + margin.right)
+			.attr("height", height + margin.top + margin.bottom)
+			.style("background", "#dedede")
+		.append("g")
+			.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-        				button.classList.add('active');
-      				});
-    			});
-    
-    </script>
-
-	<!-- Laden der Grafiken -->
-	<div class="chart-container" id="my_dataviz">
-		<th:block th:each="cluster : ${results}">
-
-
-
-			<script th:inline="javascript">
-
-      var margin = {top: 30, right: 30, bottom: 180, left: 100},
-	    width = 1800 - margin.left - margin.right,
-	    height = 800 - margin.top - margin.bottom;
- 
-        //Grafik an chart-container hängen
-		var svg = d3.selectAll("#my_dataviz")
-			.append("svg")
-			.attr("width", width + margin.left + margin.right)
-  			.attr("height", height + margin.top + margin.bottom)
-  			.style("background", "#dedede")
-			.append("g")
-  			.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-		//Ergebnisse x,y Values als array
-		var tableName = /*[[${cluster.tableName}]]*/ ""; 
-		var xValues = /*[[${cluster.getXnames()}]]*/ ""; 
-		var yValues = /*[[${cluster.getYdata()}]]*/ ""; 
-		var yName =	/*[[${cluster.getYname()}]]*/ "";
-		
-		
-		
-		
-		//X-Achse
-		var x = d3.scaleBand()
-	    		.range([ 0, width ])
-	    		.domain(xValues)
-	   	 		.padding(0.2);
-		
-		//Y-Beschriftung	
-		svg.append('text')
-		.attr('x', -75)
-		.attr('y', 0)
-		.attr('text-anchor', 'left')
-		.text(yName)
- 		.style("font-size","25px");
-		
-		//X Achse zum svg hinzufuegen
-		svg.append("g")
-	    	.attr("transform", "translate(0," + height + ")")
-	    	.call(d3.axisBottom(x))
-	    	.selectAll("text")
-	      		.attr("transform", "translate(-10,0)rotate(-45)")
-	      		.style("text-anchor", "end")
-				.style("font-size","25px");
-			
-		//Y Achse erstellen
-		var y = d3.scaleLinear()
-	    	.domain([0, 300])
-	    	.range([ height, 20])
-	    	
-		//Y Achse hinzufuegen
-	  	svg.append("g")
-	    	.call(d3.axisLeft(y))
+	//X-Achse
+	var x = d3.scaleBand()
+    		.range([ 0, width ])
+    		.domain(xValues)
+   	 		.padding(0.2);
+	
+	//Y-Beschriftung	
+	svg.append('text')
+	.attr('x', -75)
+	.attr('y', 0)
+	.attr('text-anchor', 'left')
+	.text(yName)
+		.style("font-size","25px");
+	
+	//X Achse zum svg hinzufuegen
+	svg.append("g")
+    	.attr("transform", "translate(0," + height + ")")
+    	.call(d3.axisBottom(x))
+    	.selectAll("text")
+      		.attr("transform", "translate(-10,0)rotate(-45)")
+      		.style("text-anchor", "end")
 			.style("font-size","25px");
-			
-		//Balken Hinzufuegen
-	 	svg.selectAll("bar")
-	    	.data(xValues)
-	   		.enter()
-	   		.append("rect")
-	     	.attr("x", function(d) { return x(d) })
-	     	.data(yValues)
-	      	.attr("y", function(d) { return y(d) })
-	      	.attr("width", x.bandwidth())
-	     	.attr("height", function(d) { return height - y(d) })
-	      	.attr("fill", "#69b3a2")
+		
+	//Y Achse erstellen
+	var y = d3.scaleLinear()
+    	.domain([0, 300])
+    	.range([ height, 20])
+    	
+	//Y Achse hinzufuegen
+  	svg.append("g")
+    	.call(d3.axisLeft(y))
+		.style("font-size","25px");
+		
+	//Balken Hinzufuegen
+ 	svg.selectAll("bar")
+    	.data(xValues)
+   		.enter()
+   		.append("rect")
+     	.attr("x", function(d) { return x(d) })
+     	.data(yValues)
+      	.attr("y", function(d) { return y(d) })
+      	.attr("width", x.bandwidth())
+     	.attr("height", function(d) { return height - y(d) })
+      	.attr("fill", "#69b3a2")
+
+	//Überschrift der Grafik
+    svg.append('text')
+		.attr('x', width / 2 + margin.left)
+		.attr('y', margin.top / 2)
+		.attr('text-anchor', 'middle')
+		.text(tableName)
+ 		.style("font-size","25px");
+	}
 	
-		//Überschrift der Grafik
-	    svg.append('text')
-    		.attr('x', width / 2 + margin.left)
-    		.attr('y', margin.top / 2)
-    		.attr('text-anchor', 'middle')
-    		.text(tableName)
-	 		.style("font-size","25px");
-		 
 	
-	 		
-      </script>
-	</div>
-	</th:block>
+	/* dropdown2 funktionalitaet */
+	document.addEventListener('DOMContentLoaded', function() {
+		  var kundengruppenLink = document.getElementById('kundengruppen-link');
+		  var dropdown = document.getElementById('drop2');
+
+		  kundengruppenLink.addEventListener('mouseenter', function() {
+		    dropdown.style.display = 'block';
+		  });
+
+		  kundengruppenLink.addEventListener('mouseleave', function() {
+		    dropdown.style.display = 'none';
+		  });
+		  
+		  dropdown.addEventListener('mouseenter', function() {
+		    dropdown.style.display = 'block';
+		  });
+		  
+		  dropdown.addEventListener('mouseleave', function() {
+		    dropdown.style.display = 'none';
+		  });
+		});
 
 
+			/* Ändert Die Farbe eines Buttons nachdem der User draufklickt */
+				
+		  
+		    			const navbar2Buttons = document.querySelectorAll('.nav2-item');
 
-	<script>
+		    			navbar2Buttons.forEach(button => {
+		      				button.addEventListener('click', () => {
+		      
+		       					navbar2Buttons.forEach(btn => {
+		          					btn.classList.remove('active');
+		        				});
 
+		        				button.classList.add('active');
+		      				});
+		    			});
+	
 	const loading = document.getElementById('loading');
 	const loadingimg = document.getElementById('loadingimg');
 	console.log(loadingimg);
+	
 	/* beim drücken von "zurueck" im browser wird die Sanduhr versteckt */
 	window.addEventListener( "pageshow", function ( event ) {
 		  var historyTraversal = event.persisted || 
@@ -264,5 +252,63 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 </script>
+	<th:block th:if="${results != null}">
+		<br />
+		<div class="slidecontainer">
+		<h2>Anzahl der Cluster: <span id="sliderValue"></span></h2>
+			<input type="range" min="3" max="100" value="3" class="slider"
+				id="slider">
+		</div>
+	</th:block>
+
+	<script>
+        $(document).ready(function() {
+            // Initial data load
+            //loadData(1);
+
+            // Slider change event
+            $('#slider').on('input', function() {
+                var value = $(this).val();
+                $('#sliderValue').text(value);
+                loadData(value);
+            });
+        });
+
+        function loadData(value) {
+            $.post('WekaServlet', { sliderValue: value, button1: "kd100.csv" },
+            	function(response){
+                console.log(response);
+                
+                }).
+                fail(function(){ 
+                    console.log('Error:', error);
+                
+            });
+            }
+
+    </script>
+
+
+	<!-- Laden der Grafiken -->
+	<div class="chart-container" id="my_dataviz">
+		<th:block th:each="cluster : ${results}">
+
+
+
+			<script th:inline="javascript">
+
+			//Ergebnisse x,y Values als array
+			var tableName = /*[[${cluster.tableName}]]*/ ""; 
+			var xValues = /*[[${cluster.getXnames()}]]*/ ""; 
+			var yValues = /*[[${cluster.getYdata()}]]*/ ""; 
+			var yName =	/*[[${cluster.getYname()}]]*/ "";
+			createChart(tableName, yName, xValues, yValues);
+	
+	 		
+      </script>
+	</div>
+	</th:block>
+
+
 </body>
 </html>
