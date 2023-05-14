@@ -152,7 +152,11 @@ public class WekaAnalyser {
 
 
 
-
+	/**
+	 * Top Einkaufsuhrzeit pro Tag
+	 * @param filehandler
+	 * @return File with 
+	 */
 	public File uhrzeitProTag(FileHandler filehandler) {
 		Map<String, Map<String, Integer>> tageZeiten = new HashMap<>();
 		tageZeiten.put("Montag", new HashMap<>());
