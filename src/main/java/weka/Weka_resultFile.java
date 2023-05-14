@@ -32,7 +32,7 @@ public class Weka_resultFile {
 		System.out.println(yName);
 		for(int i = 0;i<xNames.size();i++) {
 			System.out.print(xNames.get(i) + ": ");
-			System.out.println(yData.get(i));
+			//System.out.println(yData.get(i));
 		}
 
 
