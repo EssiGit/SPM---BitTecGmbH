@@ -216,7 +216,7 @@ public class WekaAnalyser {
 				}
 
 			}
-			
+			result = result.concat(tag + " " + weirdTime + " \n");
 		}
 		System.out.println("MY TIME:");
 		System.out.println("result: \n" + result);

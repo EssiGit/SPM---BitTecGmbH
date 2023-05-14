@@ -31,10 +31,7 @@ public class Weka_test {
 		WekaAnalyser analyser = new WekaAnalyser(fileName, user);
 		
 		StopWatch watch = new StopWatch();
-        watch.start();
-        analyser.KSETU(fileHandler);
-        watch.stop();
-        System.out.println("Kundenstärkste Einkauftage u. Uhzreiten: " + watch.getTime() + "ms");
+
         watch.reset();
         watch.start();
         analyser.USUT();
@@ -47,12 +44,17 @@ public class Weka_test {
         watch.stop();
 		
 	    System.out.println("cluster anal end time : "  + watch.getTime() + "ms");
+	    System.out.println("Umsatzstärkste Uhzreiten pro Tag: " + watch.getTime() + "ms");
         watch.reset();
         watch.start();
 		analyser.uhrzeitProTag(fileHandler);
 		watch.stop();
-		System.out.println("Umsatzstärkste Uhzreiten pro Tag: " + watch.getTime() + "ms");
-		System.out.println("multi");
+		System.out.println("Kundenstärkste Einkauftage u. Uhzreiten: " + watch.getTime() + "ms");
+        watch.reset();
+        watch.start();
+		analyser.KSETU(fileHandler);
+		watch.stop();
+		System.out.println("end");
 
 
 	}
