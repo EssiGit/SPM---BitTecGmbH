@@ -5,7 +5,9 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.IOException;   
+import java.io.IOException;
+import java.io.PrintWriter;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -28,18 +30,21 @@ import java.util.Map;
 public class WekaServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		WebContext context = new WebContext(request, response,
-				request.getServletContext());
-		response.setCharacterEncoding("UTF-8");
-		request.setCharacterEncoding("UTF-8");
 		HttpSession session = request.getSession();
-		String buttonValue = request.getParameter("selectedButton");
-		System.out.println("context: " + buttonValue);
-		FileHandler filehandler = new FileHandler((User)session.getAttribute("User"));
-		String[] buttonVal = filehandler.getFileNames();
-		context.setVariable("buttons",buttonVal);
-		ThymeleafConfig.getTemplateEngine().process("main.html", context, response.getWriter());
-	}
+        WebContext context = new WebContext(request, response,
+                request.getServletContext());
+        response.setCharacterEncoding("UTF-8");
+        request.setCharacterEncoding("UTF-8");
+        
+        FileHandler filehandler = new FileHandler((User)session.getAttribute("User"));
+       
+        String[] buttonVal = filehandler.getFileNames();
+        for(int i=1;i<=5;i++) {
+        	context.setVariable("button"+i,buttonVal[i-1]);
+        }
+        ThymeleafConfig.getTemplateEngine().process("main.html", context, response.getWriter());
+    }
+
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession();
 

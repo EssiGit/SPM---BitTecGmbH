@@ -86,7 +86,6 @@ public class WekaAnalyser {
 		fileHandler.writeWekaResult(result, fileName);
 		return new File(System.getProperty("user.home") + File.separator + "KaufDort_Userfiles" + File.separator + "users"  + File.separator + user.getName() +File.separator +"Result_Files" + File.separator +  "result_cluster_" + fileName);
 	}
-
 	String findMaximum(Instances daten, int index) throws Exception {
 		String[] max;
 
@@ -99,6 +98,7 @@ public class WekaAnalyser {
 		max = za.toString().split(": "); // weka -blabla wegnehmen
 
 		return (max[1]);
+
 	}
 
 	/**
