@@ -1,32 +1,22 @@
 package weka;
 
-import java.io.BufferedReader; 
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
+import java.io.BufferedReader;  
+
 import helpers.UserHandler;
 import java.io.File;
 import java.io.FileReader;
-import weka.WekaTools;
 import weka.classifiers.rules.ZeroR;
+import weka.core.Attribute;
 import weka.core.Instances;
 import weka.core.converters.ArffLoader;
 import weka.core.converters.ArffSaver;
 import weka.core.converters.CSVLoader;
 import weka.filters.Filter;
 import weka.filters.unsupervised.attribute.NumericCleaner;
-import java.io.FileWriter;
-import java.io.IOException;
-import helpers.User;
-import helpers.FileHandler;
-import weka.core.converters.ConverterUtils.DataSource;
-import weka.classifiers.Classifier;
-import weka.classifiers.functions.LinearRegression;
-import weka.filters.unsupervised.attribute.Remove;
-
 import java.util.HashMap;
 import java.util.Map;
+import helpers.User;
+import helpers.FileHandler;
 
 public class WekaAnalyser {
 	//private static final String DIR = "src" + File.separator +"main" + File.separator+"webapp" + File.separator + "usr_data" + File.separator;
@@ -69,18 +59,31 @@ public class WekaAnalyser {
 
 	}
 
+/**
+ * Cluster analyse
+ * @param fileHandler
+ * @param cluster der Name des Attributes, nach dem geclustered wird. Bsp "Einkaufssumme"
+ * @return
+ * @throws Exception
+ */
 
-
-	public File clusterAnalyse(FileHandler fileHandler) throws Exception {
+	public File clusterAnalyse(FileHandler fileHandler, String cluster) throws Exception {
 
 		System.out.println(">>>>>--- Clusteranalyse ueber alle Daten, 5 Cluster ---\n");
 		String result = "";
 		try (BufferedReader reader = new BufferedReader(new FileReader(DIR))) {
 			result = reader.readLine();
 		}
-		result = result.concat("\n" + analyse.findCluster(data, 5));
+		int index = 0;
+	    Attribute attribute = data.attribute(cluster);
+	    if (attribute != null) {
+	    	 index = attribute.index();
+	    } else {
+	    	 index = 0; // Attribut nicht gefunden
+	    }
+		System.out.println("INDEX : " + index);
+		result = result.concat("\n" + analyse.findCluster(data, index, 5));
 		fileHandler.writeWekaResult(result, fileName);
-		UserHandler userhand = new UserHandler();
 		return new File(System.getProperty("user.home") + File.separator + "KaufDort_Userfiles" + File.separator + "users"  + File.separator + user.getName() +File.separator +"Result_Files" + File.separator +  "result_cluster_" + fileName);
 	}
 
@@ -98,81 +101,214 @@ public class WekaAnalyser {
 		return (max[1]);
 	}
 
-    public Map<String, Integer> findBusiestShoppingTimePerDay() {
-        Map<String, Integer> busiestTimes = new HashMap<>();
+	/**
+	 * Kundenstärkste Einkauftage und Uhrzeiten
+	 * 
+	 * @param fileHandler
+	 */
+	public void KSETU(FileHandler fileHandler) {
+		Map<String, Integer> tage = new HashMap<>();
+		tage.put("Montag", 0);
+		tage.put("Dienstag", 0);
+		tage.put("Mittwoch", 0);
+		tage.put("Donnerstag", 0);
+		tage.put("Freitag", 0);
+		tage.put("Samstag", 0);
 
-        for (int i = 0; i < arffDaten.numInstances(); i++) {
-            String day = arffDaten.instance(i).stringValue(arffDaten.attribute("Einkaufstag"));
-            String time = arffDaten.instance(i).stringValue(arffDaten.attribute("Einkaufsuhrzeit"));
-            double sales = arffDaten.instance(i).value(arffDaten.attribute("Einkaufssumme"));
+		//{'>17 Uhr','12-14 Uhr','<10 Uhr','10-12 Uhr','14-17 Uhr'}
+		Map<String, Integer> zeiten = new HashMap<>();
+		zeiten.put("<10 Uhr", 0);
+		zeiten.put("10-12 Uhr", 0);
+		zeiten.put("12-14 Uhr", 0);
+		zeiten.put("14-17 Uhr", 0);
+		zeiten.put(">17 Uhr", 0);
 
-            // Extrahiere die Uhrzeit ohne Leerzeichen
-            String cleanedTime = time.replace(" ", "");
 
-            // Prüfe, ob der Tag bereits in der Map enthalten ist
-            if (!busiestTimes.containsKey(day)) {
-                busiestTimes.put(day, 0);
-            }
-
-            // Aktualisiere die Anzahl der Einkäufe für die entsprechende Uhrzeit
-            if (cleanedTime.equals(">17Uhr") || cleanedTime.equals("14-17Uhr") ||
-                    cleanedTime.equals("12-14Uhr") || cleanedTime.equals("10-12Uhr") ||
-                    cleanedTime.equals("<10Uhr")) {
-                int count = busiestTimes.get(day);
-                busiestTimes.put(day, count + 1);
-            }
-        }
-
-        return busiestTimes;
-    }
-	public void umsatzstärksteUhrzeit() throws Exception {
-		DataSource source = new DataSource(arffDaten);
-		Instances data = source.getDataSet();
-
-		// Setze den Index des Attributs für die Uhrzeit (Annahme: Attributindex 0)
-		int uhrzeitIndex = 0;
-
-		// Entferne alle anderen Attribute, die nicht für die Vorhersage benötigt werden
-		String[] options = new String[]{"-R", "1-" + (data.numAttributes() - 1)};
-		Remove remove = new Remove();
-		remove.setOptions(options);
-		remove.setInputFormat(data);
-		Instances filteredData = Filter.useFilter(data, remove);
-
-		// Setze das Zielattribut auf den Umsatz (Annahme: Letztes Attribut)
-		filteredData.setClassIndex(filteredData.numAttributes() - 1);
-
-		// Erstelle ein lineares Regressionsmodell
-		Classifier classifier = new LinearRegression();
-		classifier.buildClassifier(filteredData);
-
-		// Erstelle eine Map zur Speicherung der Umsatzsummen für jede Uhrzeit
-		Map<Integer, Double> uhrzeitUmsatzMap = new HashMap<>();
-
-		// Iteriere über die Instanzen und berechne die Vorhersage für jede Uhrzeit
-		for (int i = 0; i < filteredData.numInstances(); i++) {
-			double uhrzeit = filteredData.instance(i).value(uhrzeitIndex);
-			double umsatz = classifier.classifyInstance(filteredData.instance(i));
-
-			// Aktualisiere die Umsatzsumme für die entsprechende Uhrzeit
-			if (uhrzeitUmsatzMap.containsKey(uhrzeit)) {
-				umsatz += uhrzeitUmsatzMap.get(uhrzeit);
+		try {
+			for (int i = 0; i < data.numInstances(); i++) {
+				String wochentag = data.instance(i).stringValue(5);
+				String zeit = data.instance(i).stringValue(6);
+				tage.put(wochentag, (1 + tage.get(wochentag)));
+				zeiten.put(zeit, (1 + zeiten.get(zeit)));
 			}
-			uhrzeitUmsatzMap.put((int) uhrzeit, umsatz);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 
-		// Suche die umsatzstärkste Uhrzeit pro Tag
-		for (int i = 0; i < 24; i++) {
-			double maxUmsatz = 0.0;
-			int umsatzstarkeUhrzeit = -1;
-			for (int j = i; j < i + 24; j++) {
-				double umsatz = uhrzeitUmsatzMap.getOrDefault(j % 24, 0.0);
-				if (umsatz > maxUmsatz) {
-					maxUmsatz = umsatz;
-					umsatzstarkeUhrzeit = j % 24;
+		System.out.println("Montag: " + tage.get("Montag"));
+		System.out.println("Dienstag: " + tage.get("Dienstag"));
+		System.out.println("Mittwoch: " + tage.get("Mittwoch"));
+		System.out.println("Donnerstag: " + tage.get("Donnerstag"));
+		System.out.println("Freitag: " + tage.get("Freitag"));
+		System.out.println("Samstag: " + tage.get("Samstag"));
+
+		System.out.println("<10 Uhr: " + zeiten.get("<10 Uhr"));
+		System.out.println("10-12 Uhr: " + zeiten.get("10-12 Uhr"));
+		System.out.println("12-14 Uhr: " + zeiten.get("12-14 Uhr"));
+		System.out.println("14-17 Uhr: " + zeiten.get("14-17 Uhr"));
+		System.out.println(">17 Uhr: " + zeiten.get(">17 Uhr"));
+	}
+
+
+
+
+	public File uhrzeitProTag(FileHandler filehandler) {
+		Map<String, Map<String, Integer>> tageZeiten = new HashMap<>();
+		tageZeiten.put("Montag", new HashMap<>());
+		tageZeiten.get("Montag").put("<10 Uhr", 0);
+		tageZeiten.get("Montag").put("10-12 Uhr", 0);
+		tageZeiten.get("Montag").put("12-14 Uhr", 0);
+		tageZeiten.get("Montag").put("14-17 Uhr", 0);
+		tageZeiten.get("Montag").put(">17 Uhr", 0);
+		tageZeiten.put("Dienstag", new HashMap<>());
+		tageZeiten.get("Dienstag").put("<10 Uhr", 0);
+		tageZeiten.get("Dienstag").put("10-12 Uhr", 0);
+		tageZeiten.get("Dienstag").put("12-14 Uhr", 0);
+		tageZeiten.get("Dienstag").put("14-17 Uhr", 0);
+		tageZeiten.get("Dienstag").put(">17 Uhr", 0);
+		tageZeiten.put("Mittwoch", new HashMap<>());
+		tageZeiten.get("Mittwoch").put("<10 Uhr", 0);
+		tageZeiten.get("Mittwoch").put("10-12 Uhr", 0);
+		tageZeiten.get("Mittwoch").put("12-14 Uhr", 0);
+		tageZeiten.get("Mittwoch").put("14-17 Uhr", 0);
+		tageZeiten.get("Mittwoch").put(">17 Uhr", 0);
+		tageZeiten.put("Donnerstag", new HashMap<>());
+		tageZeiten.get("Donnerstag").put("<10 Uhr", 0);
+		tageZeiten.get("Donnerstag").put("10-12 Uhr", 0);
+		tageZeiten.get("Donnerstag").put("12-14 Uhr", 0);
+		tageZeiten.get("Donnerstag").put("14-17 Uhr", 0);
+		tageZeiten.get("Donnerstag").put(">17 Uhr", 0);
+		tageZeiten.put("Freitag", new HashMap<>());
+		tageZeiten.get("Freitag").put("<10 Uhr", 0);
+		tageZeiten.get("Freitag").put("10-12 Uhr", 0);
+		tageZeiten.get("Freitag").put("12-14 Uhr", 0);
+		tageZeiten.get("Freitag").put("14-17 Uhr", 0);
+		tageZeiten.get("Freitag").put(">17 Uhr", 0);
+		tageZeiten.put("Samstag", new HashMap<>());
+		tageZeiten.get("Samstag").put("<10 Uhr", 0);
+		tageZeiten.get("Samstag").put("10-12 Uhr", 0);
+		tageZeiten.get("Samstag").put("12-14 Uhr", 0);
+		tageZeiten.get("Samstag").put("14-17 Uhr", 0);
+		tageZeiten.get("Samstag").put(">17 Uhr", 0);
+
+		for (int i = 0; i < data.numInstances(); i++) {
+			String wochentag = data.instance(i).stringValue(5);
+			String zeit = data.instance(i).stringValue(6);
+			Map<String, Integer> tagZeit = tageZeiten.get(wochentag);
+			tagZeit.put(zeit, (int) (data.instance(i).value(9) + tagZeit.get(zeit)));
+		}
+		String result = "";
+		String[]  tage = {"Montag", "Dienstag", "Mittwoch", "Donnerstag" , "Freitag", "Samstag"};
+		String[]  zeiten = {"<10 Uhr", "10-12 Uhr", "12-14 Uhr", "14-17 Uhr" , ">17 Uhr"};
+		Map<String,String> topDays = new HashMap<String, String>();
+		for(String tag : tage) {
+			int topTime = 0;
+			String weirdTime = "";
+			System.out.println(tag);
+			for(String zeit : zeiten) {
+				System.out.println(zeit);
+				System.out.println("TOP TIME: " + topTime);
+				System.out.println("weirdTime: " + weirdTime);
+				if( topTime<tageZeiten.get(tag).get(zeit)) {
+					topTime = tageZeiten.get(tag).get(zeit);
+					weirdTime = zeit;
 				}
+
 			}
-			System.out.println("Tag " + (i + 1) + ": Umsatzstärkste Uhrzeit: " + umsatzstarkeUhrzeit);
+			
 		}
+		System.out.println("MY TIME:");
+		System.out.println("result: \n" + result);
+		filehandler.writeWekaResult(result, fileName);
+		return new File(System.getProperty("user.home") + File.separator + "KaufDort_Userfiles" + File.separator + "users"  + File.separator + user.getName() +File.separator +"Result_Files" + File.separator +  "result_cluster_" + fileName);
+
+	}
+
+
+/**
+ * Umsatzstärkste Einkauftage und Uhrzeiten
+ */
+	public void USUT() {
+		Map<String, Map<String, Integer>> tageZeiten = new HashMap<>();
+		tageZeiten.put("Montag", new HashMap<>());
+		tageZeiten.get("Montag").put("<10 Uhr", 0);
+		tageZeiten.get("Montag").put("10-12 Uhr", 0);
+		tageZeiten.get("Montag").put("12-14 Uhr", 0);
+		tageZeiten.get("Montag").put("14-17 Uhr", 0);
+		tageZeiten.get("Montag").put(">17 Uhr", 0);
+		tageZeiten.put("Dienstag", new HashMap<>());
+		tageZeiten.get("Dienstag").put("<10 Uhr", 0);
+		tageZeiten.get("Dienstag").put("10-12 Uhr", 0);
+		tageZeiten.get("Dienstag").put("12-14 Uhr", 0);
+		tageZeiten.get("Dienstag").put("14-17 Uhr", 0);
+		tageZeiten.get("Dienstag").put(">17 Uhr", 0);
+		tageZeiten.put("Mittwoch", new HashMap<>());
+		tageZeiten.get("Mittwoch").put("<10 Uhr", 0);
+		tageZeiten.get("Mittwoch").put("10-12 Uhr", 0);
+		tageZeiten.get("Mittwoch").put("12-14 Uhr", 0);
+		tageZeiten.get("Mittwoch").put("14-17 Uhr", 0);
+		tageZeiten.get("Mittwoch").put(">17 Uhr", 0);
+		tageZeiten.put("Donnerstag", new HashMap<>());
+		tageZeiten.get("Donnerstag").put("<10 Uhr", 0);
+		tageZeiten.get("Donnerstag").put("10-12 Uhr", 0);
+		tageZeiten.get("Donnerstag").put("12-14 Uhr", 0);
+		tageZeiten.get("Donnerstag").put("14-17 Uhr", 0);
+		tageZeiten.get("Donnerstag").put(">17 Uhr", 0);
+		tageZeiten.put("Freitag", new HashMap<>());
+		tageZeiten.get("Freitag").put("<10 Uhr", 0);
+		tageZeiten.get("Freitag").put("10-12 Uhr", 0);
+		tageZeiten.get("Freitag").put("12-14 Uhr", 0);
+		tageZeiten.get("Freitag").put("14-17 Uhr", 0);
+		tageZeiten.get("Freitag").put(">17 Uhr", 0);
+		tageZeiten.put("Samstag", new HashMap<>());
+		tageZeiten.get("Samstag").put("<10 Uhr", 0);
+		tageZeiten.get("Samstag").put("10-12 Uhr", 0);
+		tageZeiten.get("Samstag").put("12-14 Uhr", 0);
+		tageZeiten.get("Samstag").put("14-17 Uhr", 0);
+		tageZeiten.get("Samstag").put(">17 Uhr", 0);
+
+		for (int i = 0; i < data.numInstances(); i++) {
+			String wochentag = data.instance(i).stringValue(5);
+			String zeit = data.instance(i).stringValue(6);
+			Map<String, Integer> tagZeit = tageZeiten.get(wochentag);
+			tagZeit.put(zeit, (int) (data.instance(i).value(9) + tagZeit.get(zeit)));
+		}
+
+		System.out.println("<10 Uhr: " + tageZeiten.get("Montag").get("<10 Uhr"));
+		System.out.println("10-12 Uhr: " + tageZeiten.get("Montag").get("10-12 Uhr"));
+		System.out.println("12-14 Uhr: " + tageZeiten.get("Montag").get("12-14 Uhr"));
+		System.out.println("14-17 Uhr: " + tageZeiten.get("Montag").get("14-17 Uhr"));
+		System.out.println(">17 Uhr: " + tageZeiten.get("Montag").get(">17 Uhr"));
+		//
+		System.out.println("<10 Uhr: " + tageZeiten.get("Dienstag").get("<10 Uhr"));
+		System.out.println("10-12 Uhr: " + tageZeiten.get("Dienstag").get("10-12 Uhr"));
+		System.out.println("12-14 Uhr: " + tageZeiten.get("Dienstag").get("12-14 Uhr"));
+		System.out.println("14-17 Uhr: " + tageZeiten.get("Dienstag").get("14-17 Uhr"));
+		System.out.println(">17 Uhr: " + tageZeiten.get("Dienstag").get(">17 Uhr"));
+		//
+		System.out.println("<10 Uhr: " + tageZeiten.get("Mittwoch").get("<10 Uhr"));
+		System.out.println("10-12 Uhr: " + tageZeiten.get("Mittwoch").get("10-12 Uhr"));
+		System.out.println("12-14 Uhr: " + tageZeiten.get("Mittwoch").get("12-14 Uhr"));
+		System.out.println("14-17 Uhr: " + tageZeiten.get("Mittwoch").get("14-17 Uhr"));
+		System.out.println(">17 Uhr: " + tageZeiten.get("Mittwoch").get(">17 Uhr"));
+		//
+		System.out.println("<10 Uhr: " + tageZeiten.get("Donnerstag").get("<10 Uhr"));
+		System.out.println("10-12 Uhr: " + tageZeiten.get("Donnerstag").get("10-12 Uhr"));
+		System.out.println("12-14 Uhr: " + tageZeiten.get("Donnerstag").get("12-14 Uhr"));
+		System.out.println("14-17 Uhr: " + tageZeiten.get("Donnerstag").get("14-17 Uhr"));
+		System.out.println(">17 Uhr: " + tageZeiten.get("Donnerstag").get(">17 Uhr"));
+		//
+		System.out.println("<10 Uhr: " + tageZeiten.get("Freitag").get("<10 Uhr"));
+		System.out.println("10-12 Uhr: " + tageZeiten.get("Freitag").get("10-12 Uhr"));
+		System.out.println("12-14 Uhr: " + tageZeiten.get("Freitag").get("12-14 Uhr"));
+		System.out.println("14-17 Uhr: " + tageZeiten.get("Freitag").get("14-17 Uhr"));
+		System.out.println(">17 Uhr: " + tageZeiten.get("Freitag").get(">17 Uhr"));
+		//
+		System.out.println("<10 Uhr: " + tageZeiten.get("Samstag").get("<10 Uhr"));
+		System.out.println("10-12 Uhr: " + tageZeiten.get("Samstag").get("10-12 Uhr"));
+		System.out.println("12-14 Uhr: " + tageZeiten.get("Samstag").get("12-14 Uhr"));
+		System.out.println("14-17 Uhr: " + tageZeiten.get("Samstag").get("14-17 Uhr"));
+		System.out.println(">17 Uhr: " + tageZeiten.get("Samstag").get(">17 Uhr"));
 	}
 }

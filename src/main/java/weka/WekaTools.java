@@ -1,30 +1,69 @@
 package weka;
 
-import java.io.File; 
+import java.io.File;  
 import java.util.List;
-
 import weka.associations.Apriori;
 import weka.associations.AssociationRule;
 import weka.classifiers.rules.ZeroR;
 import weka.clusterers.SimpleKMeans;
+import weka.core.Instance;
 import weka.core.Instances;
 import weka.filters.Filter;
+import weka.filters.unsupervised.attribute.Remove;
 import weka.filters.unsupervised.attribute.NumericCleaner;
 import weka.filters.unsupervised.attribute.NumericToNominal;
 
 public class WekaTools {
 	
 	
-    String findCluster(Instances daten, int number) throws Exception {
+    String findCluster(Instances daten,int clusterIndex, int number) throws Exception {
         String[] result;
 
         SimpleKMeans model = new SimpleKMeans();
         model.setNumClusters(number);
-
+        Remove attributeFilter = new Remove();
+        attributeFilter.setAttributeIndicesArray(new int[] {1,2,3,4, clusterIndex });
+        attributeFilter.setInvertSelection(true);
+        attributeFilter.setInputFormat(daten);
+        daten = Filter.useFilter(daten, attributeFilter);
         model.buildClusterer(daten);
 
         // Final cluster centroids holen
         result = model.getClusterCentroids().toString().split("@data\n");
+        System.out.println("temp : " + result[1]);
+        return (result[1] + "\n");
+    }
+    public String findClusterNew(Instances daten, int clusterIndex, int number) throws Exception {
+        String[] result;
+        String resultTest = "";
+        int numFields = 5;
+        SimpleKMeans model = new SimpleKMeans();
+        model.setNumClusters(number);
+        // Attribut entfernen, außer dem gewünschten Attribut für die Clusteranalyse
+        Remove attributeFilter = new Remove();
+        attributeFilter.setAttributeIndicesArray(new int[] {1,2,3,4, clusterIndex });
+        attributeFilter.setInvertSelection(true);
+        attributeFilter.setInputFormat(daten);
+        Instances clusterData = Filter.useFilter(daten, attributeFilter);
+        
+        model.buildClusterer(clusterData);
+        
+        Instances centroids = model.getClusterCentroids();
+        // Nur die ersten numFields Felder der Clusterzentroide anzeigen
+        for (int i = 0; i < centroids.numInstances(); i++) {
+            Instance centroid = centroids.instance(i);
+            StringBuilder clusterFields = new StringBuilder();
+            for (int j = 0; j < numFields; j++) {
+            	System.out.println(j);
+                clusterFields.append(centroid.stringValue(j)).append(",");
+            }
+            resultTest += clusterFields.toString() + "\n";
+        }
+
+        // Nur die ersten numFields Felder der Clusterzentroide anzeigen
+        result = model.getClusterCentroids().toString().split("@data\n");
+        System.out.println("temp : " + result[1]);
+        System.out.println("tempTest : " + resultTest);
         return (result[1] + "\n");
     }
 
@@ -39,6 +78,7 @@ public class WekaTools {
                 temp = temp + a;
             }
         }
+        
         return temp;
     }
 

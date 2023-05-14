@@ -62,7 +62,8 @@ public class WekaServlet extends HttpServlet {
 			WekaAnalyser weka = new WekaAnalyser(buttonValue,(User)session.getAttribute("User"));
 			ArrayList<Weka_resultFile> wekaFiles = new ArrayList<>();
 
-			File resultSet = weka.clusterAnalyse(filehandler);
+			//File resultSet = weka .clusterAnalyse(filehandler);
+			File resultSet = weka.uhrzeitProTag(filehandler);
 			int lines = getLines(resultSet);
 			for(int i=1;i<lines;i++) {
 				Weka_resultFile resFile = new Weka_resultFile(resultSet,i);

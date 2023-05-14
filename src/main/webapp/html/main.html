@@ -67,25 +67,6 @@
     				document.getElementById("buttonForm").submit();
   				}
 			</script>
-			<!--  div class="dropdown-content">
-					<form name="buttons" method="post" action="WekaServlet">
-						<th:block th:each="button, buttonStatus : ${buttons}">
-
-							<span th:unless="${button == 'Empty'}"> <input
-								type="hidden" th:name="'button-' + ${buttonStatus.index}" th:value="${button}">
-								<button type="submit" th:text="${button}"></button>
-							</span>
-
-							<span th:if="${button == 'Empty'}">
-								<button disabled th:text="${button}"></button>
-							</span>
-
-
-						</th:block>
-					</form>
-
-
-				</div-->
 		</div>
 		
 	</nav>

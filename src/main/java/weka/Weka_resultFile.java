@@ -16,6 +16,7 @@ public class Weka_resultFile {
 	public String tableName;
 	private int lineNumber;
 
+	//TODO make dynmaic y and x axis
 	public Weka_resultFile(File resultData, int lineNumber) throws FileNotFoundException, IOException {
 		this.lineNumber = (lineNumber+1);
 
