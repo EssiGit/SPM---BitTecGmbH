@@ -18,7 +18,7 @@ public class Weka_test {
 		 * Dann an ein WekaAnalyer Objekt übergeben und analysiert.
 		 * Diese Klasse kann ohne Server zum testen ausgeführt werden
 		 */
-		String fileName = "kd10000 - Kopie.csv";
+		String fileName = "kd10000.csv";
 		
 		//WekaAnalyser test = new WekaAnalyser("kd1000.csv");
 
@@ -26,7 +26,7 @@ public class Weka_test {
 		//Weka_resultFile temp = new Weka_resultFile(test.clusterAnalyse(), 1);
 
 		// Erstelle ein WekaAnalyser-Objekt mit dem Dateinamen und dem Benutzer
-		User user = new User("da8050");
+		User user = new User("niko");
 		FileHandler fileHandler = new FileHandler(user);
 		WekaAnalyser analyser = new WekaAnalyser(fileName, user);
 		
