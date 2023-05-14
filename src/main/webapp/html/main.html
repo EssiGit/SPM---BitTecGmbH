@@ -23,17 +23,27 @@
 			</form>
 
 			<!-- Upload-button -->
-			<form name="main" method="post" action="main"
+			<form name="main" id="upload" method="post" action="main"
 				enctype="multipart/form-data">
 				<input type="file" name="file-input" id="file-input"
-					onchange="document.forms['main'].submit()" style="display: none"
+					onchange="SubmitForm('upload');" style="display: none"
 					accept=".csv" />
 			</form>
-			<button onclick="document.getElementById('file-input').click()">Datei
-				hochladen</button>
+			<button onclick="document.getElementById('file-input').click()">Datei hochladen</button>
 
-
-			<!-- Dropdown -->
+			<!-- dispatch event für eventlistener -->
+			<script>
+			function SubmitForm(formId) {
+			    var oForm = document.getElementById(formId);
+			    if (oForm) {
+			        oForm.dispatchEvent(new Event('submit')); 
+			    }
+			    else {
+			        alert("DEBUG - could not find element " + formId);
+			    }
+			}
+			</script> 
+			<!-- Dropdown Für Analysen-->
 			<div class="dropdown">
 				<button>Analysen</button>
 				<div class="dropdown-content">
@@ -94,7 +104,8 @@
 			Einkaufsuhrzeit pro Tag</a> <a class="nav2-item" id="kundengruppen-link"
 			href="#">Kundengruppen</a>
 	</nav>
-
+	
+	<!-- dropdown Kundngruppen -->
 	<div class="dropdown2" id="drop2">
 		<a href="#">Umsatz</a> <a href="#">Kilometer</a> <a href="#">Uhrzeit</a>
 		<a href="#">whatever</a>
@@ -106,12 +117,31 @@
 
 
 	<script>
-	
-	
-	function createChart(tableName, yName, xValues, yValues){
-	
-	console.log("function called");
-		
+
+	/* Dropdown2 für Kundengruppen */
+document.addEventListener('DOMContentLoaded', function() {
+  var kundengruppenLink = document.getElementById('kundengruppen-link');
+  var dropdown = document.getElementById('drop2');
+
+  kundengruppenLink.addEventListener('mouseenter', function() {
+    dropdown.style.display = 'block';
+  });
+
+  kundengruppenLink.addEventListener('mouseleave', function() {
+    dropdown.style.display = 'none';
+  });
+  
+  dropdown.addEventListener('mouseenter', function() {
+    dropdown.style.display = 'block';
+  });
+  
+  dropdown.addEventListener('mouseleave', function() {
+    dropdown.style.display = 'none';
+  });
+});
+
+
+	function createChart(tableName, yName, xValues, yValues){	
 	var margin = {top: 30, right: 30, bottom: 180, left: 100},
     width = 1800 - margin.left - margin.right,
     height = 800 - margin.top - margin.bottom;
@@ -178,7 +208,7 @@
 		.text(tableName)
  		.style("font-size","25px");
 	}
-	
+
 	
 	/* dropdown2 funktionalitaet */
 	document.addEventListener('DOMContentLoaded', function() {
