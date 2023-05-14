@@ -240,3 +240,90 @@ body{margin: 0px;}
   background: #04AA6D;
   cursor: pointer;
 }
+
+/* Marketing style */
+.container {
+            background-color: white;
+            font-size: 30px;
+           
+        }
+        
+        .box {
+            height: 100%;
+            width: 75%;
+            padding: 20px;
+            background-color: white;
+            border: 1px solid #ccc;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .title {
+            font-size: 40px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        
+        .line {
+            width: 100%;
+            height: 1px;
+            background-color: #ccc;
+            margin-bottom: 10px;
+        }
+        
+        .list {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .list li {
+            margin-bottom: 5px;
+             list-style: none;
+        }
+        
+        .list li:before {
+            content: "•";
+            margin-right: 5px;
+        }
+        
+        .button {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #ccc;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .button:hover {
+            background-color: #aaa;
+        }
+        
+        .textbox {
+            display: none;
+            margin-top: 10px;
+        }
+        
+        .textbox textarea {
+            font-size: 20px;
+            width: 90%;
+            height: 100px;
+            border: 1px solid #ccc;
+            background-color: lightgrey;
+            padding: 5px;
+        }
+        
+        .textbox button {
+            width: 25%;
+            background-color: lightgrey;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .textbox button:hover {
+            background-color: #aaa;
+        }

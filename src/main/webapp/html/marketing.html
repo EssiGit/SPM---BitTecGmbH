@@ -6,6 +6,7 @@
 <link rel="stylesheet" href="css/style2.css">
 <script src="https://d3js.org/d3.v7.min.js"></script>
 
+
 </head>
 <body>
 
@@ -30,38 +31,34 @@
 				hochladen</button>
 
 
-			<!-- Dropdown -->
+
+			<!-- Dropdown Für Analysen-->
 			<div class="dropdown">
 				<button>Analysen</button>
 				<div class="dropdown-content">
-
-					<form name="button1" method="post" action="WekaServlet">
-						<input type="hidden" name="button1" th:value="${button1}">
-						<button type="submit" th:text="${button1}"></button>
+					<form name="buttons" id="buttonForm" method="post"
+						action="WekaServlet">
+						<input type="hidden" id="selectedButton" name="selectedButton">
+						<th:block th:each="button, buttonStatus : ${buttons}">
+							<span th:unless="${button == 'Empty'}">
+								<button type="button" th:text="${button}"
+									onclick="selectButton(this)"></button>
+							</span>
+							<span th:if="${button == 'Empty'}">
+								<button disabled th:text="${button}"></button>
+							</span>
+						</th:block>
 					</form>
-
-					<form name="button2" method="post" action="WekaServlet">
-						<input type="hidden" name="button2" th:value="${button2}">
-						<button type="submit" th:text="${button2}"></button>
-					</form>
-
-					<form name="button3" method="post" action="WekaServlet">
-						<input type="hidden" name="button3" th:value="${button3}">
-						<button type="submit" th:text="${button3}"></button>
-					</form>
-
-					<form name="button4" method="post" action="WekaServlet">
-						<input type="hidden" name="button4" th:value="${button4}">
-						<button type="submit" th:text="${button4}"></button>
-					</form>
-
-					<form name="button5" method="post" action="WekaServlet">
-						<input type="hidden" name="button5" th:value="${button5}">
-						<button type="submit" th:text="${button5}"></button>
-					</form>
-
 				</div>
 			</div>
+
+			<script>
+  				function selectButton(button) {
+    				var selectedButtonInput = document.getElementById("selectedButton");
+    				selectedButtonInput.value = button.textContent;
+    				document.getElementById("buttonForm").submit();
+  				}
+			</script>
 		</div>
 	</nav>
 
@@ -82,25 +79,39 @@
 		</div>
 	</div>
 
-	<!-- Marketingmaßnahmen -->
-		<h1>Marketing massssnahmen</h1>
-		<ul>
-			<li>Gestaltung ansprechender Schaufenster, um das Interesse
-				von Passanten zu wecken und neue Kunden zu gewinnen.</li>
-			<li>Durchführung von Rabattaktionen, Verlosungen oder anderen
-				Promotionen, um Kunden anzulocken und die Umsätze zu steigern.</li>
-			<li>Angebot von kostenlosen Produktproben, um Kunden von neuen
-				Produkten zu überzeugen und die Markentreue zu stärken.</li>
-			<li>Durchführung von Kundenumfragen, um Feedback zu erhalten
-				und das Angebot an Produkten und Dienstleistungen zu optimieren.</li>
-			<li>Organisation von Events wie Verkostungen oder Workshops,
-				um Kunden in den Laden zu locken und das Image des Ladens zu
-				stärken.</li>
-			<li>Einrichtung eines Treueprogramms, um bestehende Kunden an
-				den Laden zu binden und die Wiederholungskäufe zu steigern.</li>
-		</ul>
 
-			<script>
+	<!-- Marketingmaßnahmen -->
+	<div class="container">
+		<div class="box">
+			<h1 class="title">Marketingmaßnahmen</h1>
+			<div class="line"></div>
+			<ul class="list">
+				<li th:each= "item : ${items}"><span th:text="${item}"></span></li>
+			</ul>
+			<div class="button" onclick="toggleTextBox()">
+				<span>+</span>
+			</div>
+			<form action="./MarketingServlet"></form>
+			<div class="textbox" id="textbox">
+				<textarea rows="4" cols="50"></textarea>
+				<button type="submit" class="submit-button">hinzufügen</button>
+			</div>
+		</div>
+	</div>
+
+	<script>
+        function toggleTextBox() {
+            var textbox = document.getElementById("textbox");
+            if (textbox.style.display == "none") {
+                textbox.style.display = "block";
+            } else {
+                textbox.style.display = "none";
+            }
+        }
+    </script>
+
+
+	<script>
 
 	const loading = document.getElementById('loading');
 	const loadingimg = document.getElementById('loadingimg');
