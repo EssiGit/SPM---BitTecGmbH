@@ -44,9 +44,7 @@ public class Main extends HttpServlet {
 		FileHandler filehandler = new FileHandler(user);
 
 		String[] buttonVal = filehandler.getFileNames();
-		/* for(int i=1;i<=5;i++) {
-        	context.setVariable("button"+i,buttonVal[i-1]);
-        }*/
+
 		context.setVariable("buttons",buttonVal);
 		System.out.println("main do get");
 		ThymeleafConfig.getTemplateEngine().process("main.html", context, response.getWriter());
