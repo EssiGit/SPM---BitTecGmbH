@@ -285,14 +285,15 @@ document.addEventListener('DOMContentLoaded', function() {
 	<th:block th:if="${results != null}">
 		<br />
 		<div class="slidecontainer">
-		<h2>Anzahl der Cluster: <span id="sliderValue"></span></h2>
+		<h2>Anzahl der Cluster: <span id="sliderValue">3</span></h2>
 			<input type="range" min="3" max="100" value="3" class="slider"
 				id="slider">
 		</div>
 	</th:block>
 
 	<script>
-        $(document).ready(function() {
+       
+	$(document).ready(function() {
             // Initial data load
             //loadData(1);
 
@@ -305,9 +306,14 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         function loadData(value) {
-            $.post('WekaServlet', { sliderValue: value, button1: "kd100.csv" },
+            $.post('AJAXUpdate', { sliderValue: value, button1: "kd100.csv" },
             	function(response){
-                console.log(response);
+            	 	console.log(data); //<---- brauche nur die Daten nicht das ganze HTML
+            	 	//var tableName = /*[[${cluster.tableName}]]*/ ""; 
+        			//var xValues = /*[[${cluster.getXnames()}]]*/ ""; 
+        			//var yValues = /*[[${cluster.getYdata()}]]*/ ""; 
+        			//var yName =	/*[[${cluster.getYname()}]]*/ "";
+            		createChart(tableName, yName, xValues, yValues);
                 
                 }).
                 fail(function(){ 
@@ -315,7 +321,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 
             });
             }
-
+        
+        setInterval(function() {
+        	loadData(value); // updateChart() alle 5 Sekunden aufrufen
+        	}, 5000);
     </script>
 
 
@@ -338,7 +347,7 @@ document.addEventListener('DOMContentLoaded', function() {
       </script>
 	</div>
 	</th:block>
-
+<button onclick="loadData()">Aktualisieren</button>
 
 </body>
 </html>

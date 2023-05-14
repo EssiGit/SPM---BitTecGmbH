@@ -62,7 +62,7 @@ public class WekaAnalyser {
     try (BufferedReader reader = new BufferedReader(new FileReader(DIR))) {
 		result = reader.readLine();
 	}
-    result = result.concat("\n" + analyse.findCluster(data, 5));
+    result = result.concat("\n" + analyse.findCluster(data, 3));
     writeWekaResult(result);
     return new File(System.getProperty("user.home") + File.separator + "KaufDort_Userfiles" + File.separator + "Result_Files" + File.separator +  "result_cluster_" + fileName);
 	}
