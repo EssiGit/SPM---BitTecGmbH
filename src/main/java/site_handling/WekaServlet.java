@@ -68,12 +68,13 @@ public class WekaServlet extends HttpServlet {
 			ArrayList<Weka_resultFile> wekaFiles = new ArrayList<>();
 
 			//File resultSet = weka .clusterAnalyse(filehandler);
-			File resultSet = weka.clusterAnalyse(filehandler, "Einkaufssumme");
-			int lines = getLines(resultSet);
+			Weka_resultFile resFile = weka.clusterAnalyseMulti(filehandler, "Einkaufssumme");
+			wekaFiles.add(resFile);
+			/*int lines = getLines(resultSet);
 			for(int i=1;i<lines;i++) {
 				Weka_resultFile resFile = new Weka_resultFile(resultSet,i);
 				wekaFiles.add(resFile);
-			}
+			}*/
 			for(Weka_resultFile test : wekaFiles) {
 				System.out.println(test.getTableName());
 			}

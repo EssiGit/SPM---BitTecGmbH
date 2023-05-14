@@ -18,7 +18,7 @@ public class Weka_test {
 		 * Dann an ein WekaAnalyer Objekt übergeben und analysiert.
 		 * Diese Klasse kann ohne Server zum testen ausgeführt werden
 		 */
-		String fileName = "kd10000.csv";
+		String fileName = "GIGAULTRA.csv";
 		
 		//WekaAnalyser test = new WekaAnalyser("kd1000.csv");
 
@@ -26,34 +26,46 @@ public class Weka_test {
 		//Weka_resultFile temp = new Weka_resultFile(test.clusterAnalyse(), 1);
 
 		// Erstelle ein WekaAnalyser-Objekt mit dem Dateinamen und dem Benutzer
-		User user = new User("niko");
+		User user = new User("Daniel");
 		FileHandler fileHandler = new FileHandler(user);
 		WekaAnalyser analyser = new WekaAnalyser(fileName, user);
 		
 		StopWatch watch = new StopWatch();
 
-        watch.reset();
-        watch.start();
-        analyser.USUT();
-        watch.stop();
-        System.out.println("Umsatzstärkste Einkauftage u. Uhzreiten: " + watch.getTime() + "ms");
-        System.out.println("cluster anal");
+
+        /*´´System.out.println("cluster anal");
         watch.reset();
         watch.start();
         analyser.clusterAnalyse(fileHandler, "Einkaufssumme");
         watch.stop();
-		
+		*/
 	    System.out.println("cluster anal end time : "  + watch.getTime() + "ms");
-	    System.out.println("Umsatzstärkste Uhzreiten pro Tag: " + watch.getTime() + "ms");
+        watch.reset();
+        watch.start();
+        analyser.clusterAnalyseMulti(fileHandler, "Einkaufssumme");
+        watch.stop();
+        System.out.println("cluster analMulti end time : "  + watch.getTime() + "ms");
         watch.reset();
         watch.start();
 		analyser.uhrzeitProTag(fileHandler);
 		watch.stop();
-		System.out.println("Kundenstärkste Einkauftage u. Uhzreiten: " + watch.getTime() + "ms");
+		System.out.println("Umsatzstärkste Uhzreiten pro Tag: " + watch.getTime() + "ms");
+		
         watch.reset();
         watch.start();
 		analyser.KSETU(fileHandler);
 		watch.stop();
+		System.out.println("Kundenstärkste Einkauftage u. Uhzreiten: " + watch.getTime() + "ms");
+        watch.reset();
+        watch.start();
+        analyser.USUT(fileHandler);
+        watch.stop();
+        System.out.println("Umsatzstärkste Einkauftage u. Uhzreiten: " + watch.getTime() + "ms");
+        watch.reset();
+        watch.start();
+        analyser.USUT2(fileHandler);
+        watch.stop();
+        System.out.println("Umsatzstärkste Einkauftage u. Uhzreiten2: " + watch.getTime() + "ms");
 		System.out.println("end");
 
 

@@ -1,6 +1,10 @@
 package weka;
 
 import java.io.File;  
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.List;
 import weka.associations.Apriori;
 import weka.associations.AssociationRule;
@@ -33,6 +37,35 @@ public class WekaTools {
         System.out.println("temp : " + result[1]);
         return (result[1] + "\n");
     }
+    String findClusterMulti(final Instances daten, final int clusterIndex, final int number) throws Exception {
+        ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+        try {
+            Callable<String> task = new Callable<String>() {
+                public String call() throws Exception {
+                    SimpleKMeans model = new SimpleKMeans();
+                    model.setNumClusters(number);
+                    Remove attributeFilter = new Remove();
+                    attributeFilter.setAttributeIndicesArray(new int[]{1, 2, 3, 4, clusterIndex});
+                    attributeFilter.setInvertSelection(true);
+                    attributeFilter.setInputFormat(daten);
+                    Instances filteredData = Filter.useFilter(daten, attributeFilter);
+                    model.buildClusterer(filteredData);
+
+                    // Final cluster centroids holen
+                    String[] result = model.getClusterCentroids().toString().split("@data\n");
+                    System.out.println("temp : " + result[1]);
+                    return result[1];
+                }
+            };
+
+            Future<String> future = executor.submit(task);
+            String result = future.get();
+            return result + "\n";
+        } finally {
+            executor.shutdown();
+        }
+    }
+    
     public String findClusterNew(Instances daten, int clusterIndex, int number) throws Exception {
         String[] result;
         String resultTest = "";
