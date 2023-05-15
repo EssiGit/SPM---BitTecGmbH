@@ -83,11 +83,12 @@ public class FileHandler {
 	 */
 	public void setUpFILE(File fileName, HttpServletRequest request) throws IOException, ServletException {
 		setUpDIR();
-		File newFileDIR = new File(System.getProperty("user.home") + File.separator + "KaufDort_Userfiles" + File.separator + "users" + File.separator + user.getName() + File.separator + fileName.getName());
+		File newFileDIR = new File(baseDIR.getAbsolutePath() +  File.separator + "users" + File.separator + user.getName() + File.separator + fileName.getName());
+		System.out.println("newFile " +  newFileDIR); 
 		if(!(newFileDIR.exists())) {
 			System.out.println("its a new file");
 			for(Part part : request.getParts()) {
-				part.write(System.getProperty("user.home") + File.separator + "KaufDort_Userfiles" + File.separator + "users" + File.separator + user.getName() + File.separator + fileName.getName());
+				part.write(baseDIR.getAbsolutePath() + File.separator + "users" + File.separator + user.getName() + File.separator + fileName.getName());
 			}
 			writeDataFile(fileName.getName());
 		}
