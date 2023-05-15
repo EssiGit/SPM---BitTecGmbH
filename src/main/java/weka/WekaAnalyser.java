@@ -78,7 +78,7 @@ public class WekaAnalyser {
 		ArrayList<Weka_resultFile> wekaFiles = new ArrayList<>();
 		switch (analName) {
 		case "Umsatzstärkstertag/Uhrzeit":
-			wekaFiles.addAll(USUT(filehandler));
+			wekaFiles.addAll(umsatzstaerksteTagUhrzeit(filehandler));
 			break;
 		case "Kundenhäufigkeit":
 			wekaFiles.addAll(KSETU(filehandler));
@@ -97,7 +97,7 @@ public class WekaAnalyser {
 		return wekaFiles;
 	}
 	/**
-	 * Cluster analyse
+	 * Cluster analyse veraltet
 	 * @param fileHandler
 	 * @param cluster der Name des Attributes, nach dem geclustered wird. Bsp "Einkaufssumme"
 	 * @return
@@ -434,7 +434,7 @@ public class WekaAnalyser {
 	 * @throws IOException 
 	 * @throws FileNotFoundException 
 	 */
-	public ArrayList<Weka_resultFile> USUT(FileHandler filehandler) throws FileNotFoundException, IOException {
+	public ArrayList<Weka_resultFile> umsatzstaerksteTagUhrzeit(FileHandler filehandler) throws FileNotFoundException, IOException {
 		String[] tage = {"Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag"};
 		String[] zeiten = {"<10 Uhr", "10-12 Uhr", "12-14 Uhr", "14-17 Uhr", ">17 Uhr"};
 		ArrayList<Weka_resultFile> wekaFiles = new ArrayList<>();
