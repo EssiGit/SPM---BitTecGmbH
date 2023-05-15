@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 
 public class Weka_resultFile {
@@ -55,6 +56,25 @@ public class Weka_resultFile {
 	}
 	public String getTableName() {
 		return tableName;
+	}
+
+
+	//(nikok) get Json of Result
+	public String ajax() {
+		
+		String xNames = "";
+		
+		for (int i = 0; i < getXnames().length; i++) {
+			xNames += getXnames()[i] + "\",\"";
+		}
+		
+		xNames = "[\""+ xNames.substring(0, xNames.length()-3)+ "\"]";
+		xNames = xNames.replace("\n", "");
+		return "{\"xNames\": " +       xNames
+				+ ",\n\"yName\": \"" + getYname() + "\""
+				+ ",\n\"yMax\": " + getYmax() 
+				+ ",\n\"tablename\": " + getTableName() 
+				+ ",\n\"yValues\": "  + Arrays.toString(getYdata()).replace("[", "[\"").replace(",", "\",\"").replace("]", "\"]") + "}";
 	}
 
 }
