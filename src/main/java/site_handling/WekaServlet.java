@@ -107,9 +107,11 @@ public class WekaServlet extends HttpServlet {
 			//setzen ob cluster oder nicht (nikok)
 			if(!(typeOfAnalysis.equals("Umsatzstärkstertag/Uhrzeit") || 
 					typeOfAnalysis.equals("Kundenhäufigkeit") ||
-					typeOfAnalysis.equals("uhrzeitProTag")))
+					typeOfAnalysis.equals("uhrzeitProTag"))) 
 				context.setVariable("isCluster", true);
+			
 			//(nikok)
+			context.setVariable("margin", 120);
 			context.setVariable("typeOfAnalysis", typeOfAnalysis);
 			
 			context.setVariable("results", wekaFiles);

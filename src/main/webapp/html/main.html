@@ -121,16 +121,22 @@
 			//Cluster Anzahl aktualisieren
 			$(document).ready(function() {
 				// Initial data load
-				//loadData(1);
-
+				var cluster = /*[[${isCluster}]]*/ "";
+				if(cluster){
+				loadData(8, type);
+				}
 				// Slider change event
-				$('#slider').on('input', function() {
+				$('#slider').on('mouseup', function() {
 					var value = $(this).val();
-					var file = /*[[${filename}]]*/ "";
+					
+				
 					
 					$('#sliderValue').text(value);
+					
+						loadData(value, type);
 				
-					loadData(value, type);
+					
+					
 				});
 			});
 			
@@ -138,12 +144,13 @@
 			
 			console.log(type);
 			//Ergebnisse x,y Values als array
+			var marginBottom = /*[[${margin}]]*/ "";
 			var maxYvalue = /*[[${cluster.getYmax()}]]*/ "";
 			var tableName = /*[[${cluster.tableName}]]*/ ""; 
 			var xValues = /*[[${cluster.getXnames()}]]*/ ""; 
 			var yValues = /*[[${cluster.getYdata()}]]*/ ""; 
 			var yName =	/*[[${cluster.getYname()}]]*/ "";
-			createChart(tableName, yName, xValues, yValues, maxYvalue);
+			createChart(tableName, yName, xValues, yValues, maxYvalue, marginBottom);
 	
 	 		
       </script>

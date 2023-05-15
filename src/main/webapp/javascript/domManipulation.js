@@ -52,8 +52,8 @@ function selectButton(button) {
 function loadData(value, info) {
 	$.post('WekaServlet', { sliderValue: value, clusterInfo: info, ajaxUpdate: 1},
 		function(response) {
-		   updateChart(response.tableName, response.yName, response.xNames, response.yValues, response.yMax);
-
+		   updateChart(response.tableName, response.yName, response.xNames, response.yValues, response.yMax, 400);
+			
 		}).
 		fail(function() {
 			console.log('Error:', error);
