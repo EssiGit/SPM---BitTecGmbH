@@ -10,6 +10,16 @@ function SubmitEvent(formId) {
 	}
 }
 
+//zeige Sanduhr
+function showHourglass(){
+	
+	const loading = document.getElementById('loading');
+	const loadingimg = document.getElementById('loadingimg');
+	loading.style.display = "flex";
+	loadingimg.style.display = "flex";
+	
+}
+
 //sende submits mit Clusterinfos
 function submitForm(action, clusterInfo) {
 	var form = document.createElement('form');
@@ -23,11 +33,8 @@ function submitForm(action, clusterInfo) {
 
 	form.appendChild(input);
 	document.body.appendChild(form);
-
-	const loading = document.getElementById('loading');
-	const loadingimg = document.getElementById('loadingimg');
-	loading.style.display = "flex";
-	loadingimg.style.display = "flex";
+	
+	showHourglass();
 
 	form.submit();
 }
@@ -35,10 +42,9 @@ function submitForm(action, clusterInfo) {
 function selectButton(button) {
 	var selectedButtonInput = document.getElementById("selectedButton");
 	selectedButtonInput.value = button.textContent;
-	const loading = document.getElementById('loading');
-	const loadingimg = document.getElementById('loadingimg');
-	loading.style.display = "flex";
-	loadingimg.style.display = "flex";
+	
+	showHourglass();
+	
 	document.getElementById("buttonForm").submit();
 }
 
