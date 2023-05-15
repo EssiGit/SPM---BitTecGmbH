@@ -177,7 +177,7 @@ public class WekaAnalyser {
 	}
 	private String[] setXvalues(String[] xValues) {
 		for(int i = 0;i<xValues.length;i++) {
-			if(xValues[i].contains(",m,")) {
+			if(xValues[i].contains("m,")) {
 				xValues[i] = xValues[i].replaceFirst("m,", " Männlich, Alter: ");
 			}else {
 				xValues[i] = xValues[i].replaceFirst("w,", " Weiblich, Alter: ");

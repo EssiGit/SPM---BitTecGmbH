@@ -87,9 +87,6 @@ public class WekaServlet extends HttpServlet {
 				clusterAnzahl = Integer.parseInt(request.getParameter("sliderValue"));
 			
 			ArrayList<Weka_resultFile> wekaFiles = weka.getCorrectAnalysis(filehandler, typeOfAnalysis, clusterAnzahl);
-			for(Weka_resultFile test : wekaFiles) {
-				System.out.println(test.getTableName());
-			}
 			
 			//(nikok) ajax json response für table update
 			if(request.getParameter("ajaxUpdate") != null && request.getParameter("ajaxUpdate").equals("1")) {
@@ -100,6 +97,7 @@ public class WekaServlet extends HttpServlet {
 				System.out.println(wekaFiles.get(0).ajax());
 				
 				ThymeleafConfig.getTemplateEngine().process("main.html", context, response.getWriter());
+				watch.stop();
 				System.out.println("Time till served: " + watch.getTime() + "ms");
 				return;
 			}
