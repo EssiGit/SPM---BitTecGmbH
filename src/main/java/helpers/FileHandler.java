@@ -147,11 +147,13 @@ public class FileHandler {
 			System.out.println(fileDataPath.exists());
 			System.out.println("in Filehandler, writeDataFile :" + fileDataPath.getAbsolutePath());
 
-			System.out.println(fileDataPath.isFile());
+			System.out.println("bytess " + fileDataPath.length());
 			if(fileDataPath.exists()) {
 				System.out.println("before write:" + fileName);
 				BufferedWriter buffWriter = new BufferedWriter(new FileWriter(fileDataPath,true));
-				buffWriter.newLine();
+	            if (fileDataPath.length() > 0) {
+	                buffWriter.newLine(); //nur wenn schon etwas drin steht new line. Bei dem ersten upload würder er sonst bei der zweiten Zeile starten
+	            }
 				buffWriter.append(fileName);
 				buffWriter.close();
 			}else {
@@ -175,16 +177,16 @@ public class FileHandler {
 	 * @throws IOException
 	 */
 	private void writeNewIDFile(File file,  String[] lines) throws IOException {
+		System.out.println(" new file");
 		if(file.exists()==false){
+			System.out.println(" new gud");
 			new FileWriter(file.getAbsolutePath()).close();
 		}else {
-			PrintWriter makeNew = new PrintWriter(file.getAbsolutePath());
-			makeNew.write("");
-			makeNew.close();
+			new FileWriter(file.getAbsolutePath()).close();
 			FileWriter fileWriter = new FileWriter(file);
 			BufferedWriter buffWriter = new BufferedWriter(fileWriter);
 			System.out.println("lines0 " + lines[0]);
-			buffWriter.write(lines[0]);
+			fileWriter.write(lines[0]);
 			for(int i = 1;i<lines.length;i++) {
 				if(lines[i] != null) {
 					buffWriter.newLine();
