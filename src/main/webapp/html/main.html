@@ -77,7 +77,7 @@
 
 <!-- Zweite Navigationbar -->
 <nav class="navbar-2" th:if="${results != null}">
-    <a class="nav2-item active" id="Umsatzstärkstertag/Uhrzeit" href="#" onclick="submitForm('WekaServlet', 'Umsatzstärkstertag/Uhrzeit')">Umsatzstärkstertag/Uhrzeit</a>
+    <a class="nav2-item" id="Umsatzstärkstertag/Uhrzeit" href="#" onclick="submitForm('WekaServlet', 'Umsatzstärkstertag/Uhrzeit')">Umsatzstärkstertag/Uhrzeit</a>
     <a class="nav2-item" id="Kundenhäufigkeit" href="#" onclick="submitForm('WekaServlet', 'Kundenhäufigkeit')">Kundenhäufigkeit</a>
     <a class="nav2-item" id="uhrzeitProTag" href="#" onclick="submitForm('WekaServlet', 'uhrzeitProTag')">Umsatzstärkste Einkaufsuhrzeit pro Tag</a>
     <a class="nav2-item" id="kundengruppen-link" href="#">Kundengruppen</a>
@@ -94,7 +94,7 @@
 
 <!-- lade domManipulation -->
 <script src="./javascript/domManipulation.js"></script>
-	
+
 	<th:block th:if="${isCluster == true}">
 		<br />
 		<div class="slidecontainer">
@@ -113,7 +113,12 @@
 
 			<script th:inline="javascript">
 
+			//setze farbe der dropdown2 buttons
 			var type = /*[[${typeOfAnalysis}]]*/ "";
+			var linkElement = document.getElementById(type);
+			linkElement.style.backgroundColor = "#4CAF50"; //grün
+			
+			
 			console.log(type);
 			//Ergebnisse x,y Values als array
 			var maxYvalue = /*[[${cluster.getYmax()}]]*/ "";
