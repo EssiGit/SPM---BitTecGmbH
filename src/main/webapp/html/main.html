@@ -4,10 +4,13 @@
 <meta charset="UTF-8">
 <title>KaufDort Homepage</title>
 <link rel="stylesheet" href="css/style2.css">
-<!-- lade d3 lib -->
-<script src="https://d3js.org/d3.v7.min.js"></script>
+
 <!-- lade ajax lib -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- d3.js laden -->
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<!-- lade chart js -->
+<script src="./javascript/chart.js"></script>
 
 </head>
 <body>
@@ -26,23 +29,10 @@
 			<form name="main" id="upload" method="post" action="main"
 				enctype="multipart/form-data">
 				<input type="file" name="file-input" id="file-input"
-					onchange="SubmitForm('upload');" style="display: none"
+					onchange="SubmitEvent('upload');" style="display: none"
 					accept=".csv" />
 			</form>
 			<button onclick="document.getElementById('file-input').click()">Datei hochladen</button>
-
-			<!-- dispatch event für eventlistener -->
-			<script>
-			function SubmitForm(formId) {
-			    var oForm = document.getElementById(formId);
-			    if (oForm) {
-			        oForm.dispatchEvent(new Event('submit')); 
-			    }
-			    else {
-			        alert("DEBUG - could not find element " + formId);
-			    }
-			}
-			</script> 
 			
 			<!-- Dropdown Für Analysen-->
 			<div class="dropdown">
@@ -63,14 +53,6 @@
 					</form>
 				</div>
 			</div>
-
-			<script>
-  				function selectButton(button) {
-    				var selectedButtonInput = document.getElementById("selectedButton");
-    				selectedButtonInput.value = button.textContent;
-    				document.getElementById("buttonForm").submit();
-  				}
-			</script>
 		</div>
 		
 	</nav>
@@ -109,190 +91,10 @@
     <a href="#" onclick="submitForm('WekaServlet', 'Haushaltsnettoeinkommen')">Haushaltsnettoeinkommen</a>
 </div>
 
-<script>
-    function submitForm(action, clusterInfo) {
-        var form = document.createElement('form');
-        form.setAttribute('method', 'post');
-        form.setAttribute('action', action);
-        
-        var input = document.createElement('input');
-        input.setAttribute('type', 'hidden');
-        input.setAttribute('name', 'clusterInfo');
-        input.setAttribute('value', clusterInfo);
-        
-        form.appendChild(input);
-        document.body.appendChild(form);
-        form.submit();
-    }
-</script>
 
-
-	<script>
-
-	/* Dropdown2 für Kundengruppen */
-document.addEventListener('DOMContentLoaded', function() {
-  var kundengruppenLink = document.getElementById('kundengruppen-link');
-  var dropdown = document.getElementById('drop2');
-
-  kundengruppenLink.addEventListener('mouseenter', function() {
-    dropdown.style.display = 'block';
-  });
-
-  kundengruppenLink.addEventListener('mouseleave', function() {
-    dropdown.style.display = 'none';
-  });
-  
-  dropdown.addEventListener('mouseenter', function() {
-    dropdown.style.display = 'block';
-  });
-  
-  dropdown.addEventListener('mouseleave', function() {
-    dropdown.style.display = 'none';
-  });
-});
-
-
-	function createChart(tableName, yName, xValues, yValues, maxYvalue){	
-	var margin = {top: 30, right: 30, bottom: 180, left: 100},
-    width = 1800 - margin.left - margin.right,
-    height = 900 - margin.top - margin.bottom;
-
-    //Grafik an chart-container hängen
-	var svg = d3.selectAll("#my_dataviz")
-		.append("svg")
-		.attr("width", width + margin.left + margin.right)
-			.attr("height", height + margin.top + margin.bottom)
-			.style("background", "#dedede")
-		.append("g")
-			.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-	//X-Achse
-	var x = d3.scaleBand()
-    		.range([ 0, width ])
-    		.domain(xValues)
-   	 		.padding(0.2);
+<!-- lade domManipulation -->
+<script src="./javascript/domManipulation.js"></script>
 	
-	//Y-Beschriftung	
-	svg.append('text')
-	.attr('x', -75)
-	.attr('y', 0)
-	.attr('text-anchor', 'left')
-	.text(yName)
-		.style("font-size","25px");
-	
-	//X Achse zum svg hinzufuegen
-	svg.append("g")
-    	.attr("transform", "translate(0," + height + ")")
-    	.call(d3.axisBottom(x))
-    	.selectAll("text")
-      		.attr("transform", "translate(-10,0)rotate(-45)")
-      		.style("text-anchor", "end")
-			.style("font-size","25px");
-		
-	//Y Achse erstellen
-	var y = d3.scaleLinear()
-    	.domain([0, Math.round(maxYvalue + maxYvalue*0.3)])
-    	.range([ height, 20])
-    	
-	//Y Achse hinzufuegen
-  	svg.append("g")
-    	.call(d3.axisLeft(y))
-		.style("font-size","25px");
-		
-	//Balken Hinzufuegen
- 	svg.selectAll("bar")
-    	.data(xValues)
-   		.enter()
-   		.append("rect")
-     	.attr("x", function(d) { return x(d) })
-     	.data(yValues)
-      	.attr("y", function(d) { return y(d) })
-      	.attr("width", x.bandwidth())
-     	.attr("height", function(d) { return height - y(d) })
-      	.attr("fill", "#69b3a2")
-
-	//Überschrift der Grafik
-    svg.append('text')
-		.attr('x', width / 2 + margin.left)
-		.attr('y', margin.top / 2)
-		.attr('text-anchor', 'middle')
-		.text(tableName)
- 		.style("font-size","25px");
-	}
-
-	
-	/* dropdown2 funktionalitaet */
-	document.addEventListener('DOMContentLoaded', function() {
-		  var kundengruppenLink = document.getElementById('kundengruppen-link');
-		  var dropdown = document.getElementById('drop2');
-
-		  kundengruppenLink.addEventListener('mouseenter', function() {
-		    dropdown.style.display = 'block';
-		  });
-
-		  kundengruppenLink.addEventListener('mouseleave', function() {
-		    dropdown.style.display = 'none';
-		  });
-		  
-		  dropdown.addEventListener('mouseenter', function() {
-		    dropdown.style.display = 'block';
-		  });
-		  
-		  dropdown.addEventListener('mouseleave', function() {
-		    dropdown.style.display = 'none';
-		  });
-		});
-
-
-			/* Ändert Die Farbe eines Buttons nachdem der User draufklickt */
-				
-		  
-		    			const navbar2Buttons = document.querySelectorAll('.nav2-item');
-
-		    			navbar2Buttons.forEach(button => {
-		      				button.addEventListener('click', () => {
-		      
-		       					navbar2Buttons.forEach(btn => {
-		          					btn.classList.remove('active');
-		        				});
-
-		        				button.classList.add('active');
-		      				});
-		    			});
-	
-	const loading = document.getElementById('loading');
-	const loadingimg = document.getElementById('loadingimg');
-	console.log(loadingimg);
-	
-	/* beim drücken von "zurueck" im browser wird die Sanduhr versteckt */
-	window.addEventListener( "pageshow", function ( event ) {
-		  var historyTraversal = event.persisted || 
-		                         ( typeof window.performance != "undefined" && 
-		                              window.performance.navigation.type === 2 );
-		  if ( historyTraversal ) {
-			loading.style.display = "none";
-			loadingimg.style.display = "none";
-		    window.location.reload();
-		  }
-		});
-	
-	
-	/* Lädt die Sanduhr */
-	const forms = document.querySelectorAll('form');
-
-	forms.forEach(form => {
-		
-  		form.addEventListener('submit', function(){
-   
-    		event.preventDefault();
-    		loading.style.display = "flex";
-    		loadingimg.style.display = "flex";
-    		form.submit();
-    
-  });
-});
-
-</script>
 	<th:block th:if="${isCluster == true}">
 		<br />
 		<div class="slidecontainer">
@@ -301,39 +103,6 @@ document.addEventListener('DOMContentLoaded', function() {
 				id="slider">
 		</div>
 	</th:block>
-
-	<script>
-       
-	$(document).ready(function() {
-            // Initial data load
-            //loadData(1);
-
-            // Slider change event
-            $('#slider').on('input', function() {
-                var value = $(this).val();
-                $('#sliderValue').text(value);
-                loadData(value);
-            });
-        });
-
-        function loadData(value) {
-            $.post('AJAXUpdate', { sliderValue: value, button1: "kd100.csv" },
-            	function(response){
-            	 	console.log(data); //<---- brauche nur die Daten nicht das ganze HTML
-            	 	
-            		//createChart(tableName, yName, xValues, yValues);
-                
-                }).
-                fail(function(){ 
-                    console.log('Error:', error);
-                
-            });
-            }
-        
-        setInterval(function() {
-        	loadData(value); // updateChart() alle 5 Sekunden aufrufen
-        	}, 5000);
-    </script> 
 
 
 	<!-- Laden der Grafiken -->
@@ -356,6 +125,8 @@ document.addEventListener('DOMContentLoaded', function() {
       </script>
 	</div>
 	</th:block>
+
+
 
 </body>
 </html>
