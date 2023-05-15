@@ -98,9 +98,8 @@
 	<th:block th:if="${isCluster == true}">
 		<br />
 		<div class="slidecontainer">
-		<h2>Anzahl der Cluster: <span id="sliderValue">3</span></h2>
-			<input type="range" min="3" max="100" value="3" class="slider"
-				id="slider">
+		<h2>Anzahl der Cluster: <span id="sliderValue">8</span></h2>
+			<input type="range" min="8" max="15" value="8" class="slider" id="slider">
 		</div>
 	</th:block>
 
@@ -117,6 +116,24 @@
 			var type = /*[[${typeOfAnalysis}]]*/ "";
 			var linkElement = document.getElementById(type);
 			linkElement.style.backgroundColor = "#4CAF50"; //grün
+			
+			
+			//Cluster Anzahl aktualisieren
+			$(document).ready(function() {
+				// Initial data load
+				//loadData(1);
+
+				// Slider change event
+				$('#slider').on('input', function() {
+					var value = $(this).val();
+					var file = /*[[${filename}]]*/ "";
+					
+					$('#sliderValue').text(value);
+				
+					loadData(value, type);
+				});
+			});
+			
 			
 			
 			console.log(type);

@@ -72,11 +72,24 @@ public class WekaServlet extends HttpServlet {
 			if(typeOfAnalysis == null)
 				typeOfAnalysis = "Umsatzstärkstertag/Uhrzeit";
 			
-			ArrayList<Weka_resultFile> wekaFiles = weka.getCorrectAnalysis(filehandler, typeOfAnalysis);
+			//(nikok)
+			int clusterAnzahl = 8;
+			if(request.getParameter("sliderValue") != null)
+				clusterAnzahl = Integer.parseInt(request.getParameter("sliderValue"));
+			
+			ArrayList<Weka_resultFile> wekaFiles = weka.getCorrectAnalysis(filehandler, typeOfAnalysis, clusterAnzahl);
 			for(Weka_resultFile test : wekaFiles) {
 				System.out.println(test.getTableName());
 			}
+			
+			//setzen ob cluster oder nicht (nikok)
+			if(!(typeOfAnalysis.equals("Umsatzstärkstertag/Uhrzeit") || 
+					typeOfAnalysis.equals("Kundenhäufigkeit") ||
+					typeOfAnalysis.equals("uhrzeitProTag")))
+				context.setVariable("isCluster", true);
+			//(nikok)
 			context.setVariable("typeOfAnalysis", typeOfAnalysis);
+			
 			context.setVariable("results", wekaFiles);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

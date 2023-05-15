@@ -74,7 +74,7 @@ public class WekaAnalyser {
 	}
 
 
-	public ArrayList<Weka_resultFile> getCorrectAnalysis(FileHandler filehandler, String analName) throws Exception {
+	public ArrayList<Weka_resultFile> getCorrectAnalysis(FileHandler filehandler, String analName, int clusterAnzahl) throws Exception {
 		ArrayList<Weka_resultFile> wekaFiles = new ArrayList<>();
 		switch (analName) {
 		case "Umsatzstärkstertag/Uhrzeit":
@@ -89,7 +89,7 @@ public class WekaAnalyser {
 
 		default:
 			// Aktion für andere Fälle
-			wekaFiles.addAll(clusterAnalyseMulti(filehandler, analName,10));
+			wekaFiles.addAll(clusterAnalyseMulti(filehandler, analName, clusterAnzahl));
 			break;
 		}
 

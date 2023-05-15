@@ -49,10 +49,10 @@ function selectButton(button) {
 }
 
 //Chart Values aktuallisieren je nach Clusteranzahl
-function loadData(value) {
-	$.post('AJAXUpdate', { sliderValue: value, button1: "kd100.csv" },
+function loadData(value, info) {
+	$.post('WekaServlet', { sliderValue: value, clusterInfo: info },
 		function(response) {
-			console.log(data); //<---- brauche nur die Daten nicht das ganze HTML
+			console.log(response); //<---- brauche nur die Daten nicht das ganze HTML
 
 			//createChart(tableName, yName, xValues, yValues);
 
@@ -83,18 +83,6 @@ dropdown.addEventListener('mouseleave', function() {
 	dropdown.style.display = 'none';
 });
 
-//Cluster Anzahl aktualisieren
-$(document).ready(function() {
-	// Initial data load
-	//loadData(1);
-
-	// Slider change event
-	$('#slider').on('input', function() {
-		var value = $(this).val();
-		$('#sliderValue').text(value);
-		loadData(value);
-	});
-});
 
 const loading = document.getElementById('loading');
 const loadingimg = document.getElementById('loadingimg');
