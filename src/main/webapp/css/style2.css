@@ -126,11 +126,6 @@ body{margin: 0px;}
 	box-sizing: border-box;
 }
 
-/* Style for the active class */
-.nav2-item.active {
-	background-color: #4CAF50;
-}
-
 /* Hide the link that should open and close the navbar on small screens */
 .navbar-2 .icon {
 	display: none;

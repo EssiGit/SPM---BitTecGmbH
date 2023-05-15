@@ -21,14 +21,13 @@
 			</form>
 
 			<!-- Upload-button -->
-			<form name="main" method="post" action="main"
+			<form name="main" id="upload" method="post" action="main"
 				enctype="multipart/form-data">
 				<input type="file" name="file-input" id="file-input"
-					onchange="document.forms['main'].submit()" style="display: none"
+					onchange="SubmitEvent('upload');" style="display: none"
 					accept=".csv" />
 			</form>
-			<button onclick="document.getElementById('file-input').click()">Datei
-				hochladen</button>
+			<button onclick="document.getElementById('file-input').click()">Datei hochladen</button>
 
 
 
@@ -99,50 +98,8 @@
 		</div>
 	</div>
 
-	<script>
-        function toggleTextBox() {
-            var textbox = document.getElementById("textbox");
-            if (textbox.style.display == "none") {
-                textbox.style.display = "block";
-            } else {
-                textbox.style.display = "none";
-            }
-        }
-    </script>
-
-
-	<script>
-
-	const loading = document.getElementById('loading');
-	const loadingimg = document.getElementById('loadingimg');
-	console.log(loadingimg);
-	/* beim drücken von "zurueck" im browser wird die Sanduhr versteckt */
-	window.addEventListener( "pageshow", function ( event ) {
-		  var historyTraversal = event.persisted || 
-		                         ( typeof window.performance != "undefined" && 
-		                              window.performance.navigation.type === 2 );
-		  if ( historyTraversal ) {
-			loading.style.display = "none";
-			loadingimg.style.display = "none";
-		    window.location.reload();
-		  }
-		});
 	
-	
-	/* Lädt die Sanduhr */
-	const forms = document.querySelectorAll('form');
-
-	forms.forEach(form => {
-		
-  		form.addEventListener('submit', function(){
-   
-    		event.preventDefault();
-    		loading.style.display = "flex";
-    		loadingimg.style.display = "flex";
-    		form.submit();
-    
-  });
-});
-	</script>
+<!-- lade domManipulation -->
+<script src="./javascript/domManipulation.js"></script>
 </body>
 </html>
