@@ -82,15 +82,35 @@
 			<div class="button" onclick="toggleTextBox()">
 				<span>+</span>
 			</div>
-			<form action="./MarketingServlet"></form>
+			<form action="./MarketingServlet" method="POST" id="markForm">
 			<div class="textbox" id="textbox">
-				<textarea rows="4" cols="50" name="marketingText"></textarea>
-				<button type="submit" class="submit-button">hinzufügen</button>
+				<textarea rows="4" cols="50" id="marketingTextbox"></textarea>
+				<button type="button" class="submit-button" onclick="getText()">hinzufügen</button>
+			
 			</div>
+			</form>
 		</div>
 	</div>
 
 	<script>
+	//hole Textareavalue und schicke sie per POST
+	function getText(){
+		
+	var textareaValue = document.getElementById("marketingTextbox").value;
+	var formData = new FormData();
+	  formData.append("textareaContent", textareaValue);
+
+	  // Create a hidden input field to hold the textarea value
+	  var hiddenInput = document.createElement("input");
+	  hiddenInput.type = "hidden";
+	  hiddenInput.name = "marketingText";
+	  hiddenInput.value = textareaValue;
+	  document.getElementById("markForm").appendChild(hiddenInput);
+
+	  // Submit the form
+	  document.getElementById("markForm").submit();
+}
+	
         function toggleTextBox() {
             var textbox = document.getElementById("textbox");
             if (textbox.style.display == "none") {
