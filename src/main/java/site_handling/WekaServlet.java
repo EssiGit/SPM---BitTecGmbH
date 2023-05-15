@@ -91,7 +91,7 @@ public class WekaServlet extends HttpServlet {
 				System.out.println(test.getTableName());
 			}
 			
-
+			//(nikok) ajax json response für table update
 			if(request.getParameter("ajaxUpdate") != null && request.getParameter("ajaxUpdate").equals("1")) {
 				
 				response.setContentType("application/json");

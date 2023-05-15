@@ -108,7 +108,7 @@ public class Weka_resultFile {
 	}
 
 
-
+	//(nikok) get Json of Result
 	public String ajax() {
 		
 		String xNames = "";
