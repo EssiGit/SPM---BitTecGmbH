@@ -50,14 +50,6 @@
 					</form>
 				</div>
 			</div>
-
-			<script>
-  				function selectButton(button) {
-    				var selectedButtonInput = document.getElementById("selectedButton");
-    				selectedButtonInput.value = button.textContent;
-    				document.getElementById("buttonForm").submit();
-  				}
-			</script>
 		</div>
 	</nav>
 
@@ -98,7 +90,16 @@
 		</div>
 	</div>
 
-	
+	<script>
+        function toggleTextBox() {
+            var textbox = document.getElementById("textbox");
+            if (textbox.style.display == "none") {
+                textbox.style.display = "block";
+            } else {
+                textbox.style.display = "none";
+            }
+        }
+    </script>
 <!-- lade domManipulation -->
 <script src="./javascript/domManipulation.js"></script>
 </body>

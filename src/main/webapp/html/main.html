@@ -126,6 +126,12 @@
 				loadData(8, type);
 				}
 				// Slider change event
+				$('#slider').on('input', function() {
+				
+					$('#sliderValue').text($(this).val());
+				});
+				
+				
 				$('#slider').on('mouseup', function() {
 					var value = $(this).val();
 					
