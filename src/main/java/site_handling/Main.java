@@ -39,6 +39,10 @@ public class Main extends HttpServlet {
 		response.setCharacterEncoding("UTF-8");
 		HttpSession session = request.getSession();
 		User user = (User)session.getAttribute("User");
+	    if (user == null) {
+	        response.sendRedirect("index"); // Weiterleitung zum "index" Servlet
+	        return;
+	    }
 		UserHandler userHand = new UserHandler();
 		System.out.println("TEST " + user.getName());
 		FileHandler filehandler = new FileHandler(user);

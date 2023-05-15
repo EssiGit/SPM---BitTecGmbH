@@ -178,14 +178,14 @@ public class WekaAnalyser {
 	private String[] setXvalues(String[] xValues) {
 		for(int i = 0;i<xValues.length;i++) {
 			if(xValues[i].contains(",m,")) {
-				xValues[i] = xValues[i].replaceFirst(",m,", " Männlich, Alter: ");
+				xValues[i] = xValues[i].replaceFirst("m,", " Männlich, Alter: ");
 			}else {
-				xValues[i] = xValues[i].replaceFirst(",w,", " Weiblich, Alter: ");
+				xValues[i] = xValues[i].replaceFirst("w,", " Weiblich, Alter: ");
 			}
 			if(xValues[i].contains(",nein")) {
-				xValues[i] = xValues[i].replaceFirst(",nein", ", keine Kinder");
+				xValues[i] = xValues[i].replaceFirst(",nein", ", keine Kinder \n");
 			}else {
-				xValues[i] = xValues[i].replaceFirst(",ja", ", Kinder");
+				xValues[i] = xValues[i].replaceFirst(",ja", ", Kinder \n");
 			}
 			if(xValues[i].contains(",ledig")) {
 				xValues[i] = xValues[i].replaceFirst(",ledig", ", ledig");
