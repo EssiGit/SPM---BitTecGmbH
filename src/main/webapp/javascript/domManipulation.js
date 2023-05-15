@@ -2,11 +2,11 @@
 function SubmitEvent(formId) {
 	var oForm = document.getElementById(formId);
 	if (oForm) {
-		oForm.dispatchEvent(new Event('submit'));
+		showHourglass();
+		oForm.submit();
 	}
 	else {
 		alert("DEBUG - could not find element " + formId);
-		formId.dispatchEvent(new Event('submit'));
 	}
 }
 
