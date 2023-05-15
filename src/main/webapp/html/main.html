@@ -152,7 +152,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 
-	function createChart(tableName, yName, xValues, yValues){	
+	function createChart(tableName, yName, xValues, yValues, maxYvalue){	
 	var margin = {top: 30, right: 30, bottom: 180, left: 100},
     width = 1800 - margin.left - margin.right,
     height = 900 - margin.top - margin.bottom;
@@ -191,7 +191,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		
 	//Y Achse erstellen
 	var y = d3.scaleLinear()
-    	.domain([0, 3000])
+    	.domain([0, maxYvalue])
     	.range([ height, 20])
     	
 	//Y Achse hinzufuegen
@@ -345,11 +345,12 @@ document.addEventListener('DOMContentLoaded', function() {
 			<script th:inline="javascript">
 
 			//Ergebnisse x,y Values als array
+			var maxYvalue = /*[[${cluster.getYmax()}]]*/ "";
 			var tableName = /*[[${cluster.tableName}]]*/ ""; 
 			var xValues = /*[[${cluster.getXnames()}]]*/ ""; 
 			var yValues = /*[[${cluster.getYdata()}]]*/ ""; 
 			var yName =	/*[[${cluster.getYname()}]]*/ "";
-			createChart(tableName, yName, xValues, yValues);
+			createChart(tableName, yName, xValues, yValues, maxYvalue);
 	
 	 		
       </script>

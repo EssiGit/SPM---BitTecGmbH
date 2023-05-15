@@ -82,6 +82,19 @@ public class Weka_resultFile {
 		tableName = setTableName(tableName);
 	}*/
 	
+	public int getYmax(){
+		int tmp = 0;
+		
+		for(int i = 0; i < yData.length; i++) {
+			
+			if(yData[i] > tmp)
+				tmp = yData[i]; 
+			
+		}
+		
+		return tmp;
+	}
+	
 	public String[] getXnames(){
 		return xData;
 	}
