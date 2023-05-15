@@ -62,6 +62,10 @@ public class Main extends HttpServlet {
 				request.getServletContext());
 		HttpSession session = request.getSession();
 		User user = (User)session.getAttribute("User");
+	    if (user == null) {
+	        response.sendRedirect("index"); // Weiterleitung zum "index" Servlet
+	        return;
+	    }
 		UserHandler userHand = new UserHandler();
 		FileHandler filehandler = new FileHandler(user);
 
