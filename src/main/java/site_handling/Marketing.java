@@ -42,6 +42,10 @@ public class Marketing extends HttpServlet {
 		response.setCharacterEncoding("UTF-8");
 		HttpSession session = request.getSession();
 		User user = (User)session.getAttribute("User");
+	    if (user == null) {
+	        response.sendRedirect("index"); // Weiterleitung zum "index" Servlet
+	        return;
+	    }
 		System.out.println("TEST " + user.getName());
 		FileHandler filehandler = new FileHandler(user);
 		ArrayList<String> items = new ArrayList<>();

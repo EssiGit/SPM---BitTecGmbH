@@ -35,7 +35,11 @@ public class WekaServlet extends HttpServlet {
 				request.getServletContext());
 		response.setCharacterEncoding("UTF-8");
 		request.setCharacterEncoding("UTF-8");
-
+		User user = (User)session.getAttribute("User");
+	    if (user == null) {
+	        response.sendRedirect("index"); // Weiterleitung zum "index" Servlet
+	        return;
+	    }
 		FileHandler filehandler = new FileHandler((User)session.getAttribute("User"));
 		System.out.println("WekaServlet doGet");
 		String[] buttonVal = filehandler.getFileNames();
@@ -60,14 +64,19 @@ public class WekaServlet extends HttpServlet {
 		}
 
 		System.out.println("context: " + buttonValue);
-		FileHandler filehandler = new FileHandler((User)session.getAttribute("User"));
+		User user = (User)session.getAttribute("User");
+	    if (user == null) {
+	        response.sendRedirect("index"); // Weiterleitung zum "index" Servlet
+	        return;
+	    }
+		FileHandler filehandler = new FileHandler(user);
 		String[] buttonVal = filehandler.getFileNames();
 		context.setVariable("buttons",buttonVal);
 		if(buttonValue != null) {
 			session.setAttribute("filename", buttonValue);
 		}
 		try {
-			WekaAnalyser weka = new WekaAnalyser((String)session.getAttribute("filename"),(User)session.getAttribute("User"));
+			WekaAnalyser weka = new WekaAnalyser((String)session.getAttribute("filename"),user);
 			String typeOfAnalysis = request.getParameter("clusterInfo");
 			if(typeOfAnalysis == null)
 				typeOfAnalysis = "Umsatzstärkstertag/Uhrzeit";

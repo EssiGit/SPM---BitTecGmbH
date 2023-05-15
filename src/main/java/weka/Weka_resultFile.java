@@ -17,17 +17,22 @@ public class Weka_resultFile {
 	private String yName;
 	public String tableName;
 	private int lineNumber;
+	private int yMax;
 
 	//TODO make dynmaic y and x axis
 	public Weka_resultFile(String yName, String[] xData, String[] yData) throws FileNotFoundException, IOException {
 		this.xData = xData;
 		this.yData = new int[yData.length];
+		int yMaxTmp = 0;
 		for(int i = 0; i<yData.length;i++) {
 			System.out.println("test");
 			System.out.println(yData[i]);
 			this.yData[i] = (int) Double.parseDouble(yData[i]);
+			if(this.yData[i]>yMaxTmp) {
+				yMaxTmp= this.yData[i];
+			}
 		}
-		
+		yMax = yMaxTmp;
 		
 		
 		this.yName = yName;
@@ -84,16 +89,8 @@ public class Weka_resultFile {
 	}*/
 	
 	public int getYmax(){
-		int tmp = 0;
-		
-		for(int i = 0; i < yData.length; i++) {
-			
-			if(yData[i] > tmp)
-				tmp = yData[i]; 
-			
-		}
-		
-		return tmp;
+
+		return yMax;
 	}
 	
 	public String[] getXnames(){
