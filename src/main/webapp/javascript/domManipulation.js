@@ -11,13 +11,13 @@ function SubmitEvent(formId) {
 }
 
 //zeige Sanduhr
-function showHourglass(){
-	
+function showHourglass() {
+
 	const loading = document.getElementById('loading');
 	const loadingimg = document.getElementById('loadingimg');
 	loading.style.display = "flex";
 	loadingimg.style.display = "flex";
-	
+
 }
 
 //sende submits mit Clusterinfos
@@ -33,7 +33,7 @@ function submitForm(action, clusterInfo) {
 
 	form.appendChild(input);
 	document.body.appendChild(form);
-	
+
 	showHourglass();
 
 	form.submit();
@@ -42,19 +42,17 @@ function submitForm(action, clusterInfo) {
 function selectButton(button) {
 	var selectedButtonInput = document.getElementById("selectedButton");
 	selectedButtonInput.value = button.textContent;
-	
+
 	showHourglass();
-	
+
 	document.getElementById("buttonForm").submit();
 }
 
 //Chart Values aktuallisieren je nach Clusteranzahl
 function loadData(value, info) {
-	$.post('WekaServlet', { sliderValue: value, clusterInfo: info },
+	$.post('WekaServlet', { sliderValue: value, clusterInfo: info, ajaxUpdate: 1},
 		function(response) {
-			console.log(response); //<---- brauche nur die Daten nicht das ganze HTML
-
-			//createChart(tableName, yName, xValues, yValues);
+		   updateChart(response.tableName, response.yName, response.xNames, response.yValues, response.yMax);
 
 		}).
 		fail(function() {

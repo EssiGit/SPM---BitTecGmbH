@@ -82,6 +82,19 @@ public class WekaServlet extends HttpServlet {
 				System.out.println(test.getTableName());
 			}
 			
+
+			if(request.getParameter("ajaxUpdate") != null && request.getParameter("ajaxUpdate").equals("1")) {
+				
+				response.setContentType("application/json");
+				response.setContentLength(wekaFiles.get(0).ajax().length());
+				response.getWriter().write(wekaFiles.get(0).ajax());
+				System.out.println(wekaFiles.get(0).ajax());
+				
+				ThymeleafConfig.getTemplateEngine().process("main.html", context, response.getWriter());
+				System.out.println("Time till served: " + watch.getTime() + "ms");
+				return;
+			}
+			
 			//setzen ob cluster oder nicht (nikok)
 			if(!(typeOfAnalysis.equals("Umsatzstärkstertag/Uhrzeit") || 
 					typeOfAnalysis.equals("Kundenhäufigkeit") ||
@@ -97,6 +110,7 @@ public class WekaServlet extends HttpServlet {
 		}
 		watch.stop();
 
+		
 		ThymeleafConfig.getTemplateEngine().process("main.html", context, response.getWriter());
 		System.out.println("Time till served: " + watch.getTime() + "ms");
 
