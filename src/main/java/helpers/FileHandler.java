@@ -107,32 +107,18 @@ public class FileHandler {
 		}
 
 	}
-	/**
-	 * writes wekaResultFile to USERDIR/Result_Files/
-	 * @param csv
-	 * @param fileName
-	 */
-	public void writeWekaResult(String csv,String fileName) {
-		try {
-			FileWriter file = new FileWriter(System.getProperty("user.home") + File.separator + "KaufDort_Userfiles"+ File.separator + "users" + File.separator + user.getName() + File.separator +"Result_Files" +  File.separator +  "result_cluster_" + fileName);
-			file.write(csv);
-			file.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 
-	}
 	/** Deletes file.
 	 * @param file to be deleted. Both file and the result-file will be deleted!
 	 * 
 	 * 
 	 */
 	private void deleteOldFile(String file) {
-		File tmpResultFile = new File(System.getProperty("user.home") + File.separator + "KaufDort_Userfiles"+ File.separator + "users" + File.separator + user.getName() + File.separator + "Result_Files"+ File.separator+ "result_cluster_" + file);
-		File tmpFile = new File(System.getProperty("user.home") + File.separator + "KaufDort_Userfiles"+ File.separator + "users" + File.separator + user.getName() + File.separator + file);		
-		tmpResultFile.delete();
-		tmpFile.delete();
+	    String arffFile = file.replace(".csv", ".arff.csv");
+	    File tmpArffFile = new File(System.getProperty("user.home") + File.separator + "KaufDort_Userfiles" + File.separator + "users" + File.separator + user.getName() + File.separator + arffFile);
+	    File tmpFile = new File(System.getProperty("user.home") + File.separator + "KaufDort_Userfiles" + File.separator + "users" + File.separator + user.getName() + File.separator + file);        
+	    tmpArffFile.delete();
+	    tmpFile.delete();
 	}
 
 	/** writes fileData.txt to keep order of last 5 added files.
