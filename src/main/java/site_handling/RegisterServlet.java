@@ -39,27 +39,26 @@ public class RegisterServlet extends HttpServlet {
 	String name = request.getParameter("username");
 	System.out.println("Index Name: " + name);
 	System.out.println("stil in POST");
-	if(name.isEmpty() == false) {
+	
 	name = name.toLowerCase();
-	User user = new User(name);
-	SetupUser setup = new SetupUser(user);
-	if(setup.checkIfexists()==false) {
-		setup.addUser();
+	SetupUser setup = new SetupUser(name);
+	if(setup.errorMsg().equals("none")) {
+
+		User user = new User(name);
+		FileHandler filehandler = new FileHandler(user);
+		setup.addUser(filehandler);
 		MarketingHelper marketing = new MarketingHelper(user);
 		marketing.newMarketingFile();
-	    FileHandler filehandler = new FileHandler(user);
-	    String[] buttonVal = filehandler.getFileNames();
-	    for(int i=1;i<=5;i++) {
-	    	context.setVariable("button"+i,buttonVal[i-1]);
-	    }
+
 	    response.sendRedirect("index");
 	}else {
+		System.out.println(setup.errorMsg());
 		context.setVariable("error", "1");
+		context.setVariable("errorMsg", setup.errorMsg());
 		ThymeleafConfig.getTemplateEngine().process("register.html", context, response.getWriter());
 		
 	}
 
-	}
 	
 }
 

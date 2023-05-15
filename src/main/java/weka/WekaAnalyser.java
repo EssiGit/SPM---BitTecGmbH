@@ -81,7 +81,7 @@ public class WekaAnalyser {
 			wekaFiles.addAll(umsatzstaerksteTagUhrzeit(filehandler));
 			break;
 		case "Kundenhäufigkeit":
-			wekaFiles.addAll(KSETU(filehandler));
+			wekaFiles.addAll(kundenhaeufigkeit(filehandler));
 			break;
 		case "uhrzeitProTag":
 			wekaFiles.addAll(uhrzeitProTag(filehandler));
@@ -96,34 +96,8 @@ public class WekaAnalyser {
 		// Rückgabe des Ergebnisses (je nach Bedarf)
 		return wekaFiles;
 	}
-	/**
-	 * Cluster analyse veraltet
-	 * @param fileHandler
-	 * @param cluster der Name des Attributes, nach dem geclustered wird. Bsp "Einkaufssumme"
-	 * @return
-	 * @throws Exception
-	 */
+	
 
-	public File clusterAnalyse(FileHandler fileHandler, String cluster) throws Exception {
-		System.out.println(">>>>>--- Clusteranalyse ueber alle Daten, 5 Cluster ---\n");
-		String result = "";
-		try (BufferedReader reader = new BufferedReader(new FileReader(DIR))) {
-			result = reader.readLine();
-		}
-		int index = 0;
-		Attribute attribute = data.attribute(cluster);
-		if (attribute != null) {
-			index = attribute.index();
-		} else {
-			index = 0; // Attribut nicht gefunden
-		}
-		System.out.println("INDEX : " + index);
-
-
-
-		//fileHandler.writeWekaResult(result, fileName);
-		return new File(System.getProperty("user.home") + File.separator + "KaufDort_Userfiles" + File.separator + "users"  + File.separator + user.getName() +File.separator +"Result_Files" + File.separator +  "result_cluster_" + fileName);
-	}
 
 	/**
 	 * cluster analyse multithreaded. saves up to 200 ms
@@ -296,7 +270,7 @@ public class WekaAnalyser {
 	 * @throws IOException 
 	 * @throws FileNotFoundException 
 	 */
-	public ArrayList<Weka_resultFile> KSETU(FileHandler fileHandler) throws FileNotFoundException, IOException {
+	public ArrayList<Weka_resultFile> kundenhaeufigkeit(FileHandler fileHandler) throws FileNotFoundException, IOException {
 		ArrayList<Weka_resultFile> wekaFiles = new ArrayList<>();
 
 		Map<String, Integer> tage = new HashMap<>();
@@ -348,18 +322,6 @@ public class WekaAnalyser {
 		}
 		wekaFiles.add(new Weka_resultFile("Kunden nach Uhrzeit", xValues2, yValues2));
 
-		System.out.println("Montag: " + tage.get("Montag"));
-		System.out.println("Dienstag: " + tage.get("Dienstag"));
-		System.out.println("Mittwoch: " + tage.get("Mittwoch"));
-		System.out.println("Donnerstag: " + tage.get("Donnerstag"));
-		System.out.println("Freitag: " + tage.get("Freitag"));
-		System.out.println("Samstag: " + tage.get("Samstag"));
-
-		System.out.println("<10 Uhr: " + zeiten.get("<10 Uhr"));
-		System.out.println("10-12 Uhr: " + zeiten.get("10-12 Uhr"));
-		System.out.println("12-14 Uhr: " + zeiten.get("12-14 Uhr"));
-		System.out.println("14-17 Uhr: " + zeiten.get("14-17 Uhr"));
-		System.out.println(">17 Uhr: " + zeiten.get(">17 Uhr"));
 
 		return wekaFiles;
 	}

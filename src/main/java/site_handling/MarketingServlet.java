@@ -41,6 +41,7 @@ public class MarketingServlet extends HttpServlet {
 		WebContext context = new WebContext(request, response,
 				request.getServletContext());
 		response.setCharacterEncoding("UTF-8");
+		request.setCharacterEncoding("UTF-8");
 		HttpSession session = request.getSession();
 		User user = (User)session.getAttribute("User");
 	    if (user == null) {
@@ -70,6 +71,7 @@ public class MarketingServlet extends HttpServlet {
 		WebContext context = new WebContext(request, response,
 				request.getServletContext());
 		response.setCharacterEncoding("UTF-8");
+		request.setCharacterEncoding("UTF-8");
 		HttpSession session = request.getSession();
 		User user = (User)session.getAttribute("User");
 		System.err.println("marketing doPost");

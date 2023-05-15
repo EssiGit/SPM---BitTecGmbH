@@ -1,40 +1,55 @@
 <!DOCTYPE html>
 <html lang="de" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="utf-8">
-    <meta name="registrieren" content="registrieren">
-    <meta name="author" content="Gruppe X">
-    <title>Amazon Light Registrierung</title>
-    <link rel="stylesheet" href="css/style.css">
+  <meta charset="utf-8">
+  <meta name="registrieren" content="registrieren">
+  <meta name="author" content="Gruppe X">
+  <title>BitTec Registrierung</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .alert {
+      background-color: transparent;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .closebtn {
+      float: right;
+      font-size: 24px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .extra-bold-text {
+      font-weight: bold;
+      color: red;
+    }
+  </style>
 </head>
 <body>
 
-    <form name="register" method="post" action="register">
-    
-        <h1> Registrierung</h1>
-        
-		<th:block th:if="${error == 1}">
-			<div class="alert">
-			<span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
-			Nutzername existiert bereits!
-			</div>
-		</th:block>
-		
-		
-        <label>Ihr Nutzername</label>
-        <input type="text" name="username" placeholder="Username">
-    
-        <label>Passwort</label>
-        <input type="password" name="password" placeholder="Passwort">
+  <form name="register" method="post" action="register">
 
-		<label>Passwort erneut eingeben</label>
-        <input type="password" name="passwordrepeat" placeholder="Passwort">
-        
-        <a href="./index">zum Login</a>
-        
-        	<button type="submit" class="log">registrieren</button>
-        
-      </form>
-    
+    <h1>Registrierung</h1>
+
+    <th:block th:if="${error == 1}">
+      <div class="alert">
+        <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+        <label th:text="${errorMsg}" class="extra-bold-text"></label>
+      </div>
+    </th:block>
+
+    <label>Ihr Nutzername</label>
+    <input type="text" name="username" placeholder="Username">
+    <label>Passwort</label>
+    <input type="password" name="password" placeholder="Passwort">
+    <label>Passwort erneut eingeben</label>
+    <input type="password" name="passwordrepeat" placeholder="Passwort">
+    <a href="./index">zum Login</a>
+
+    <button type="submit" class="log">registrieren</button>
+
+  </form>
+
 </body>
 </html>
