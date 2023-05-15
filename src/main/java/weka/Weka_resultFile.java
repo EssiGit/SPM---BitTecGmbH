@@ -69,7 +69,7 @@ public class Weka_resultFile {
 		}
 		
 		xNames = "[\""+ xNames.substring(0, xNames.length()-3)+ "\"]";
-		xNames = xNames.replace("\n", "\\n");
+		xNames = xNames.replace("\n", "\\n").replace("ä", "ae");
 		return "{\"xNames\": " +       xNames
 				+ ",\n\"yName\": \"" + getYname() + "\""
 				+ ",\n\"yMax\": " + getYmax() 
