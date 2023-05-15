@@ -1,7 +1,7 @@
-function createChart(tableName, yName, xValues, yValues, maxYvalue, bottomMargin) {
+function createChart(tableName, yName, xValues, yValues, maxYvalue, bottomMargin, leftMargin) {
 
 	//setze höhe,breite und abstaende 120 normal
-	var margin = { top: 30, right: 30, bottom: bottomMargin, left: 100 },
+	var margin = { top: 30, right: 30, bottom: bottomMargin, left: leftMargin },
 		width = 1800 - margin.left - margin.right,
 		height = 900 - margin.top - margin.bottom;
 
@@ -35,7 +35,7 @@ function createChart(tableName, yName, xValues, yValues, maxYvalue, bottomMargin
 		.selectAll("text")
 		.attr("transform", "translate(-10,0)rotate(-45)")
 		.style("text-anchor", "end")
-		.style("font-size", "25px");
+		.style("font-size", "22px");
 
 	//Y Achse erstellen
 	var y = d3.scaleLinear()
@@ -74,5 +74,5 @@ function updateChart(tableName, yName, xValues, yValues, maxYvalue, bottomMargin
 	d3.select("#my_dataviz svg").remove();
 	
 	//erstelle neuen chart
-	createChart(tableName, yName, xValues, yValues, maxYvalue, bottomMargin)
+	createChart(tableName, yName, xValues, yValues, maxYvalue, bottomMargin, 350)
 }
