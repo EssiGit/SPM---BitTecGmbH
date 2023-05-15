@@ -56,6 +56,7 @@ public class UserHandler {
 		File path = new File(System.getProperty("user.home") + File.separator + "KaufDort_Userfiles"+ File.separator + "usersHandling.txt"); 
 		userLine = userLine.replace("\n", "");
 		boolean result = false;
+		if(path.exists()) {
 		BufferedReader reader = new BufferedReader(new FileReader(path));
 		String line = "";
 		while(( line = reader.readLine()) != null) {
@@ -65,7 +66,7 @@ public class UserHandler {
 				System.out.println("in " + line);
 			}
 		}
-
+		}
 		return result;
 	}
 	/**

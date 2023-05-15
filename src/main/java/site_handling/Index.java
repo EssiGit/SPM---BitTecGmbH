@@ -37,7 +37,7 @@ public class Index extends HttpServlet {
 		String name = request.getParameter("nutzername");
 		System.out.println("Index Name: " + name);
 		if(name.isEmpty()) {name = " ";};
-		
+		name = name.toLowerCase();
 		UserHandler userHand = new UserHandler();
 		
 
