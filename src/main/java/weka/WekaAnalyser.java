@@ -193,7 +193,7 @@ public class WekaAnalyser {
 				xValues[i] = xValues[i].replaceFirst(",Partnerschaft", ", Partnerschaft");
 			}
 			if(xValues[i].contains(",ja")) {
-				xValues[i] = xValues[i].replaceFirst(",ja", ", Beruftaetig");
+				xValues[i] = xValues[i].replaceFirst(",ja", ", Berufstaetig");
 			}else {
 				xValues[i] = xValues[i].replaceFirst(",nein", ", Arbeitslos");
 			}
@@ -206,9 +206,23 @@ public class WekaAnalyser {
 		if(cluster.equals("Einkaufsuhrzeit")) {
 			for(int i = 0;i<yValues.length;i++) {
 				String test =yValues[i];
-				System.out.println("eyo" + test);
 				yValues[i] = changeTime(yValues[i]);	
-				System.out.println("eyo" + yValues[i]);
+			}
+		}else if(cluster.equals("Wohnort")) {
+			for(int i = 0;i<yValues.length;i++) {
+				String test =yValues[i];
+				System.out.println("yValues[i] before: " + yValues[i]) ;
+
+				yValues[i] = changeWohnort(yValues[i]);	
+				System.out.println("yValues[i]: " + yValues[i]) ;
+			}
+		}else if(cluster.equals("Haushaltsnettoeinkommen")) {
+			System.out.println(" Haushaltsnettoeinkommen");
+			for(int i = 0;i<yValues.length;i++) {
+				String test =yValues[i];
+				System.out.println("yValues[i] before: " + yValues[i]) ;
+				yValues[i] = changeEinkommen(yValues[i]);	
+				System.out.println("yValues[i]: " + yValues[i]) ;
 			}
 		}
 
@@ -228,6 +242,34 @@ public class WekaAnalyser {
 			return "15";
 		case "'>17 Uhr'":
 			return "18";
+		default:
+			return ""; // Rückgabe eines leeren Strings für den Fall, dass der Wert von "time" nicht erkannt wird
+		}
+	}
+	private String changeWohnort(String ort) {
+		switch (ort) {
+		case "'< 10 km'":
+			return "9";
+		case "'10 - 25 km'":
+			return "18";
+		case "'> 25 km'":
+			return "30";
+		default:
+			return ""; // Rückgabe eines leeren Strings für den Fall, dass der Wert von "time" nicht erkannt wird
+		}
+	}
+	private String changeEinkommen(String einkommen) {
+		switch (einkommen) {
+		case "3200-<4500":
+			return "4000";
+		case "<1000":
+			return "900";
+		case "1000-<2000":
+			return "1500";	
+		case "2000-<3200":
+			return "2750";
+		case ">4500":
+			return "5800";
 		default:
 			return ""; // Rückgabe eines leeren Strings für den Fall, dass der Wert von "time" nicht erkannt wird
 		}
@@ -393,56 +435,56 @@ public class WekaAnalyser {
 	 * @throws FileNotFoundException 
 	 */
 	public ArrayList<Weka_resultFile> USUT(FileHandler filehandler) throws FileNotFoundException, IOException {
-	    String[] tage = {"Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag"};
-	    String[] zeiten = {"<10 Uhr", "10-12 Uhr", "12-14 Uhr", "14-17 Uhr", ">17 Uhr"};
-	    ArrayList<Weka_resultFile> wekaFiles = new ArrayList<>();
-	    Map<String, Map<String, Integer>> tageZeiten = new HashMap<>();
-	    String[] xValues = new String[zeiten.length]; // Array für X-Werte (Uhrzeiten)
-	    String[] yValuesTime = new String[zeiten.length]; // Array für Y-Werte (Umsatz nach Uhrzeit)
-	    String[] yValuesDay = new String[tage.length]; // Array für Y-Werte (Umsatz nach Tag)
+		String[] tage = {"Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag"};
+		String[] zeiten = {"<10 Uhr", "10-12 Uhr", "12-14 Uhr", "14-17 Uhr", ">17 Uhr"};
+		ArrayList<Weka_resultFile> wekaFiles = new ArrayList<>();
+		Map<String, Map<String, Integer>> tageZeiten = new HashMap<>();
+		String[] xValues = new String[zeiten.length]; // Array für X-Werte (Uhrzeiten)
+		String[] yValuesTime = new String[zeiten.length]; // Array für Y-Werte (Umsatz nach Uhrzeit)
+		String[] yValuesDay = new String[tage.length]; // Array für Y-Werte (Umsatz nach Tag)
 
-	    for (String tag : tage) {
-	        tageZeiten.put(tag, new HashMap<>());
-	        tageZeiten.get(tag).put("<10 Uhr", 0);
-	        tageZeiten.get(tag).put("10-12 Uhr", 0);
-	        tageZeiten.get(tag).put("12-14 Uhr", 0);
-	        tageZeiten.get(tag).put("14-17 Uhr", 0);
-	        tageZeiten.get(tag).put(">17 Uhr", 0);
-	    }
+		for (String tag : tage) {
+			tageZeiten.put(tag, new HashMap<>());
+			tageZeiten.get(tag).put("<10 Uhr", 0);
+			tageZeiten.get(tag).put("10-12 Uhr", 0);
+			tageZeiten.get(tag).put("12-14 Uhr", 0);
+			tageZeiten.get(tag).put("14-17 Uhr", 0);
+			tageZeiten.get(tag).put(">17 Uhr", 0);
+		}
 
-	    for (int i = 0; i < data.numInstances(); i++) {
-	        String wochentag = data.instance(i).stringValue(5);
-	        String zeit = data.instance(i).stringValue(6);
-	        Map<String, Integer> tagZeit = tageZeiten.get(wochentag);
-	        tagZeit.put(zeit, (int) (data.instance(i).value(9) + tagZeit.get(zeit)));
-	    }
+		for (int i = 0; i < data.numInstances(); i++) {
+			String wochentag = data.instance(i).stringValue(5);
+			String zeit = data.instance(i).stringValue(6);
+			Map<String, Integer> tagZeit = tageZeiten.get(wochentag);
+			tagZeit.put(zeit, (int) (data.instance(i).value(9) + tagZeit.get(zeit)));
+		}
 
-	    // Generiere Tabelle mit Uhrzeiten und Umsatz
-	    for (int i = 0; i < zeiten.length; i++) {
-	        xValues[i] = zeiten[i];
-	        int sum = 0;
-	        for (String tag : tage) {
-	            int currTime = tageZeiten.get(tag).get(zeiten[i]);
-	            sum += currTime;
-	            yValuesTime[i] = Integer.toString(sum);
-	        }
-	    }
-	    
-	    // Generiere Weka_resultFile für Tage und Umsatz
-	    for (int i = 0; i < tage.length; i++) {
-	        int sum = 0;
-	        for (String zeit : zeiten) {
-	            int currTime = tageZeiten.get(tage[i]).get(zeit);
-	            sum += currTime;
-	        }
-	        yValuesDay[i] = Integer.toString(sum);
-	    }
+		// Generiere Tabelle mit Uhrzeiten und Umsatz
+		for (int i = 0; i < zeiten.length; i++) {
+			xValues[i] = zeiten[i];
+			int sum = 0;
+			for (String tag : tage) {
+				int currTime = tageZeiten.get(tag).get(zeiten[i]);
+				sum += currTime;
+				yValuesTime[i] = Integer.toString(sum);
+			}
+		}
 
-	    // Erzeuge Weka_resultFile-Objekte und füge sie zur Liste hinzu
-	    wekaFiles.add(new Weka_resultFile("Umsatz nach Uhrzeit", xValues, yValuesTime));
-	    wekaFiles.add(new Weka_resultFile("Umsatz nach Tag", tage, yValuesDay));
+		// Generiere Weka_resultFile für Tage und Umsatz
+		for (int i = 0; i < tage.length; i++) {
+			int sum = 0;
+			for (String zeit : zeiten) {
+				int currTime = tageZeiten.get(tage[i]).get(zeit);
+				sum += currTime;
+			}
+			yValuesDay[i] = Integer.toString(sum);
+		}
 
-	    return wekaFiles;
+		// Erzeuge Weka_resultFile-Objekte und füge sie zur Liste hinzu
+		wekaFiles.add(new Weka_resultFile("Umsatz nach Uhrzeit", xValues, yValuesTime));
+		wekaFiles.add(new Weka_resultFile("Umsatz nach Tag", tage, yValuesDay));
+
+		return wekaFiles;
 	}
 
 
