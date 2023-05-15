@@ -39,6 +39,7 @@ public class RegisterServlet extends HttpServlet {
 	System.out.println("Index Name: " + name);
 	System.out.println("stil in POST");
 	if(name.isEmpty() == false) {
+	name = name.toLowerCase();
 	User user = new User(name);
 	SetupUser setup = new SetupUser(user);
 	if(setup.checkIfexists()==false) {
