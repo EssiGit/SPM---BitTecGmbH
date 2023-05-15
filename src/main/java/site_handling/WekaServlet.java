@@ -71,11 +71,12 @@ public class WekaServlet extends HttpServlet {
 			String typeOfAnalysis = request.getParameter("clusterInfo");
 			if(typeOfAnalysis == null)
 				typeOfAnalysis = "Umsatzstärkstertag/Uhrzeit";
-
+			
 			ArrayList<Weka_resultFile> wekaFiles = weka.getCorrectAnalysis(filehandler, typeOfAnalysis);
 			for(Weka_resultFile test : wekaFiles) {
 				System.out.println(test.getTableName());
 			}
+			context.setVariable("typeOfAnalysis", typeOfAnalysis);
 			context.setVariable("results", wekaFiles);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

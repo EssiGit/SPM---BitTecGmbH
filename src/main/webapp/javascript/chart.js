@@ -1,7 +1,7 @@
 function createChart(tableName, yName, xValues, yValues, maxYvalue){	
 	
-	//setze höhe,breite und abstaende
-	var margin = {top: 30, right: 30, bottom: 180, left: 100},
+	//setze höhe,breite und abstaende 120 normal
+	var margin = {top: 30, right: 30, bottom: 120, left: 100},
     width = 1800 - margin.left - margin.right,
     height = 900 - margin.top - margin.bottom;
 

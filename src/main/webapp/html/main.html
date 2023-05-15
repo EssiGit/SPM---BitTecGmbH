@@ -77,18 +77,18 @@
 
 <!-- Zweite Navigationbar -->
 <nav class="navbar-2" th:if="${results != null}">
-    <a class="nav2-item active" href="#" onclick="submitForm('WekaServlet', 'Umsatzstärkstertag/Uhrzeit')">Umsatzstärkstertag/Uhrzeit</a>
-    <a class="nav2-item" href="#" onclick="submitForm('WekaServlet', 'Kundenhäufigkeit')">Kundenhäufigkeit</a>
-    <a class="nav2-item" href="#" onclick="submitForm('WekaServlet', 'uhrzeitProTag')">Umsatzstärkste Einkaufsuhrzeit pro Tag</a>
+    <a class="nav2-item active" id="Umsatzstärkstertag/Uhrzeit" href="#" onclick="submitForm('WekaServlet', 'Umsatzstärkstertag/Uhrzeit')">Umsatzstärkstertag/Uhrzeit</a>
+    <a class="nav2-item" id="Kundenhäufigkeit" href="#" onclick="submitForm('WekaServlet', 'Kundenhäufigkeit')">Kundenhäufigkeit</a>
+    <a class="nav2-item" id="uhrzeitProTag" href="#" onclick="submitForm('WekaServlet', 'uhrzeitProTag')">Umsatzstärkste Einkaufsuhrzeit pro Tag</a>
     <a class="nav2-item" id="kundengruppen-link" href="#">Kundengruppen</a>
 </nav>
 
 <!-- dropdown Kundngruppen -->
 <div class="dropdown2" id="drop2">
-    <a href="#" onclick="submitForm('WekaServlet', 'Einkaufssumme')">Einkaufssumme</a> 
-    <a href="#" onclick="submitForm('WekaServlet', 'Wohnort')">Wohnort</a> 
-    <a href="#" onclick="submitForm('WekaServlet', 'Einkaufsuhrzeit')">Einkaufsuhrzeit</a>
-    <a href="#" onclick="submitForm('WekaServlet', 'Haushaltsnettoeinkommen')">Haushaltsnettoeinkommen</a>
+    <a href="#" id="Einkaufssumme" onclick="submitForm('WekaServlet', 'Einkaufssumme')">Einkaufssumme</a> 
+    <a href="#" id="Wohnort" onclick="submitForm('WekaServlet', 'Wohnort')">Wohnort</a> 
+    <a href="#" id="Einkaufsuhrzeit" onclick="submitForm('WekaServlet', 'Einkaufsuhrzeit')">Einkaufsuhrzeit</a>
+    <a href="#" id="Haushaltsnettoeinkommen" onclick="submitForm('WekaServlet', 'Haushaltsnettoeinkommen')">Haushaltsnettoeinkommen</a>
 </div>
 
 
@@ -113,6 +113,8 @@
 
 			<script th:inline="javascript">
 
+			var type = /*[[${typeOfAnalysis}]]*/ "";
+			console.log(type);
 			//Ergebnisse x,y Values als array
 			var maxYvalue = /*[[${cluster.getYmax()}]]*/ "";
 			var tableName = /*[[${cluster.tableName}]]*/ ""; 
