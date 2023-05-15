@@ -37,11 +37,13 @@ public class Index extends HttpServlet {
 		String name = request.getParameter("nutzername");
 		System.out.println("Index Name: " + name);
 		if(name.isEmpty()) {name = " ";};
-		User user = new User(name);
+		
 		UserHandler userHand = new UserHandler();
-		FileHandler filehandler = new FileHandler(user);
+		
 
 		if(userHand.checkForUserName(name)) {
+			User user = new User(name);
+			FileHandler filehandler = new FileHandler(user);
 			session.setAttribute("User", user);
 
 			request.setAttribute("User", user);
