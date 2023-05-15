@@ -37,56 +37,7 @@ public class Weka_resultFile {
 		
 		this.yName = yName;
 
-		
-		System.out.println(tableName);
-		System.out.println(yName);
-		for(int i = 0;i<xNames.size();i++) {
-			System.out.print(xNames.get(i) + ": ");
-			//System.out.println(yData.get(i));
-		}
-
-
-
-
-
 	}
-
-
-
-	/**
-	 * reads a certain line, for example line 2, in a file.
-	 * SLOW AS FUCK and a dumb way to do things but works for now
-	 * @param resultFile
-	 * @param customLine custom line as int
-	 * @return
-	 * @throws IOException
-	 */
-	private String readFileLine(File resultFile,int customLine) throws IOException {
-
-		try (BufferedReader reader = new BufferedReader(new FileReader(resultFile))) {
-			int readingLine = 1;
-			String line;
-			String returnVal = "";
-			while((line = reader.readLine()) != null) {
-				if(customLine == readingLine) {
-					returnVal = line;
-				}
-				readingLine++;
-			}
-			return returnVal;
-		}
-	}
-
-
-	
-	/*private void setupTableName(File resultData) throws IOException {
-		String result = readFileLine(resultData, lineNumber);
-		String[] resultArr = result.split(",");
-		for(int i =0;i<4;i++) { //9 for all
-				tableName = tableName.concat("," + resultArr[i]);
-		}
-		tableName = setTableName(tableName);
-	}*/
 	
 	public int getYmax(){
 

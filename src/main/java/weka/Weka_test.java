@@ -58,7 +58,7 @@ public class Weka_test {
 		System.out.println("Kundenstärkste Einkauftage u. Uhzreiten: " + watch.getTime() + "ms");
         watch.reset();
         watch.start();
-        analyser.USUT(fileHandler);
+        analyser.umsatzstaerksteTagUhrzeit(fileHandler);
         watch.stop();
         System.out.println("Umsatzstärkste Einkauftage u. Uhzreiten: " + watch.getTime() + "ms");
         watch.reset();
