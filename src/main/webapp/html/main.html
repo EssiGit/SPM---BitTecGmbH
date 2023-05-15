@@ -93,26 +93,38 @@
 	</div>
 
 
-	<!-- Zweite Navigationbar -->
-	<nav class="navbar-2" th:if="${results != null}">
-		<a class="nav2-item active" href="./WekaServlet?resultID=1">Umsatzstärkstertag/Uhrzeit</a>
-		<a class="nav2-item" href="./WekaServlet?resultID=2">Kundenhäufigkeit</a>
-		<a class="nav2-item" href="./WekaServlet?resultID=3">Umsatzstärkste
-			Einkaufsuhrzeit pro Tag</a> <a class="nav2-item" id="kundengruppen-link"
-			href="#">Kundengruppen</a>
-	</nav>
+<!-- Zweite Navigationbar -->
+<nav class="navbar-2" th:if="${results != null}">
+    <a class="nav2-item active" href="#" onclick="submitForm('WekaServlet', 'Umsatzstärkstertag/Uhrzeit')">Umsatzstärkstertag/Uhrzeit</a>
+    <a class="nav2-item" href="#" onclick="submitForm('WekaServlet', 'Kundenhäufigkeit')">Kundenhäufigkeit</a>
+    <a class="nav2-item" href="#" onclick="submitForm('WekaServlet', 'uhrzeitProTag')">Umsatzstärkste Einkaufsuhrzeit pro Tag</a>
+    <a class="nav2-item" id="kundengruppen-link" href="#">Kundengruppen</a>
+</nav>
 
-	<!-- dropdown Kundngruppen -->
-	<div class="dropdown2" id="drop2">
-		<a href="/WekaServlet?clusterInfo=Einkaufssumme">Einkaufssumme</a> 
-		<a href="/WekaServlet?clusterInfo=Wohnort">Wohnort</a> 
-		<a href="/WekaServlet?clusterInfo=Einkaufsuhrzeit">Einkaufsuhrzeit</a>
-		<a href="/WekaServlet?clusterInfo=Haushaltsnettoeinkommen">Haushaltsnettoeinkommen</a>
-	</div>
+<!-- dropdown Kundngruppen -->
+<div class="dropdown2" id="drop2">
+    <a href="#" onclick="submitForm('WekaServlet', 'Einkaufssumme')">Einkaufssumme</a> 
+    <a href="#" onclick="submitForm('WekaServlet', 'Wohnort')">Wohnort</a> 
+    <a href="#" onclick="submitForm('WekaServlet', 'Einkaufsuhrzeit')">Einkaufsuhrzeit</a>
+    <a href="#" onclick="submitForm('WekaServlet', 'Haushaltsnettoeinkommen')">Haushaltsnettoeinkommen</a>
+</div>
 
-
-
-
+<script>
+    function submitForm(action, clusterInfo) {
+        var form = document.createElement('form');
+        form.setAttribute('method', 'post');
+        form.setAttribute('action', action);
+        
+        var input = document.createElement('input');
+        input.setAttribute('type', 'hidden');
+        input.setAttribute('name', 'clusterInfo');
+        input.setAttribute('value', clusterInfo);
+        
+        form.appendChild(input);
+        document.body.appendChild(form);
+        form.submit();
+    }
+</script>
 
 
 	<script>
@@ -143,7 +155,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	function createChart(tableName, yName, xValues, yValues){	
 	var margin = {top: 30, right: 30, bottom: 180, left: 100},
     width = 1800 - margin.left - margin.right,
-    height = 800 - margin.top - margin.bottom;
+    height = 900 - margin.top - margin.bottom;
 
     //Grafik an chart-container hängen
 	var svg = d3.selectAll("#my_dataviz")
@@ -179,7 +191,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		
 	//Y Achse erstellen
 	var y = d3.scaleLinear()
-    	.domain([0, 300])
+    	.domain([0, 3000])
     	.range([ height, 20])
     	
 	//Y Achse hinzufuegen

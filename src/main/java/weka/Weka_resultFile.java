@@ -45,25 +45,7 @@ public class Weka_resultFile {
 
 	}
 
-	private String setTableName(String table) {
-		table = table.replaceFirst("cluster", "Durchschnittlicher Einkauf von: ");
-		if(table.contains(",m,")) {
-			table = table.replaceFirst(",m,", " Männlich, Alter: ");
-		}else {
-			table = table.replaceFirst(",w,", " Weiblich, Alter: ");
-		}
-		if(table.contains(",nein")) {
-			table = table.replaceFirst(",nein", ", keine Kinder");
-		}else {
-			table = table.replaceFirst(",ja", ", Kinder");
-		}
-		if(table.contains(",ledig")) {
-			table = table.replaceFirst(",ledig", ", ledig");
-		}else {
-			table = table.replaceFirst(",Partnerschaft", ", Partnerschaft");
-		}
-		return table;
-	}
+
 
 	/**
 	 * reads a certain line, for example line 2, in a file.
@@ -91,14 +73,14 @@ public class Weka_resultFile {
 
 
 	
-	private void setupTableName(File resultData) throws IOException {
+	/*private void setupTableName(File resultData) throws IOException {
 		String result = readFileLine(resultData, lineNumber);
 		String[] resultArr = result.split(",");
 		for(int i =0;i<4;i++) { //9 for all
 				tableName = tableName.concat("," + resultArr[i]);
 		}
 		tableName = setTableName(tableName);
-	}
+	}*/
 	
 	public String[] getXnames(){
 		return xData;

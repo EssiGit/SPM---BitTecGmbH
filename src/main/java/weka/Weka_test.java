@@ -42,7 +42,7 @@ public class Weka_test {
 	    System.out.println("cluster anal end time : "  + watch.getTime() + "ms");
         watch.reset();
         watch.start();
-        analyser.clusterAnalyseMulti(fileHandler, "Einkaufssumme");
+        analyser.clusterAnalyseMulti(fileHandler, "Einkaufssumme",10);
         watch.stop();
         System.out.println("cluster analMulti end time : "  + watch.getTime() + "ms");
         watch.reset();

@@ -21,7 +21,7 @@ import weka.WekaAnalyser;
 import weka.Weka_resultFile;
 import helpers.FileHandler;
 import helpers.User;
-
+import org.apache.commons.lang3.time.StopWatch;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Map;
@@ -31,21 +31,21 @@ public class WekaServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession();
-        WebContext context = new WebContext(request, response,
-                request.getServletContext());
-        response.setCharacterEncoding("UTF-8");
-        request.setCharacterEncoding("UTF-8");
-        
-        FileHandler filehandler = new FileHandler((User)session.getAttribute("User"));
-       
-        String[] buttonVal = filehandler.getFileNames();
-        for(int i=1;i<=5;i++) {
-        	context.setVariable("button"+i,buttonVal[i-1]);
-        }
-        ThymeleafConfig.getTemplateEngine().process("main.html", context, response.getWriter());
-    }
+		WebContext context = new WebContext(request, response,
+				request.getServletContext());
+		response.setCharacterEncoding("UTF-8");
+		request.setCharacterEncoding("UTF-8");
+
+		FileHandler filehandler = new FileHandler((User)session.getAttribute("User"));
+		System.out.println("WekaServlet doGet");
+		String[] buttonVal = filehandler.getFileNames();
+		context.setVariable("buttons",buttonVal);
+		ThymeleafConfig.getTemplateEngine().process("main.html", context, response.getWriter());
+	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		StopWatch watch = new StopWatch();
+		watch.start();
 		HttpSession session = request.getSession();
 
 		response.setCharacterEncoding("UTF-8");
@@ -58,23 +58,21 @@ public class WekaServlet extends HttpServlet {
 		if(buttonValue == null) {
 			buttonValue = (String)session.getAttribute("selButton");
 		}
+
 		System.out.println("context: " + buttonValue);
 		FileHandler filehandler = new FileHandler((User)session.getAttribute("User"));
 		String[] buttonVal = filehandler.getFileNames();
 		context.setVariable("buttons",buttonVal);
-
+		if(buttonValue != null) {
+			session.setAttribute("filename", buttonValue);
+		}
 		try {
-			WekaAnalyser weka = new WekaAnalyser(buttonValue,(User)session.getAttribute("User"));
-			ArrayList<Weka_resultFile> wekaFiles = new ArrayList<>();
+			WekaAnalyser weka = new WekaAnalyser((String)session.getAttribute("filename"),(User)session.getAttribute("User"));
+			String typeOfAnalysis = request.getParameter("clusterInfo");
+			if(typeOfAnalysis == null)
+				typeOfAnalysis = "Umsatzstärkstertag/Uhrzeit";
 
-			//File resultSet = weka .clusterAnalyse(filehandler);
-			Weka_resultFile resFile = weka.clusterAnalyseMulti(filehandler, "Einkaufssumme");
-			wekaFiles.add(resFile);
-			/*int lines = getLines(resultSet);
-			for(int i=1;i<lines;i++) {
-				Weka_resultFile resFile = new Weka_resultFile(resultSet,i);
-				wekaFiles.add(resFile);
-			}*/
+			ArrayList<Weka_resultFile> wekaFiles = weka.getCorrectAnalysis(filehandler, typeOfAnalysis);
 			for(Weka_resultFile test : wekaFiles) {
 				System.out.println(test.getTableName());
 			}
@@ -83,6 +81,8 @@ public class WekaServlet extends HttpServlet {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		watch.stop();
+		System.out.println("Time till served: " + watch.getTime() + "ms");
 
 		ThymeleafConfig.getTemplateEngine().process("main.html", context, response.getWriter());
 	}

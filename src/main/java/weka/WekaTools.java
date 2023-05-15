@@ -45,7 +45,7 @@ public class WekaTools {
                     SimpleKMeans model = new SimpleKMeans();
                     model.setNumClusters(number);
                     Remove attributeFilter = new Remove();
-                    attributeFilter.setAttributeIndicesArray(new int[]{1, 2, 3, 4, clusterIndex});
+                    attributeFilter.setAttributeIndicesArray(new int[]{0,1, 2, 3, 4, clusterIndex});
                     attributeFilter.setInvertSelection(true);
                     attributeFilter.setInputFormat(daten);
                     Instances filteredData = Filter.useFilter(daten, attributeFilter);
