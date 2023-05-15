@@ -82,9 +82,10 @@ public class WekaServlet extends HttpServlet {
 			e.printStackTrace();
 		}
 		watch.stop();
-		System.out.println("Time till served: " + watch.getTime() + "ms");
 
 		ThymeleafConfig.getTemplateEngine().process("main.html", context, response.getWriter());
+		System.out.println("Time till served: " + watch.getTime() + "ms");
+
 	}
 	private int getLines(File file) throws FileNotFoundException, IOException { 
 		try (BufferedReader reader = new BufferedReader(new FileReader(file))) {

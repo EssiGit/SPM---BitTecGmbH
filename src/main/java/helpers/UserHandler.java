@@ -48,7 +48,6 @@ public class UserHandler {
 	}
 	/**
 	 * check the userHandling file for the given username
-	 * @param path 
 	 * @param userLine name of the user 
 	 * @return false if user not found, true if user found
 	 * @throws IOException

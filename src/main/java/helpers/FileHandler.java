@@ -20,10 +20,12 @@ public class FileHandler {
 	private User user;
 
 	private static File baseDIR = new File(System.getProperty("user.home") + File.separator + "KaufDort_Userfiles"+ File.separator );
-
+	File fileDataPath;
 
 	public FileHandler(User user) {
 		this.user = user;
+		fileDataPath = new File(System.getProperty("user.home") + File.separator + "KaufDort_Userfiles"+ File.separator + "users" + File.separator + user.getName() + File.separator + "fileData.txt");
+
 	}
 
 
@@ -36,8 +38,7 @@ public class FileHandler {
 	 * 
 	 */
 	public String[] getFileNames() throws IOException {
-		File path = new File(System.getProperty("user.home") + File.separator + "KaufDort_Userfiles"+ File.separator + "users" + File.separator + user.getName() + File.separator + "fileData.txt");
-		BufferedReader reader = new BufferedReader(new FileReader(path));
+		BufferedReader reader = new BufferedReader(new FileReader(fileDataPath));
 		String line;
 		String[] lines = new String[5];
 		int i = 0;
@@ -142,7 +143,6 @@ public class FileHandler {
 	 */
 	public void writeDataFile(String fileName) throws IOException {
 		try {
-			File fileDataPath = new File(baseDIR.getAbsolutePath() + File.separator +  "users" + File.separator + user.getName() + File.separator + "fileData.txt");
 			System.out.println(fileDataPath.isFile());
 			System.out.println(fileDataPath.exists());
 			System.out.println("in Filehandler, writeDataFile :" + fileDataPath.getAbsolutePath());
