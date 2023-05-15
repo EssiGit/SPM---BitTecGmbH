@@ -13,6 +13,7 @@ import javax.servlet.http.HttpSession;
 import org.thymeleaf.context.WebContext;
 
 import helpers.FileHandler;
+import helpers.MarketingHelper;
 import helpers.User;
 import helpers.UserHandler;
 import server_conf.ThymeleafConfig;
@@ -21,13 +22,13 @@ import server_conf.ThymeleafConfig;
  * Servlet implementation class marketing
  */
 @WebServlet("/MarketingServlet")
-public class Marketing extends HttpServlet {
+public class MarketingServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public Marketing() {
+    public MarketingServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -46,24 +47,12 @@ public class Marketing extends HttpServlet {
 	        response.sendRedirect("index"); // Weiterleitung zum "index" Servlet
 	        return;
 	    }
-		System.out.println("TEST " + user.getName());
+	    System.err.println("marketing doget");
 		FileHandler filehandler = new FileHandler(user);
-		ArrayList<String> items = new ArrayList<>();
+		MarketingHelper marketing = new MarketingHelper(user);
 		
-	
-		items.add("Gestaltung ansprechender Schaufenster, um das Interesse von\r\n"
-				+ "		Passanten zu wecken und neue Kunden zu gewinnen.");
-		items.add("Durchführung von Rabattaktionen, Verlosungen oder anderen\r\n"
-				+ "		Promotionen, um Kunden anzulocken und die Umsätze zu steigern.");
-		items.add("Angebot von kostenlosen Produktproben, um Kunden von neuen\r\n"
-				+ "		Produkten zu überzeugen und die Markentreue zu stärken.");
-		items.add("Durchführung von Kundenumfragen, um Feedback zu erhalten\r\n"
-				+ "		und das Angebot an Produkten und Dienstleistungen zu optimieren.");
-		items.add("Organisation von Events wie Verkostungen oder Workshops, um\r\n"
-				+ "		Kunden in den Laden zu locken und das Image des Ladens zu stärken.");
-		items.add("Einrichtung eines Treueprogramms, um bestehende Kunden an\r\n"
-				+ "		den Laden zu binden und die Wiederholungskäufe zu steigern.");
-		
+		ArrayList<String> items = marketing.getValues();
+
 		context.setVariable("items",items);
 		
 		String[] buttonVal = filehandler.getFileNames();
@@ -77,7 +66,28 @@ public class Marketing extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		doGet(request, response);
+		String values = request.getParameter("marketingText");
+		WebContext context = new WebContext(request, response,
+				request.getServletContext());
+		response.setCharacterEncoding("UTF-8");
+		HttpSession session = request.getSession();
+		User user = (User)session.getAttribute("User");
+		System.err.println("marketing doPost");
+	    if (user == null) {
+	        response.sendRedirect("index"); // Weiterleitung zum "index" Servlet
+	        return;
+	    }
+		FileHandler filehandler = new FileHandler(user);
+		MarketingHelper marketing = new MarketingHelper(user);
+		marketing.addToMarketingFile(values);
+		ArrayList<String> items = marketing.getValues();
+		
+		context.setVariable("items",items);
+		
+		String[] buttonVal = filehandler.getFileNames();
+
+		context.setVariable("buttons",buttonVal);
+		ThymeleafConfig.getTemplateEngine().process("marketing.html", context, response.getWriter());
 	}
 
 }

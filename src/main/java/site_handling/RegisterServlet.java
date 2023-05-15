@@ -1,6 +1,7 @@
 package site_handling;
 
 import java.io.IOException;
+import helpers.MarketingHelper;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -44,7 +45,8 @@ public class RegisterServlet extends HttpServlet {
 	SetupUser setup = new SetupUser(user);
 	if(setup.checkIfexists()==false) {
 		setup.addUser();
-
+		MarketingHelper marketing = new MarketingHelper(user);
+		marketing.newMarketingFile();
 	    FileHandler filehandler = new FileHandler(user);
 	    String[] buttonVal = filehandler.getFileNames();
 	    for(int i=1;i<=5;i++) {

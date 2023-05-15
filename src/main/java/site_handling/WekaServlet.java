@@ -56,6 +56,11 @@ public class WekaServlet extends HttpServlet {
 		request.setCharacterEncoding("UTF-8");
 		WebContext context = new WebContext(request, response,
 				request.getServletContext());
+		User user = (User)session.getAttribute("User");
+	    if (user == null) {
+	        response.sendRedirect("index"); // Weiterleitung zum "index" Servlet
+	        return;
+	    }
 		String buttonValue = request.getParameter("selectedButton");
 		System.out.println("butt: " + buttonValue);
 		System.out.println((String)session.getAttribute("selButton"));
@@ -64,11 +69,7 @@ public class WekaServlet extends HttpServlet {
 		}
 
 		System.out.println("context: " + buttonValue);
-		User user = (User)session.getAttribute("User");
-	    if (user == null) {
-	        response.sendRedirect("index"); // Weiterleitung zum "index" Servlet
-	        return;
-	    }
+
 		FileHandler filehandler = new FileHandler(user);
 		String[] buttonVal = filehandler.getFileNames();
 		context.setVariable("buttons",buttonVal);
