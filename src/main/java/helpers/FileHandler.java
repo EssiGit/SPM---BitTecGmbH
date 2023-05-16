@@ -131,13 +131,7 @@ public class FileHandler {
 	 */
 	public void writeDataFile(String fileName) throws IOException {
 		try {
-			System.out.println(fileDataPath.isFile());
-			System.out.println(fileDataPath.exists());
-			System.out.println("in Filehandler, writeDataFile :" + fileDataPath.getAbsolutePath());
-
-			System.out.println("bytess " + fileDataPath.length());
 			if(fileDataPath.exists()) {
-				System.out.println("before write:" + fileName);
 				BufferedWriter buffWriter = new BufferedWriter(new FileWriter(fileDataPath,true));
 	            if (fileDataPath.length() > 0) {
 	                buffWriter.newLine(); //nur wenn schon etwas drin steht new line. Bei dem ersten upload würder er sonst bei der zweiten Zeile starten
@@ -145,7 +139,7 @@ public class FileHandler {
 				buffWriter.append(fileName);
 				buffWriter.close();
 			}else {
-				System.out.println("first");
+				System.out.println("first"); //file hat vorher nicht existiert
 				String[] lines = {""};
 				writeNewIDFile(fileDataPath,  lines);
 			}
@@ -157,6 +151,7 @@ public class FileHandler {
 		}
 
 	}
+	
 	/**
 	 * writes new IDFile to organize the user uploads. 
 	 * 
@@ -167,7 +162,6 @@ public class FileHandler {
 	private void writeNewIDFile(File file,  String[] lines) throws IOException {
 		System.out.println(" new file");
 		if(file.exists()==false){
-			System.out.println(" new gud");
 			new FileWriter(file.getAbsolutePath()).close();
 		}else {
 			new FileWriter(file.getAbsolutePath()).close();
@@ -215,52 +209,3 @@ public class FileHandler {
 		reader.close();
 	}
 }
-
-/*private int getTopFileID() {
-File DIR = new File(baseDIR.getAbsolutePath().concat(File.separator + "users" + File.separator +  user.getName()));
-int fileID = 0;
-if(DIR.exists() && DIR.listFiles() != null) {
-	for(File files : DIR.listFiles()) {
-		String extension = FilenameUtils.getExtension(files.getAbsolutePath());
-		if(extension.equals("csv")) {
-			int filetmp = 0;
-			String filename = files.getName();
-			String[] fileSplit = filename.split("_");
-			try{
-				filetmp = Integer.parseInt(fileSplit[fileSplit.length-1]);
-				if(filetmp>=fileID) fileID = filetmp;
-				System.out.println(fileID);
-			}catch(NumberFormatException e) {
-
-			}
-		}
-	}
-}
-return fileID;
-}*/
-/*public String[] getFileNames() {
-File DIR = new File(baseDIR.getAbsolutePath().concat(File.separator + "users" + File.separator +  user.getName()));
-System.out.println(DIR.getAbsolutePath());
-String fileNames = "Empty";
-int first = 0;
-if(DIR.exists() && DIR.listFiles() != null) {
-	for(File files : DIR.listFiles()) {
-		String extension = FilenameUtils.getExtension(files.getAbsolutePath());
-		if(extension.equals("csv")) {
-			if(first==0) {
-				fileNames = files.getName();
-				first++;
-			}else {
-				fileNames = fileNames.concat("," + files.getName());
-			}
-		}
-	}
-}else {
-	fileNames = "Empty";
-}
-System.out.println("all fil:"+ fileNames);
-String[] allFiles = fileNames.split(",");
-
-allFiles = setButtonValues(allFiles);
-return allFiles;
-}*/

@@ -50,6 +50,8 @@ public class WekaServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		StopWatch watch = new StopWatch();
 		watch.start();
+		response.setCharacterEncoding("UTF-8");
+		request.setCharacterEncoding("UTF-8");
 		HttpSession session = request.getSession();
 	    User user = (User) session.getAttribute("User");
 	    if (user == null) {
@@ -57,8 +59,7 @@ public class WekaServlet extends HttpServlet {
 	        return;
 	    }
 
-		response.setCharacterEncoding("UTF-8");
-		request.setCharacterEncoding("UTF-8");
+
 	    WebContext context = new WebContext(request, response, request.getServletContext());
 	    FileHandler filehandler = new FileHandler(user);
 

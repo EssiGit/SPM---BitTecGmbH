@@ -37,7 +37,7 @@ public class MarketingHelper {
     }
 /**
  * add lines to marketing file
- * @param text
+ * @param text to add
  * @throws IOException
  */
     public void addToMarketingFile(String text) throws IOException {
@@ -46,7 +46,7 @@ public class MarketingHelper {
         writer.close();
     }
 /**
- * returns values
+ * returned alle Zeilen des Marketing Files
  * @return
  * @throws IOException
  */
@@ -55,7 +55,7 @@ public class MarketingHelper {
         return new ArrayList<>(lines);
     }
 /**
- * base values
+ * base values, die jedes Marketing File immer hat
  * @return
  */
     private ArrayList<String> getBaseValues() {

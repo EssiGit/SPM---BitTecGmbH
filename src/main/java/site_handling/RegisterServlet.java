@@ -37,8 +37,6 @@ public class RegisterServlet extends HttpServlet {
     WebContext context = new WebContext(request, response,
             request.getServletContext());
 	String name = request.getParameter("username");
-	System.out.println("Index Name: " + name);
-	System.out.println("stil in POST");
 	
 	name = name.toLowerCase();
 	SetupUser setup = new SetupUser(name);

@@ -61,7 +61,7 @@ public class WekaAnalyser {
 		nc.setMinThreshold(1.0); // Schwellwert auf 1 setzen
 		nc.setMinDefault(Double.NaN); // alles unter 1 durch ? ersetzen
 		nc.setInputFormat(data);
-		data = Filter.useFilter(data, nc); // Filter anwenden
+		//data = Filter.useFilter(data, nc); // Filter anwenden
 		ArffSaver saver = new ArffSaver();
 		saver.setInstances(data);
 		saver.setFile(new File(arffDat));
@@ -71,9 +71,6 @@ public class WekaAnalyser {
 		ArffLoader aLoader = new ArffLoader();
 		aLoader.setSource(new File(arffDat));
 		arffDaten = aLoader.getDataSet();
-
-
-
 
 	}
 
@@ -201,10 +198,12 @@ public class WekaAnalyser {
 		case "'>17 Uhr'":
 			return "18";
 		default:
+			System.out.println("error Zeit");
 			return ""; 
 		}
 	}
 	private String changeWohnort(String ort) {
+		System.out.println(ort);
 		switch (ort) {
 		case "'< 10 km'":
 			return "9";
@@ -213,6 +212,7 @@ public class WekaAnalyser {
 		case "'> 25 km'":
 			return "30";
 		default:
+			System.out.println("error Wohnort");
 			return ""; // Rückgabe eines leeren Strings für den Fall, dass der Wert von "time" nicht erkannt wird
 		}
 	}

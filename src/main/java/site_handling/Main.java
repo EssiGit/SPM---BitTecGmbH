@@ -58,24 +58,15 @@ public class Main extends HttpServlet {
 		response.setCharacterEncoding("UTF-8");
 		request.setCharacterEncoding("UTF-8");
 		System.out.println("main do post");
-		WebContext context = new WebContext(request, response,
-				request.getServletContext());
 		HttpSession session = request.getSession();
 		User user = (User)session.getAttribute("User");
 	    if (user == null) {
 	        response.sendRedirect("index"); // Weiterleitung zum "index" Servlet
 	        return;
 	    }
-		UserHandler userHand = new UserHandler();
 		FileHandler filehandler = new FileHandler(user);
-
-		Iterator<String> paras = request.getParameterNames().asIterator();
 		System.out.println(request.getContentType());
 		System.out.println(request.getParameter("file-input"));
-		while(paras.hasNext())
-		{
-			System.out.println(paras.next());
-		}
 
 		Part filePart = request.getPart("file-input");
 
@@ -95,44 +86,4 @@ public class Main extends HttpServlet {
 		RequestDispatcher dispatcher = request.getRequestDispatcher("/WekaServlet");
 		dispatcher.forward(request, response);
 	}
-
-	/*<form name="button1" method="post" action="WekaServlet">
-						<span th:unless="${button1 == 'Empty'}"> <input
-							type="hidden" name="button1" th:value="${button1}">
-						</span>
-						<button type="submit" th:text="${button1}"></button>
-					</form>
-
-					<form name="button2" method="post" action="WekaServlet">
-						<span th:unless="${button2 == 'Empty'}"> <input
-							type="hidden" name="button2" th:value="${button2}">
-						</span>
-						<button type="submit" th:text="${button2}"></button>
-					</form>
-
-					<form name="button3" method="post" action="WekaServlet">
-						<span th:unless="${button3 == 'Empty'}"> <input
-							type="hidden" name="button3" th:value="${button3}">
-						</span>
-						<button type="submit" th:text="${button3}"></button>
-					</form>
-
-					<form name="button4" method="post" action="WekaServlet">
-						<span th:unless="${button4 == 'Empty'}"> <input
-							type="hidden" name="button4" th:value="${button4}">
-						</span>
-						<button type="submit" th:text="${button4}"></button>
-					</form>
-
-
-
-					<span th:unless="${button4 == 'Empty'}">
-						<form name="button5" method="post" action="WekaServlet">
-					</span> <span th:if="${button4 == 'Empty'}">
-						<form name="button5" method="post">
-					</span> <input type="hidden" name="button5" th:value="${button5}">
-
-					<button type="submit" th:text="${button5}"></button>
-					</form>*/
-
 }
