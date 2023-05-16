@@ -388,7 +388,7 @@ public class WekaAnalyser {
 	            tagZeit.put(zeit, new AtomicInteger(0));
 	        }
 	    }
-
+	    //AtomicInteger => Es dürfen keine Befehle eine Operation an einem AtomicInteger unterbrechen
 	    IntStream.range(0, data.numInstances())
 	            .parallel()
 	            .forEach(i -> {
