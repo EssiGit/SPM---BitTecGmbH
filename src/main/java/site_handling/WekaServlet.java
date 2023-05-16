@@ -51,88 +51,60 @@ public class WekaServlet extends HttpServlet {
 		StopWatch watch = new StopWatch();
 		watch.start();
 		HttpSession session = request.getSession();
+	    User user = (User) session.getAttribute("User");
+	    if (user == null) {
+	        response.sendRedirect("index"); // Redirect to the "index" servlet
+	        return;
+	    }
 
 		response.setCharacterEncoding("UTF-8");
 		request.setCharacterEncoding("UTF-8");
-		WebContext context = new WebContext(request, response,
-				request.getServletContext());
-		User user = (User)session.getAttribute("User");
-	    if (user == null) {
-	        response.sendRedirect("index"); // Weiterleitung zum "index" Servlet
-	        return;
+	    WebContext context = new WebContext(request, response, request.getServletContext());
+	    FileHandler filehandler = new FileHandler(user);
+
+	    String buttonValue = request.getParameter("selectedButton");
+	    if (buttonValue == null) {
+	        buttonValue = (String) session.getAttribute("selButton");
+	    }else {
+	    	session.setAttribute("filename", buttonValue);
 	    }
-		String buttonValue = request.getParameter("selectedButton");
-		System.out.println("butt: " + buttonValue);
-		System.out.println((String)session.getAttribute("selButton"));
-		if(buttonValue == null) {
-			buttonValue = (String)session.getAttribute("selButton");
-		}
+	    String typeOfAnalysis = request.getParameter("clusterInfo");
+	    if (typeOfAnalysis == null) {
+	        typeOfAnalysis = "Umsatzstärkstertag/Uhrzeit";
+	    }
 
-		System.out.println("context: " + buttonValue);
+	    int clusterAnzahl = 8;
+	    if (request.getParameter("sliderValue") != null) {
+	        clusterAnzahl = Integer.parseInt(request.getParameter("sliderValue"));
+	    }
 
-		FileHandler filehandler = new FileHandler(user);
-		String[] buttonVal = filehandler.getFileNames();
-		context.setVariable("buttons",buttonVal);
-		if(buttonValue != null) {
-			session.setAttribute("filename", buttonValue);
-		}
-		try {
-			WekaAnalyser weka = new WekaAnalyser((String)session.getAttribute("filename"),user);
-			String typeOfAnalysis = request.getParameter("clusterInfo");
-			if(typeOfAnalysis == null)
-				typeOfAnalysis = "Umsatzstärkstertag/Uhrzeit";
-			
-			//(nikok)
-			int clusterAnzahl = 8;
-			if(request.getParameter("sliderValue") != null)
-				clusterAnzahl = Integer.parseInt(request.getParameter("sliderValue"));
-			
-			ArrayList<Weka_resultFile> wekaFiles = weka.getCorrectAnalysis(filehandler, typeOfAnalysis, clusterAnzahl);
-			
-			//(nikok) ajax json response für table update
-			if(request.getParameter("ajaxUpdate") != null && request.getParameter("ajaxUpdate").equals("1")) {
-				
-				response.setContentType("application/json");
-				response.setContentLength(wekaFiles.get(0).ajax().length());
-				response.getWriter().write(wekaFiles.get(0).ajax());
-				System.out.println(wekaFiles.get(0).ajax());
-				
-				ThymeleafConfig.getTemplateEngine().process("main.html", context, response.getWriter());
-				watch.stop();
-				System.out.println("Time till served: " + watch.getTime() + "ms");
-				return;
-			}
-			
-			//setzen ob cluster oder nicht (nikok)
-			if(!(typeOfAnalysis.equals("Umsatzstärkstertag/Uhrzeit") || 
-					typeOfAnalysis.equals("Kundenhäufigkeit") ||
-					typeOfAnalysis.equals("uhrzeitProTag"))) 
-				context.setVariable("isCluster", true);
-			
-			//(nikok)
-			context.setVariable("margin", 120);
-			context.setVariable("typeOfAnalysis", typeOfAnalysis);
-			
-			context.setVariable("results", wekaFiles);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		watch.stop();
+	    try {
+	        WekaAnalyser weka = new WekaAnalyser((String) session.getAttribute("filename"), user);
+	        ArrayList<Weka_resultFile> wekaFiles = weka.getCorrectAnalysis(filehandler, typeOfAnalysis, clusterAnzahl);
 
-		
+	        if (request.getParameter("ajaxUpdate") != null && request.getParameter("ajaxUpdate").equals("1")) {
+	            response.setContentType("application/json");
+	            response.setContentLength(wekaFiles.get(0).ajax().length());
+	            response.getWriter().write(wekaFiles.get(0).ajax());
+	            return;
+	        }
+
+	        context.setVariable("buttons", filehandler.getFileNames());
+	        context.setVariable("isCluster", !(typeOfAnalysis.equals("Umsatzstärkstertag/Uhrzeit") || 
+	                                           typeOfAnalysis.equals("Kundenhäufigkeit") ||
+	                                           typeOfAnalysis.equals("uhrzeitProTag")));
+	        context.setVariable("margin", 120);
+	        context.setVariable("typeOfAnalysis", typeOfAnalysis);
+	        context.setVariable("results", wekaFiles);
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+
 		ThymeleafConfig.getTemplateEngine().process("main.html", context, response.getWriter());
+		watch.stop();
 		System.out.println("Time till served: " + watch.getTime() + "ms");
 
 	}
-	private int getLines(File file) throws FileNotFoundException, IOException { 
-		try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-			int readingLine = 0;
-			while((reader.readLine()) != null) {
-				readingLine++;
-			}
-			return readingLine;
-		}
-	}
+
 
 }

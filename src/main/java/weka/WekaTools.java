@@ -37,7 +37,6 @@ public class WekaTools {
 
                     // Final cluster centroids holen
                     String[] result = model.getClusterCentroids().toString().split("@data\n");
-                    System.out.println("temp : " + result[1]);
                     return result[1];
                 }
             };

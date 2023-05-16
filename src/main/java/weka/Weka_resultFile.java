@@ -25,8 +25,6 @@ public class Weka_resultFile {
 		this.yData = new int[yData.length];
 		int yMaxTmp = 0;
 		for(int i = 0; i<yData.length;i++) {
-			System.out.println("test");
-			System.out.println(yData[i]);
 			this.yData[i] = (int) Double.parseDouble(yData[i]);
 			if(this.yData[i]>yMaxTmp) {
 				yMaxTmp= this.yData[i];

@@ -1,6 +1,6 @@
 package tests;
 
-import helpers.FileHandler;
+import helpers.FileHandler; 
 import helpers.User;
 import org.apache.commons.lang3.time.StopWatch;
 import org.junit.jupiter.api.Test;
@@ -32,9 +32,9 @@ public class AnalysenTest {
 		User user = new User("testuser");
 		FileHandler filehandler = new FileHandler(user);
 		WekaAnalyser analyser = new WekaAnalyser(fileName, user);
-
+		System.out.println("watch time testUmsatzstaerksteTagUhrzeit1: " + watch.getTime());
 		ArrayList<Weka_resultFile> wekaFiles = analyser.umsatzstaerksteTagUhrzeit(filehandler);
-
+		
 		assertEquals(1933, wekaFiles.get(1).getYdata()[0]);
 		assertEquals(1182, wekaFiles.get(1).getYdata()[1]);
 		assertEquals(1395, wekaFiles.get(1).getYdata()[2]);
@@ -47,6 +47,7 @@ public class AnalysenTest {
 		assertEquals(2204, wekaFiles.get(0).getYdata()[2]);
 		assertEquals(2470, wekaFiles.get(0).getYdata()[3]);
 		assertEquals(3167, wekaFiles.get(0).getYdata()[4]);
+		System.out.println("watch time testUmsatzstaerksteTagUhrzeit: " + watch.getTime());
 		watch.stop();
 	}
 	@Test
@@ -97,6 +98,7 @@ public class AnalysenTest {
 		assertEquals(1615, wekaFiles.get(5).getYdata()[2]);
 		assertEquals(2046, wekaFiles.get(5).getYdata()[3]);
 		assertEquals(1097, wekaFiles.get(5).getYdata()[4]);
+		System.out.println("watch time uhrzeitProTag: " + watch.getTime());
 		watch.stop();
 	}
 	@Test
@@ -125,6 +127,7 @@ public class AnalysenTest {
 		assertEquals(14, wekaFiles.get(1).getYdata()[2]);
 		assertEquals(11, wekaFiles.get(1).getYdata()[3]);
 		assertEquals(22, wekaFiles.get(1).getYdata()[4]);
+		System.out.println("watch time kundenhäufigkeit: " + watch.getTime());
 		watch.stop();
 	}
 }
