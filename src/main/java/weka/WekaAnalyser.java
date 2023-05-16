@@ -325,8 +325,9 @@ public class WekaAnalyser {
 	            tagZeit.put(zeit, 0);
 	        }
 	    }
-
-	    // Extract necessary values from data
+	    /*da Daten in loops unabhängige sind kann man gut multithreaden 
+	    * z.B. für Montag und Dienstags können wir uns gleichzeitg aus der Instance die Daten holen
+	    */
 	    String[] wochentage = IntStream.range(0, data.numInstances())
 	            .parallel()
 	            .mapToObj(i -> data.instance(i).stringValue(5))
@@ -342,14 +343,15 @@ public class WekaAnalyser {
 	            .mapToDouble(i -> data.instance(i).value(9))
 	            .toArray();
 
-	    // Update tageZeiten map with computed values
+	    // Update tageZeiten map mit neuen values
 	    IntStream.range(0, data.numInstances())
 	            .parallel()
 	            .forEach(i -> {
 	                String wochentag = wochentage[i];
 	                String zeit = zeitenData[i];
-	                synchronized (tageZeiten) { // Synchronize access to shared data
+	                synchronized (tageZeiten) { 
 	                    Map<String, Integer> tagZeit = tageZeiten.get(wochentag);
+	                    //wildes remapping
 	                    tagZeit.compute(zeit, (k, v) -> (int) (values[i] + (v != null ? v : 0)));
 	                }
 	            });
@@ -400,7 +402,7 @@ public class WekaAnalyser {
 	    String[] yValuesTime = new String[zeiten.length];
 	    String[] yValuesDay = new String[tage.length];
 
-	    // Generiere Tabelle mit Uhrzeiten und Umsatz
+	    // Uhrzeiten und Umsatz
 	    for (int i = 0; i < zeiten.length; i++) {
 	        xValues[i] = zeiten[i];
 	        int sum = 0;
@@ -411,7 +413,7 @@ public class WekaAnalyser {
 	        yValuesTime[i] = Integer.toString(sum);
 	    }
 
-	    // Generiere Weka_resultFile für Tage und Umsatz
+	    // tage und Umsatz
 	    for (int i = 0; i < tage.length; i++) {
 	        int sum = 0;
 	        for (String zeit : zeiten) {
@@ -421,7 +423,7 @@ public class WekaAnalyser {
 	        yValuesDay[i] = Integer.toString(sum);
 	    }
 
-	    // Erzeuge Weka_resultFile-Objekte und füge sie zur Liste hinzu
+	    // Erzeuge 2 Weka_resultFiles für Tag und Umsatz
 	    wekaFiles.add(new Weka_resultFile("Umsatz nach Uhrzeit", xValues, yValuesTime));
 	    wekaFiles.add(new Weka_resultFile("Umsatz nach Tag", tage, yValuesDay));
 

@@ -34,9 +34,8 @@ public class WekaTools {
                     attributeFilter.setInputFormat(daten);
                     Instances filteredData = Filter.useFilter(daten, attributeFilter);
                     model.buildClusterer(filteredData);
-
-                    // Final cluster centroids holen
-                    String[] result = model.getClusterCentroids().toString().split("@data\n");
+                    
+                    String[] result = model.getClusterCentroids().toString().split("@data\n");//cluster centroids holen
                     return result[1];
                 }
             };
