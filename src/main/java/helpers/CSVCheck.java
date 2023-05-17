@@ -10,7 +10,17 @@ import java.util.List;
 import java.util.concurrent.*;
 
 public class CSVCheck {
+	private static final String[] GESCHLECHT_VALUES = {"m", "w"};
+	private static final String[] ALTER_VALUES = {">60", "18-30", "41-50", "31-40", "51-60"};
+	private static final String[] KINDER_VALUES = {"nein", "ja"};
+	private static final String[] FAMILIENSTAND_VALUES = {"ledig", "Partnerschaft"};
+	private static final String[] BERUFSTAETIG_VALUES = {"nein", "ja"};
+	private static final String[] EINKAUFTAG_VALUES = {"Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag"};
+	private static final String[] EINKAUFUHRZEIT_VALUES = {"<10 Uhr", "10-12 Uhr", "12-14 Uhr", "14-17 Uhr", ">17 Uhr"};
+	private static final String[] WOHNORT_VALUES = {"< 10 km", "10 - 25 km", "> 25 km"};
+	private static final String[] HAUSHALTSNETTOEINKOMMEN_VALUES = {"3200-<4500", "<1000", "1000-<2000", "2000-<3200", ">4500"};
     public static void main(String[] args) {
+    	
         String csvFilePath = "path/to/your/csv/file.csv";
 
         try (FileReader reader = new FileReader(csvFilePath);
@@ -27,8 +37,8 @@ public class CSVCheck {
                 futures.add(future);
             }
 
-            // Wait for all tasks to complete
-            for (Future<Boolean> future : futures) {
+            
+            for (Future<Boolean> future : futures) {// tasks fertig werden lassen
                 try {
                     if (!future.get()) {
                         System.out.println("Invalid format detected");
@@ -41,7 +51,7 @@ public class CSVCheck {
             }
 
             executor.shutdown();
-            System.out.println("CSV file has the correct format");
+            System.out.println("csv format korrekt"); // muss zur main
         } catch (IOException e) {
             e.printStackTrace();
         }
