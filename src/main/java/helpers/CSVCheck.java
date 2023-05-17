@@ -43,9 +43,9 @@ public class CSVCheck {
 	        }
 
 
-			for (Future<Boolean> future : futures) {// tasks fertig werden lassen
+			for (Future<Boolean> future : futures) {
 				try {
-					if (future.get()) {
+					if (future.get()) {// tasks fertig werden lassen und wenn return wert true war es ein error
 						System.out.println("Falsches CSV Format");
 						executor.shutdownNow();
 						return false;
