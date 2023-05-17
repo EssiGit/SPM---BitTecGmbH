@@ -114,7 +114,7 @@ public class FileHandler {
 	 * 
 	 * 
 	 */
-	private void deleteOldFile(String file) {
+	public void deleteOldFile(String file) {
 	    String arffFile = file.replace(".csv", ".csv.arff");
 	    System.out.println("arfffile: " + arffFile);
 	    File tmpArffFile = new File(System.getProperty("user.home") + File.separator + "KaufDort_Userfiles" + File.separator + "users" + File.separator + user.getName() + File.separator + arffFile);

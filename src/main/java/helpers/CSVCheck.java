@@ -3,7 +3,7 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.lang3.time.StopWatch;
-
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.HashMap;
 import java.io.FileReader;
 import java.io.IOException;
@@ -24,6 +24,7 @@ public class CSVCheck {
 	private static final String[] WOHNORT_VALUES = {"< 10 km", "10 - 25 km", "> 25 km"};
 	private static final String[] HAUSHALTSNETTOEINKOMMEN_VALUES = {"3200-<4500", "<1000", "1000-<2000", "2000-<3200", ">4500"};
 	public boolean checkCSV(String csvFilePath) {
+		AtomicBoolean returnVal = new AtomicBoolean(true);
 		StopWatch watch = new StopWatch();
 		watch.start();
 		try (FileReader reader = new FileReader(csvFilePath);
@@ -45,10 +46,11 @@ public class CSVCheck {
 
 			for (Future<Boolean> future : futures) {
 				try {
-					if (future.get()) {// tasks fertig werden lassen und wenn return wert true war es ein error
-						System.out.println("Falsches CSV Format");
-						executor.shutdownNow();
-						return false;
+					if (future.get() == false) {// tasks fertig werden lassen und wenn return wert true war es ein error
+						System.out.println("Falsches CSV Format in .get()");
+						returnVal.set(false);
+						executor.shutdown();
+						
 					}
 				} catch (InterruptedException | ExecutionException e) {
 					watch.stop();
@@ -56,15 +58,14 @@ public class CSVCheck {
 				}
 			}
 
-			executor.shutdown();
-			System.out.println("csv format korrekt"); // muss zur main
+			executor.shutdown(); 
 		} catch (IOException e) {
 			watch.stop();
 			e.printStackTrace();
 		}
 		watch.stop();
 		System.out.println("time: " + watch.getTime() +" ms");
-		return true;
+		return returnVal.get();
 	}
 
 	private static class FormatCheckTask implements Callable<Boolean> {
@@ -90,10 +91,8 @@ public class CSVCheck {
 
 	    @Override
 	    public Boolean call() {
-	        if (csvRecord.size() != 6) {
-	            System.out.println("Falsches CSV Format");
-	            return false;
-	        }
+			AtomicBoolean returnVal = new AtomicBoolean(true);
+
 
 	        for (Map.Entry<Integer, String[]> entry : columnValidValues.entrySet()) {
 	            int columnIndex = entry.getKey();
@@ -102,7 +101,7 @@ public class CSVCheck {
 
 	            if (!isValidValue(col, validValues)) {
 	                System.out.println("Wert falsch: " + columnIndex + ": " + col);
-	                return false;
+	                returnVal.set(false);
 	            }
 	        }
 
@@ -110,11 +109,11 @@ public class CSVCheck {
 	            String col = csvRecord.get(i);
 	            if (!isNumeric(col)) {
 	                System.out.println("Wert falsch: " + i + ": " + col);
-	                return false;
+	                returnVal.set(false);
 	            }
 	        }
 
-	        return true;
+	        return returnVal.get();
 	    }
 
 	    private boolean isValidValue(String value, String[] validValues) {

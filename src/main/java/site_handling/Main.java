@@ -39,10 +39,10 @@ public class Main extends HttpServlet {
 		response.setCharacterEncoding("UTF-8");
 		HttpSession session = request.getSession();
 		User user = (User)session.getAttribute("User");
-	    if (user == null) {
-	        response.sendRedirect("index"); // Weiterleitung zum "index" Servlet
-	        return;
-	    }
+		if (user == null) {
+			response.sendRedirect("index"); // Weiterleitung zum "index" Servlet
+			return;
+		}
 		UserHandler userHand = new UserHandler();
 		System.out.println("TEST " + user.getName());
 		FileHandler filehandler = new FileHandler(user);
@@ -60,10 +60,10 @@ public class Main extends HttpServlet {
 		System.out.println("main do post");
 		HttpSession session = request.getSession();
 		User user = (User)session.getAttribute("User");
-	    if (user == null) {
-	        response.sendRedirect("index"); // Weiterleitung zum "index" Servlet
-	        return;
-	    }
+		if (user == null) {
+			response.sendRedirect("index"); // Weiterleitung zum "index" Servlet
+			return;
+		}
 		FileHandler filehandler = new FileHandler(user);
 		System.out.println(request.getContentType());
 		System.out.println(request.getParameter("file-input"));
@@ -77,17 +77,22 @@ public class Main extends HttpServlet {
 
 		File DIR = new File(System.getProperty("user.home") + File.separator + "KaufDort_Userfiles" + File.separator + "users" + File.separator + user.getName() + File.separator + fileName);
 
-		
+
 		//TMP solution:
 		System.out.println("filename in doPost " + fileName);
 		filehandler.setUpFILE(DIR, request);
 		CSVCheck csvchecker = new CSVCheck();
 		boolean csv = csvchecker.checkCSV(DIR.getAbsolutePath());
-		System.out.println("csv bool " + csv);
+		System.out.println("csv bool false = error" + csv);
 		String buttonValue = request.getParameter("selectedButton");
 		System.out.println("context: " + buttonValue);
 		session.setAttribute("filename", fileName);
 		RequestDispatcher dispatcher = request.getRequestDispatcher("/WekaServlet");
-		dispatcher.forward(request, response);
+		if(csvchecker.checkCSV(DIR.getAbsolutePath())){
+			dispatcher.forward(request, response);
+		}else {
+			this.doGet(request, response);
+			filehandler.deleteOldFile(fileName);
+		}
 	}
 }
