@@ -78,11 +78,11 @@ public class Main extends HttpServlet {
 		File DIR = new File(System.getProperty("user.home") + File.separator + "KaufDort_Userfiles" + File.separator + "users" + File.separator + user.getName() + File.separator + fileName);
 
 		//TMP solution:
-
+		System.out.println("filename in doPost " + fileName);
 		filehandler.setUpFILE(DIR, request);
 		String buttonValue = request.getParameter("selectedButton");
 		System.out.println("context: " + buttonValue);
-		session.setAttribute("selButton", fileName);
+		session.setAttribute("filename", fileName);
 		RequestDispatcher dispatcher = request.getRequestDispatcher("/WekaServlet");
 		dispatcher.forward(request, response);
 	}

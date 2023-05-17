@@ -61,7 +61,7 @@ public class WekaAnalyser {
 		nc.setMinThreshold(1.0); // Schwellwert auf 1 setzen
 		nc.setMinDefault(Double.NaN); // alles unter 1 durch ? ersetzen
 		nc.setInputFormat(data);
-		//data = Filter.useFilter(data, nc); // Filter anwenden
+		data = Filter.useFilter(data, nc); // Filter anwenden
 		ArffSaver saver = new ArffSaver();
 		saver.setInstances(data);
 		saver.setFile(new File(arffDat));
@@ -71,7 +71,7 @@ public class WekaAnalyser {
 		ArffLoader aLoader = new ArffLoader();
 		aLoader.setSource(new File(arffDat));
 		arffDaten = aLoader.getDataSet();
-
+		System.out.println("filename" + fileName);
 	}
 
 

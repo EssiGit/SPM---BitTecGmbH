@@ -47,6 +47,8 @@ public class Index extends HttpServlet {
 			FileHandler filehandler = new FileHandler(user);
 			session.setAttribute("User", user);
 
+			request.setAttribute("User", user);
+
 			String[] buttonVal = filehandler.getFileNames();
 			context.setVariable("buttons",buttonVal);
 			response.sendRedirect("main");

@@ -64,11 +64,13 @@ public class WekaServlet extends HttpServlet {
 	    FileHandler filehandler = new FileHandler(user);
 
 	    String buttonValue = request.getParameter("selectedButton");
-	    if (buttonValue == null) {
-	        buttonValue = (String) session.getAttribute("selButton");
-	    }else {
-	    	session.setAttribute("filename", buttonValue);
-	    }
+		String[] buttonVal = filehandler.getFileNames();
+		context.setVariable("buttons",buttonVal);
+		if(buttonValue != null) {
+			System.out.println("buttonValue != null");
+			System.out.println(buttonValue);
+			session.setAttribute("filename", buttonValue);
+		}
 	    String typeOfAnalysis = request.getParameter("clusterInfo");
 	    if (typeOfAnalysis == null) {
 	        typeOfAnalysis = "Umsatzstärkstertag/Uhrzeit";
