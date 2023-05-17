@@ -1,15 +1,19 @@
 package helpers;
-import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVFormat; 
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
+import org.apache.commons.lang3.time.StopWatch;
 
+import java.util.HashMap;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.*;
 
 public class CSVCheck {
+	
 	private static final String[] GESCHLECHT_VALUES = {"m", "w"};
 	private static final String[] ALTER_VALUES = {">60", "18-30", "41-50", "31-40", "51-60"};
 	private static final String[] KINDER_VALUES = {"nein", "ja"};
@@ -19,90 +23,117 @@ public class CSVCheck {
 	private static final String[] EINKAUFUHRZEIT_VALUES = {"<10 Uhr", "10-12 Uhr", "12-14 Uhr", "14-17 Uhr", ">17 Uhr"};
 	private static final String[] WOHNORT_VALUES = {"< 10 km", "10 - 25 km", "> 25 km"};
 	private static final String[] HAUSHALTSNETTOEINKOMMEN_VALUES = {"3200-<4500", "<1000", "1000-<2000", "2000-<3200", ">4500"};
-    public static void main(String[] args) {
-    	
-        String csvFilePath = "path/to/your/csv/file.csv";
+	public boolean checkCSV(String csvFilePath) {
+		StopWatch watch = new StopWatch();
+		watch.start();
+		try (FileReader reader = new FileReader(csvFilePath);
+				CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT)) {
 
-        try (FileReader reader = new FileReader(csvFilePath);
-             CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT)) {
+			List<CSVRecord> records = csvParser.getRecords();
+			int numRecords = records.size();
+			int numThreads = Runtime.getRuntime().availableProcessors();
+			ExecutorService executor = Executors.newFixedThreadPool(numThreads);
+			List<Future<Boolean>> futures = new ArrayList<>();
+			
+	        for (int i = 1; i < numRecords; i++) {
+	            CSVRecord csvRecord = records.get(i);
+	            //hier sollte (hoffentlich) die call methode in einem anderen thread ausgeführt werden für jede Zeile
+	            Future<Boolean> future = executor.submit(new FormatCheckTask(csvRecord));
+	            futures.add(future);
+	        }
 
-            List<CSVRecord> records = csvParser.getRecords();
-            int numRecords = records.size();
-            int numThreads = Runtime.getRuntime().availableProcessors();
-            ExecutorService executor = Executors.newFixedThreadPool(numThreads);
-            List<Future<Boolean>> futures = new ArrayList<>();
 
-            for (CSVRecord csvRecord : records) {
-                Future<Boolean> future = executor.submit(new FormatCheckTask(csvRecord));
-                futures.add(future);
-            }
+			for (Future<Boolean> future : futures) {// tasks fertig werden lassen
+				try {
+					if (future.get()) {
+						System.out.println("Falsches CSV Format");
+						executor.shutdownNow();
+						return false;
+					}
+				} catch (InterruptedException | ExecutionException e) {
+					watch.stop();
+					e.printStackTrace();
+				}
+			}
 
-            
-            for (Future<Boolean> future : futures) {// tasks fertig werden lassen
-                try {
-                    if (!future.get()) {
-                        System.out.println("Invalid format detected");
-                        executor.shutdownNow();
-                        return;
-                    }
-                } catch (InterruptedException | ExecutionException e) {
-                    e.printStackTrace();
-                }
-            }
+			executor.shutdown();
+			System.out.println("csv format korrekt"); // muss zur main
+		} catch (IOException e) {
+			watch.stop();
+			e.printStackTrace();
+		}
+		watch.stop();
+		System.out.println("time: " + watch.getTime() +" ms");
+		return true;
+	}
 
-            executor.shutdown();
-            System.out.println("csv format korrekt"); // muss zur main
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+	private static class FormatCheckTask implements Callable<Boolean> {
+	    private final CSVRecord csvRecord;
 
-    private static class FormatCheckTask implements Callable<Boolean> {
-        private final CSVRecord csvRecord;
+	    private final Map<Integer, String[]> columnValidValues;
 
-        public FormatCheckTask(CSVRecord csvRecord) {
-            this.csvRecord = csvRecord;
-        }
+	    public FormatCheckTask(CSVRecord csvRecord) {
+	        this.csvRecord = csvRecord;
 
-        @Override
-        public Boolean call() {
-            if (csvRecord.size() != 6) {
-                System.out.println("Falsches CSV Format"); //muss noch zum frontend redirected werden
-                return false;
-            }
+	        // Initialize the map with column index and its valid values array
+	        this.columnValidValues = new HashMap<>();
+	        columnValidValues.put(0, GESCHLECHT_VALUES);
+	        columnValidValues.put(1, ALTER_VALUES);
+	        columnValidValues.put(2, KINDER_VALUES);
+	        columnValidValues.put(3, FAMILIENSTAND_VALUES);
+	        columnValidValues.put(4, BERUFSTAETIG_VALUES);
+	        columnValidValues.put(5, EINKAUFTAG_VALUES);
+	        columnValidValues.put(6, EINKAUFUHRZEIT_VALUES);
+	        columnValidValues.put(7, WOHNORT_VALUES);
+	        columnValidValues.put(8, HAUSHALTSNETTOEINKOMMEN_VALUES);
+	    }
 
-            String col1 = csvRecord.get(0);
-            String col2 = csvRecord.get(1);
-            String col3 = csvRecord.get(2);
-            String col4 = csvRecord.get(3);
-            String col5 = csvRecord.get(4);
-            String col6 = csvRecord.get(5);
+	    @Override
+	    public Boolean call() {
+	        if (csvRecord.size() != 6) {
+	            System.out.println("Falsches CSV Format");
+	            return false;
+	        }
 
-            if (!isString(col1) || !isString(col2) || !isString(col3)
-                    || !isString(col4) || !isNumeric(col5) || !isNumeric(col6)) {
-                System.out.println("Invalid format: " + csvRecord.toString());
-                return false;
-            }
+	        for (Map.Entry<Integer, String[]> entry : columnValidValues.entrySet()) {
+	            int columnIndex = entry.getKey();
+	            String[] validValues = entry.getValue();
+	            String col = csvRecord.get(columnIndex);
 
-            return true;
-        }
+	            if (!isValidValue(col, validValues)) {
+	                System.out.println("Invalid value in col" + columnIndex + ": " + col);
+	                return false;
+	            }
+	        }
 
-        private boolean isString(String value) {
-            return value.matches("[a-zA-Z]+");
-        }
+	        for (int i = 9; i <= 24; i++) {
+	            String col = csvRecord.get(i);
+	            if (!isNumeric(col)) {
+	                System.out.println("Wert falsch: " + i + ": " + col);
+	                return false;
+	            }
+	        }
 
-        private boolean isNumeric(String value) {
+	        return true;
+	    }
 
-            try {
-            	double test =  Double.parseDouble(value);
-                if(test<0) {
-                	return false;
-                }
-                return true;
-            } catch (NumberFormatException e) {
-                return false;
-            }
-            
-        }
-    }
+	    private boolean isValidValue(String value, String[] validValues) {
+	        for (String validValue : validValues) {
+	            if (value.equals(validValue)) {
+	                return true;
+	            }
+	        }
+	        return false;
+	    }
+
+	    private boolean isNumeric(String value) {
+	        try {
+	            double numericValue = Double.parseDouble(value);
+	            return numericValue >= 0;
+	        } catch (NumberFormatException e) {
+	            return false;
+	        }
+	    }
+	}
+
 }

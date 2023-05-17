@@ -1,10 +1,10 @@
 package site_handling;
 
 
-import java.io.File; 
+import java.io.File;  
 import java.io.IOException;
 import java.nio.file.Paths;
-import java.util.Iterator;
+import helpers.CSVCheck;
 import helpers.FileHandler;
 
 import javax.servlet.RequestDispatcher;
@@ -77,9 +77,13 @@ public class Main extends HttpServlet {
 
 		File DIR = new File(System.getProperty("user.home") + File.separator + "KaufDort_Userfiles" + File.separator + "users" + File.separator + user.getName() + File.separator + fileName);
 
+		
 		//TMP solution:
 		System.out.println("filename in doPost " + fileName);
 		filehandler.setUpFILE(DIR, request);
+		CSVCheck csvchecker = new CSVCheck();
+		boolean csv = csvchecker.checkCSV(DIR.getAbsolutePath());
+		System.out.println("csv bool " + csv);
 		String buttonValue = request.getParameter("selectedButton");
 		System.out.println("context: " + buttonValue);
 		session.setAttribute("filename", fileName);
