@@ -75,7 +75,7 @@ public class CSVCheck {
 	    public FormatCheckTask(CSVRecord csvRecord) {
 	        this.csvRecord = csvRecord;
 
-	        // Initialize the map with column index and its valid values array
+	        
 	        this.columnValidValues = new HashMap<>();
 	        columnValidValues.put(0, GESCHLECHT_VALUES);
 	        columnValidValues.put(1, ALTER_VALUES);
@@ -101,7 +101,7 @@ public class CSVCheck {
 	            String col = csvRecord.get(columnIndex);
 
 	            if (!isValidValue(col, validValues)) {
-	                System.out.println("Invalid value in col" + columnIndex + ": " + col);
+	                System.out.println("Wert falsch: " + columnIndex + ": " + col);
 	                return false;
 	            }
 	        }
