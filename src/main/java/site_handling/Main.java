@@ -20,6 +20,7 @@ import helpers.User;
 import helpers.UserHandler;
 import server_conf.ThymeleafConfig;
 
+import org.apache.commons.lang3.time.StopWatch;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 
@@ -55,6 +56,8 @@ public class Main extends HttpServlet {
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		StopWatch watch = new StopWatch();
+		watch.start();
 		response.setCharacterEncoding("UTF-8");
 		request.setCharacterEncoding("UTF-8");
 		System.out.println("main do post");
@@ -88,9 +91,18 @@ public class Main extends HttpServlet {
 		System.out.println("context: " + buttonValue);
 		session.setAttribute("filename", fileName);
 		RequestDispatcher dispatcher = request.getRequestDispatcher("/WekaServlet");
+		watch.stop();
+		System.out.println("main setup : " + watch.getTime() + " ms");
+		watch.reset();
+		watch.start();
 		if(csvchecker.checkCSV(DIR.getAbsolutePath())){
+			watch.stop();
+			System.out.println("time: " + watch.getTime() +" ms");
 			dispatcher.forward(request, response);
 		}else {
+			System.out.println("time: " + watch.getTime() +" ms");
+			watch.stop();
+			request.setAttribute("error", ".csv file format is not correct, upload canceled!");
 			this.doGet(request, response);
 			filehandler.deleteOldFile(fileName);
 		}

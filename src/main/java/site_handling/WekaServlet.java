@@ -48,8 +48,7 @@ public class WekaServlet extends HttpServlet {
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		StopWatch watch = new StopWatch();
-		watch.start();
+
 		response.setCharacterEncoding("UTF-8");
 		request.setCharacterEncoding("UTF-8");
 		HttpSession session = request.getSession();
@@ -82,9 +81,13 @@ public class WekaServlet extends HttpServlet {
 	    }
 
 	    try {
+			StopWatch watch = new StopWatch();
+			watch.start();
 	        WekaAnalyser weka = new WekaAnalyser((String) session.getAttribute("filename"), user);
+	        watch.stop();
 	        ArrayList<Weka_resultFile> wekaFiles = weka.getCorrectAnalysis(filehandler, typeOfAnalysis, clusterAnzahl);
-
+			
+			System.out.println("Time till served: " + watch.getTime() + "ms");
 	        if (request.getParameter("ajaxUpdate") != null && request.getParameter("ajaxUpdate").equals("1")) {
 	            response.setContentType("application/json");
 	            response.setContentLength(wekaFiles.get(0).ajax().length());
@@ -104,8 +107,7 @@ public class WekaServlet extends HttpServlet {
 	    }
 
 		ThymeleafConfig.getTemplateEngine().process("main.html", context, response.getWriter());
-		watch.stop();
-		System.out.println("Time till served: " + watch.getTime() + "ms");
+
 
 	}
 

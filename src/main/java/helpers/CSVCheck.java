@@ -23,10 +23,10 @@ public class CSVCheck {
 	private static final String[] EINKAUFUHRZEIT_VALUES = {"<10 Uhr", "10-12 Uhr", "12-14 Uhr", "14-17 Uhr", ">17 Uhr"};
 	private static final String[] WOHNORT_VALUES = {"< 10 km", "10 - 25 km", "> 25 km"};
 	private static final String[] HAUSHALTSNETTOEINKOMMEN_VALUES = {"3200-<4500", "<1000", "1000-<2000", "2000-<3200", ">4500"};
+	private String errorMsg = "";
 	public boolean checkCSV(String csvFilePath) {
 		AtomicBoolean returnVal = new AtomicBoolean(true);
-		StopWatch watch = new StopWatch();
-		watch.start();
+
 		try (FileReader reader = new FileReader(csvFilePath);
 				CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT)) {
 
@@ -53,22 +53,19 @@ public class CSVCheck {
 						
 					}
 				} catch (InterruptedException | ExecutionException e) {
-					watch.stop();
 					e.printStackTrace();
 				}
 			}
 
 			executor.shutdown(); 
 		} catch (IOException e) {
-			watch.stop();
 			e.printStackTrace();
 		}
-		watch.stop();
-		System.out.println("time: " + watch.getTime() +" ms");
+		
 		return returnVal.get();
 	}
 
-	private static class FormatCheckTask implements Callable<Boolean> {
+	private class FormatCheckTask implements Callable<Boolean> {
 	    private final CSVRecord csvRecord;
 
 	    private final Map<Integer, String[]> columnValidValues;
@@ -92,7 +89,7 @@ public class CSVCheck {
 	    @Override
 	    public Boolean call() {
 			AtomicBoolean returnVal = new AtomicBoolean(true);
-
+			
 
 	        for (Map.Entry<Integer, String[]> entry : columnValidValues.entrySet()) {
 	            int columnIndex = entry.getKey();
@@ -132,6 +129,9 @@ public class CSVCheck {
 	        } catch (NumberFormatException e) {
 	            return false;
 	        }
+	    }
+	    public String getErrorMsg() {
+	    	return errorMsg;
 	    }
 	}
 

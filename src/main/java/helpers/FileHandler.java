@@ -1,5 +1,5 @@
 package helpers;
-import helpers.User;
+import helpers.User; 
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -7,6 +7,12 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -18,13 +24,14 @@ import java.io.BufferedWriter;
 
 public class FileHandler {
 	private User user;
-
-	private static File baseDIR = new File(System.getProperty("user.home") + File.separator + "KaufDort_Userfiles"+ File.separator );
+	private static final int MAX_FILES = 5;
+	
+	private static final File BASE_DIR = new File(System.getProperty("user.home") + File.separator + "KaufDort_Userfiles"+ File.separator );
 	File fileDataPath;
 
 	public FileHandler(User user) {
 		this.user = user;
-		fileDataPath = new File(System.getProperty("user.home") + File.separator + "KaufDort_Userfiles"+ File.separator + "users" + File.separator + user.getName() + File.separator + "fileData.txt");
+		fileDataPath = new File(BASE_DIR, "users" + File.separator + user.getName() + File.separator + "fileData.txt");
 
 	}
 
@@ -83,12 +90,11 @@ public class FileHandler {
 	 */
 	public void setUpFILE(File fileName, HttpServletRequest request) throws IOException, ServletException {
 		setUpDIR();
-		File newFileDIR = new File(baseDIR.getAbsolutePath() +  File.separator + "users" + File.separator + user.getName() + File.separator + fileName.getName());
+		File newFileDIR = new File(BASE_DIR.getAbsolutePath() +  File.separator + "users" + File.separator + user.getName() + File.separator + fileName.getName());
 		System.out.println("newFile " +  newFileDIR); 
 		if(!(newFileDIR.exists())) {
-			System.out.println("its a new file");
 			for(Part part : request.getParts()) {
-				part.write(baseDIR.getAbsolutePath() + File.separator + "users" + File.separator + user.getName() + File.separator + fileName.getName());
+				part.write(BASE_DIR.getAbsolutePath() + File.separator + "users" + File.separator + user.getName() + File.separator + fileName.getName());
 			}
 			writeDataFile(fileName.getName());
 		}
@@ -116,7 +122,6 @@ public class FileHandler {
 	 */
 	public void deleteOldFile(String file) {
 	    String arffFile = file.replace(".csv", ".csv.arff");
-	    System.out.println("arfffile: " + arffFile);
 	    File tmpArffFile = new File(System.getProperty("user.home") + File.separator + "KaufDort_Userfiles" + File.separator + "users" + File.separator + user.getName() + File.separator + arffFile);
 	    File tmpFile = new File(System.getProperty("user.home") + File.separator + "KaufDort_Userfiles" + File.separator + "users" + File.separator + user.getName() + File.separator + file);        
 	    tmpArffFile.delete();
@@ -125,11 +130,28 @@ public class FileHandler {
 
 	/** writes fileData.txt to keep order of last 5 added files.
 	 * Should fileData.txt not exist, it will create a new one.
+	 * TODO fix bug where wrong upload will be shown in button
 	 * @param file (I should fix)
 	 * @param fileName (I should fix)
 	 * 
 	 */
 	public void writeDataFile(String fileName) throws IOException {
+	    try {
+	        if (fileDataPath.exists()) {
+	            List<String> lines = Collections.singletonList(fileName);
+	            Files.write(fileDataPath.toPath(), lines, StandardOpenOption.APPEND);
+	        } else {
+	            System.out.println("first"); // file hat vorher nicht existiert
+	            String[] lines = {""};
+	            writeNewFile(fileDataPath, Arrays.asList(lines));
+	        }
+
+	        checkFilesMoreThan5(fileDataPath);
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	    }
+	}
+	public void writeDataFile_old(String fileName) throws IOException {
 		try {
 			if(fileDataPath.exists()) {
 				BufferedWriter buffWriter = new BufferedWriter(new FileWriter(fileDataPath,true));
@@ -141,10 +163,10 @@ public class FileHandler {
 			}else {
 				System.out.println("first"); //file hat vorher nicht existiert
 				String[] lines = {""};
-				writeNewIDFile(fileDataPath,  lines);
+				writeNewFile(fileDataPath,  Arrays.asList(lines));
 			}
-
 			checkFilesMoreThan5(fileDataPath);
+			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -158,28 +180,17 @@ public class FileHandler {
 	 * @param file the file path with user path
 	 * @param lines the already existing files
 	 * @throws IOException
+	 * TODO: FIX AFTER 5 STACK
 	 */
-	private void writeNewIDFile(File file,  String[] lines) throws IOException {
-		System.out.println(" new file");
-		if(file.exists()==false){
-			new FileWriter(file.getAbsolutePath()).close();
-		}else {
-			new FileWriter(file.getAbsolutePath()).close();
-			FileWriter fileWriter = new FileWriter(file);
-			BufferedWriter buffWriter = new BufferedWriter(fileWriter);
-			System.out.println("lines0 " + lines[0]);
-			fileWriter.write(lines[0]);
-			for(int i = 1;i<lines.length;i++) {
-				if(lines[i] != null) {
-					buffWriter.newLine();
-					buffWriter.append(lines[i]);
-				}
-
-			}
-			buffWriter.close();
-		}
+	private void writeNewFile(File file, List<String> lines) throws IOException {
+	    System.out.println(" new file");
+	    if (!file.exists()) {
+	        file.createNewFile();
+	    } else {
+	        Path filePath = file.toPath();
+	        Files.write(filePath, lines);
+	    }
 	}
-
 	/**
 	 * helper to check that current files stay less than 6. In case of more than 5 files, oldest will be delted
 	 *
@@ -187,25 +198,14 @@ public class FileHandler {
 	 * @throws IOException
 	 */
 	private void checkFilesMoreThan5(File path) throws IOException {
-		BufferedReader reader = new BufferedReader(new FileReader(path));
-		String line;
-		String[] lines = new String[10];
-		int i = 1;	
-		line = reader.readLine();
-		while(( line = reader.readLine()) != null) {
-			lines[i-1] = line;
-			i++;
-		}
-		//firstLine;
-		while(i>5) { //more than 5 files in userDIR
-			System.out.println("more than 5" + i);
-			reader = new BufferedReader(new FileReader(path));
-			String firstLine = reader.readLine();
-			System.out.println(firstLine);
-			writeNewIDFile(path, lines);
-			deleteOldFile(firstLine);
-			i--;
-		}
-		reader.close();
+	    List<String> lines = Files.readAllLines(path.toPath());
+
+	    while (lines.size() > MAX_FILES) {
+	        String firstLine = lines.get(0);
+	        lines.remove(0);
+	        writeNewFile(path, lines);
+	        deleteOldFile(firstLine);
+	    }
 	}
+
 }

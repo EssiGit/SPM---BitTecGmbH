@@ -49,7 +49,7 @@ public class WekaAnalyser {
 		fileName = filePassed;
 		DIR = new File(System.getProperty("user.home") + File.separator + "KaufDort_Userfiles" + File.separator + "users" + File.separator + user.getName() + File.separator +  fileName);
 
-		String arffDat = DIR + ".arff";
+		
 
 		CSVLoader loader = new CSVLoader();
 		loader.setSource(DIR);
@@ -62,7 +62,10 @@ public class WekaAnalyser {
 		nc.setMinDefault(Double.NaN); // alles unter 1 durch ? ersetzen
 		nc.setInputFormat(data);
 		data = Filter.useFilter(data, nc); // Filter anwenden
-		ArffSaver saver = new ArffSaver();
+		//Ich glaub arff Datei brauchen wir nicht für unsere analysen
+		
+		//String arffDat = DIR + ".arff";
+		/*ArffSaver saver = new ArffSaver();
 		saver.setInstances(data);
 		saver.setFile(new File(arffDat));
 		saver.writeBatch();
@@ -71,7 +74,7 @@ public class WekaAnalyser {
 		ArffLoader aLoader = new ArffLoader();
 		aLoader.setSource(new File(arffDat));
 		arffDaten = aLoader.getDataSet();
-		System.out.println("filename" + fileName);
+		System.out.println("filename" + fileName);*/
 	}
 
 
@@ -256,7 +259,6 @@ public class WekaAnalyser {
 	 */
 	public ArrayList<Weka_resultFile> kundenhaeufigkeit(FileHandler fileHandler) throws FileNotFoundException, IOException {
 		StopWatch watch = new StopWatch();
-		watch.reset();
 		watch.start();
 	    ArrayList<Weka_resultFile> wekaFiles = new ArrayList<>();
 
@@ -376,7 +378,9 @@ public class WekaAnalyser {
 	 * @throws FileNotFoundException 
 	 */
 	public ArrayList<Weka_resultFile> umsatzstaerksteTagUhrzeit(FileHandler filehandler) throws FileNotFoundException, IOException {
-	    String[] tage = {"Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag"};
+		StopWatch watch = new StopWatch();
+		watch.start();
+		String[] tage = {"Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag"};
 	    String[] zeiten = {"<10 Uhr", "10-12 Uhr", "12-14 Uhr", "14-17 Uhr", ">17 Uhr"};
 	    ArrayList<Weka_resultFile> wekaFiles = new ArrayList<>();
 	    Map<String, Map<String, AtomicInteger>> tageZeiten = new HashMap<>();
@@ -426,7 +430,8 @@ public class WekaAnalyser {
 	    // Erzeuge 2 Weka_resultFiles für Tag und Umsatz
 	    wekaFiles.add(new Weka_resultFile("Umsatz nach Uhrzeit", xValues, yValuesTime));
 	    wekaFiles.add(new Weka_resultFile("Umsatz nach Tag", tage, yValuesDay));
-
+	    watch.stop();
+	    System.out.println("Tag/Uhrzeit: " + watch.getTime() + " ms");
 	    return wekaFiles;
 	}
 

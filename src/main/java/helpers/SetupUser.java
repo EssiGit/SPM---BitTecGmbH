@@ -31,13 +31,11 @@ public class SetupUser {
 	
 
 	private boolean checkForIllegalChars() {
-	    // Definiere das Muster für erlaubte Zeichen im Benutzernamen
+	    //erlaubte Zeichen
 	    Pattern pattern = Pattern.compile("^[a-zA-Z0-9_-]+$");
 
-	    // Erstelle einen Matcher für den Benutzernamen
 	    Matcher matcher = pattern.matcher(userName);
 
-	    // Überprüfe, ob der Benutzername erlaubte Zeichen enthält
 	    return matcher.matches();
 	}
 	public String errorMsg() throws IOException {
