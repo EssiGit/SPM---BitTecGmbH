@@ -62,7 +62,7 @@ public class WekaAnalyser {
 		nc.setMinDefault(Double.NaN); // alles unter 1 durch ? ersetzen
 		nc.setInputFormat(data);
 		data = Filter.useFilter(data, nc); // Filter anwenden
-		//Ich glaub arff Datei brauchen wir nicht für unsere analysen
+		//arff Datei brauchen wir nicht für unsere analysen
 		
 		//String arffDat = DIR + ".arff";
 		/*ArffSaver saver = new ArffSaver();
@@ -104,7 +104,7 @@ public class WekaAnalyser {
 
 
 	/**
-	 * cluster analyse multithreaded. saves up to 200 ms
+	 * cluster analyse multithreaded
 	 * @param fileHandler
 	 * @param cluster der Name des Attributes, nach dem geclustered wird. Bsp "Einkaufssumme"
 	 * @return
@@ -144,7 +144,11 @@ public class WekaAnalyser {
 	    System.out.println("time for cluster: " + watch.getTime() + "ms");
 		return wekaFiles;
 	}
-	
+	/**
+	 * Sets up the Name for the Frontend
+	 * @param xValues
+	 * @return
+	 */
 	private String[] setXvalues(String[] xValues) {
 		for(int i = 0;i<xValues.length;i++) {
 			if(xValues[i].contains("m,")) {
@@ -171,6 +175,13 @@ public class WekaAnalyser {
 		return xValues;
 	}
 
+	/**
+	 * 
+	 * checks which kind of cluster analysis
+	 * @param cluster
+	 * @param yValues
+	 * @return
+	 */
 	private String[] checkCluster(String cluster, String[] yValues) {
 	    if (cluster.equals("Einkaufsuhrzeit")) {
 	        for (int i = 0; i < yValues.length; i++) {
