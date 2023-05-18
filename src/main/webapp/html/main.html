@@ -21,8 +21,8 @@
 		<div>
 
 			<!-- Marketing button -->
-			<form action="./MarketingServlet">
-				<button type="submit">Marketingmaßnahmen</button>
+			<form action="./MarketingServlet" id="marketingFrom">
+				<button type="submit" onclick="SubmitEvent('marketingFrom')">Marketingmaßnahmen</button>
 			</form>
 
 			<!-- Upload-button -->
@@ -83,7 +83,7 @@
     <a class="nav2-item" id="kundengruppen-link" href="#">Kundengruppen</a>
 </nav>
 
-<!-- dropdown Kundngruppen -->
+<!-- dropdown Kundengruppen -->
 <div class="dropdown2" id="drop2">
     <a href="#" id="Einkaufssumme" onclick="submitForm('WekaServlet', 'Einkaufssumme')">Einkaufssumme</a> 
     <a href="#" id="Wohnort" onclick="submitForm('WekaServlet', 'Wohnort')">Wohnort</a> 
@@ -98,8 +98,8 @@
 	<th:block th:if="${isCluster == true}">
 		<br />
 		<div class="slidecontainer">
-		<h2>Anzahl der Cluster: <span id="sliderValue">8</span></h2>
-			<input type="range" min="8" max="15" value="8" class="slider" id="slider">
+		<h2>Anzahl der Cluster: <span id="sliderValue">1</span></h2>
+			<input type="range" min="1" max="8" value="1" class="slider" id="slider">
 		</div>
 	</th:block>
 
@@ -119,49 +119,60 @@
 			
 			
 			//Cluster Anzahl aktualisieren
-			$(document).ready(function() {
-				// Initial data load
-				var cluster = /*[[${isCluster}]]*/ "";
-				if(cluster){
-				loadData(8, type);
-				}
-				// Slider change event
-				$('#slider').on('input', function() {
-				
-					$('#sliderValue').text($(this).val());
-				});
-				
-				
-				$('#slider').on('mouseup', function() {
-					var value = $(this).val();
-					
-				
-					
-					$('#sliderValue').text(value);
-					
-						loadData(value, type);
+		
+				$(document).ready(function() {
+					// Initial data load
+					var cluster = /*[[${isCluster}]]*/"";
+					if (cluster) {
+						loadData(1, type);
+					}
+					// Slider change event
+					$('#slider').on('input', function() {
 
+						$('#sliderValue').text($(this).val());
+					});
+
+					$('#slider').on('mouseup', function() {
+						var value = $(this).val();
+
+						$('#sliderValue').text(value);
+
+						loadData(value, type);
+					});
 				});
-			});
-			
-			
-			
-			console.log(type);
-			//Ergebnisse x,y Values als array
-			var marginBottom = /*[[${margin}]]*/ "";
-			var maxYvalue = /*[[${cluster.getYmax()}]]*/ "";
-			var tableName = /*[[${cluster.tableName}]]*/ ""; 
-			var xValues = /*[[${cluster.getXnames()}]]*/ ""; 
-			var yValues = /*[[${cluster.getYdata()}]]*/ ""; 
-			var yName =	/*[[${cluster.getYname()}]]*/ "";
-			createChart(tableName, yName, xValues, yValues, maxYvalue, marginBottom, 130);
-	
-	 		
-      </script>
+
+				//Ergebnisse x,y Values als array
+				var marginBottom = /*[[${margin}]]*/"";
+				var maxYvalue = /*[[${cluster.getYmax()}]]*/"";
+				var tableName = /*[[${cluster.tableName}]]*/"";
+				var xValues = /*[[${cluster.getXnames()}]]*/"";
+				var yValues = /*[[${cluster.getYdata()}]]*/"";
+				var yName = /*[[${cluster.getYname()}]]*/"";
+				createChart(tableName, yName, xValues, yValues, maxYvalue,
+						marginBottom, 130);
+				
+				
+			</script>
 	</div>
 	</th:block>
 
+<script>
 
+/* beim drücken von "zurueck" im browser wird die Sanduhr versteckt */
+window.addEventListener("pageshow", function(event) {
+	var historyTraversal = event.persisted ||
+		(typeof window.performance != "undefined" &&
+			window.performance.getEntriesByType("navigation")[0].type === "back_forward");
+	if (historyTraversal) {
+		loading.style.display = "none";
+		loadingimg.style.display = "none";
+		window.location.reload();
+	}
+});
+
+</script>
+
+<img class="bitecLogo" src="images/bitecLogo.png" alt="bitec GmbH">
 
 </body>
 </html>

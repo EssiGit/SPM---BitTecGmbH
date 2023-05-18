@@ -1,4 +1,7 @@
-body{margin: 0px;}
+body {
+	margin: 0px;
+	font-family: Arial;
+}
 
 .navbar {
 	background-color: white;
@@ -10,7 +13,7 @@ body{margin: 0px;}
 }
 
 .navbar img {
-	height: 40px;
+	height: 60px;
 }
 
 .navbar form {
@@ -179,146 +182,154 @@ body{margin: 0px;}
 }
 
 .loading {
-  position: absolute;
-  pointer-events: none;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: none;
-  justify-content: center;
-  align-items: center;
-  background-color: rgba(0, 0, 0, 0.3); 
+	position: absolute;
+	pointer-events: none;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	display: none;
+	justify-content: center;
+	align-items: center;
+	background-color: rgba(0, 0, 0, 0.3);
 }
 
 .loading img {
 	pointer-events: auto;
 	display: none;
-  max-width: 100%;
-  max-height: 100%;
+	max-width: 100%;
+	max-height: 100%;
 }
 
 .slidecontainer {
-  text-align: center;
-  width: 100%; /* Width of the outside container */
+	text-align: center;
+	width: 100%; /* Width of the outside container */
 }
 
 /* Mouse-over effects */
 .slider:hover {
-  opacity: 1; /* Fully shown on mouse-over */
+	opacity: 1; /* Fully shown on mouse-over */
 }
 
 .slider {
-  width: calc(100%/2);
-  height: 15px;
-  border-radius: 5px;  
-  background: #000000;
-  outline: none;
-  opacity: 0.7;
-  transition: opacity .2s;
+	width: calc(100%/ 2);
+	height: 15px;
+	border-radius: 5px;
+	background: #000000;
+	outline: none;
+	opacity: 0.7;
+	transition: opacity .2s;
 }
 
 .slider::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 25px;
-  height: 25px;
-  border-radius: 50%; 
-  background: #04AA6D;
-  cursor: pointer;
+	-webkit-appearance: none;
+	appearance: none;
+	width: 25px;
+	height: 25px;
+	border-radius: 50%;
+	background: #04AA6D;
+	cursor: pointer;
 }
 
 .slider::-moz-range-thumb {
-  width: 25px;
-  height: 25px;
-  border-radius: 50%;
-  background: #04AA6D;
-  cursor: pointer;
+	width: 25px;
+	height: 25px;
+	border-radius: 50%;
+	background: #04AA6D;
+	cursor: pointer;
 }
 
 /* Marketing style */
 .container {
-            background-color: white;
-            font-size: 30px;
-           
-        }
-        
-        .box {
-            height: 100%;
-            width: 75%;
-            padding: 20px;
-            background-color: white;
-            border: 1px solid #ccc;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-        
-        .title {
-            font-size: 40px;
-            font-weight: bold;
-            text-align: center;
-            margin-bottom: 10px;
-        }
-        
-        .line {
-            width: 100%;
-            height: 1px;
-            background-color: #ccc;
-            margin-bottom: 10px;
-        }
-        
-        .list {
-            list-style-type: none;
-            padding: 0;
-            margin: 0;
-        }
-        
-        .list li {
-            margin-bottom: 5px;
-             list-style: none;
-        }
-        
-        .list li:before {
-            content: "•";
-            margin-right: 5px;
-        }
-        
-        .button {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background-color: #ccc;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        
-        .button:hover {
-            background-color: #aaa;
-        }
-        
-        .textbox {
-            display: none;
-            margin-top: 10px;
-        }
-        
-        .textbox textarea {
-            font-size: 20px;
-            width: 90%;
-            height: 100px;
-            border: 1px solid #ccc;
-            background-color: lightgrey;
-            padding: 5px;
-        }
-        
-        .textbox button {
-            width: 25%;
-            background-color: lightgrey;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        
-        .textbox button:hover {
-            background-color: #aaa;
-        }
+	background-color: white;
+	font-size: 30px;
+}
+
+.box {
+	height: 100%;
+	width: 75%;
+	padding: 20px;
+	background-color: white;
+	border: 1px solid #ccc;
+	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.title {
+	font-size: 40px;
+	font-weight: bold;
+	text-align: center;
+	margin-bottom: 10px;
+}
+
+.line {
+	width: 100%;
+	height: 1px;
+	background-color: #ccc;
+	margin-bottom: 10px;
+}
+
+.list {
+	list-style-type: none;
+	padding: 0;
+	margin: 0;
+}
+
+.list li {
+	margin-bottom: 5px;
+	list-style: none;
+}
+
+.list li:before {
+	content: "•";
+	margin-right: 5px;
+}
+
+.button {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+	background-color: #ccc;
+	cursor: pointer;
+	transition: background-color 0.3s;
+}
+
+.button:hover {
+	background-color: #aaa;
+}
+
+.textbox {
+	display: none;
+	margin-top: 10px;
+}
+
+.textbox textarea {
+	font-size: 20px;
+	width: 90%;
+	height: 100px;
+	border: 1px solid #ccc;
+	background-color: lightgrey;
+	padding: 5px;
+}
+
+.textbox button {
+	width: 25%;
+	background-color: lightgrey;
+	cursor: pointer;
+	transition: background-color 0.3s;
+}
+
+.textbox button:hover {
+	background-color: #aaa;
+}
+
+.bitecLogo {
+	opacity: 50%;
+	height: 75px;
+	width: 75px;
+	position: fixed;
+	bottom: 0;
+	left: 0;
+}

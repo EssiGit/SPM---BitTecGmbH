@@ -2,8 +2,8 @@ function createChart(tableName, yName, xValues, yValues, maxYvalue, bottomMargin
 
 	//setze höhe,breite und abstaende 120 normal
 	var margin = { top: 30, right: 30, bottom: bottomMargin, left: leftMargin },
-		width = 1800 - margin.left - margin.right,
-		height = 900 - margin.top - margin.bottom;
+		width = 1200 - margin.left - margin.right,
+		height = 500 - margin.top - margin.bottom;
 
 	//Grafik an chart-container hängen
 	var svg = d3.selectAll("#my_dataviz")
@@ -26,7 +26,8 @@ function createChart(tableName, yName, xValues, yValues, maxYvalue, bottomMargin
 		.attr('y', 0)
 		.attr('text-anchor', 'left')
 		.text(yName)
-		.style("font-size", "25px");
+		.style("font-family", "Arial")
+		.style("font-size", "20px");
 
 	//X Achse zum svg hinzufuegen
 	svg.append("g")
@@ -35,7 +36,8 @@ function createChart(tableName, yName, xValues, yValues, maxYvalue, bottomMargin
 		.selectAll("text")
 		.attr("transform", "translate(-10,0)rotate(-45)")
 		.style("text-anchor", "end")
-		.style("font-size", "22px");
+		.style("font-family", "Arial")
+		.style("font-size", "20px");
 
 	//Y Achse erstellen
 	var y = d3.scaleLinear()
@@ -45,7 +47,8 @@ function createChart(tableName, yName, xValues, yValues, maxYvalue, bottomMargin
 	//Y Achse hinzufuegen
 	svg.append("g")
 		.call(d3.axisLeft(y))
-		.style("font-size", "25px");
+		.style("font-family", "Arial")
+		.style("font-size", "20px");
 
 	//Balken Hinzufuegen
 	svg.selectAll("bar")
@@ -65,7 +68,8 @@ function createChart(tableName, yName, xValues, yValues, maxYvalue, bottomMargin
 		.attr('y', margin.top / 2)
 		.attr('text-anchor', 'middle')
 		.text(tableName)
-		.style("font-size", "25px");
+		.style("font-family", "Arial")
+		.style("font-size", "20px");
 }
 
 function updateChart(tableName, yName, xValues, yValues, maxYvalue, bottomMargin) {
@@ -74,5 +78,5 @@ function updateChart(tableName, yName, xValues, yValues, maxYvalue, bottomMargin
 	d3.select("#my_dataviz svg").remove();
 	
 	//erstelle neuen chart
-	createChart(tableName, yName, xValues, yValues, maxYvalue, bottomMargin, 350)
+	createChart(tableName, yName, xValues, yValues, maxYvalue, bottomMargin, 200)
 }
