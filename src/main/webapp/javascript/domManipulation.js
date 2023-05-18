@@ -50,10 +50,10 @@ function selectButton(button) {
 
 //Chart Values aktuallisieren je nach Clusteranzahl
 function loadData(value, info) {
-	$.post('WekaServlet', { sliderValue: value, clusterInfo: info, ajaxUpdate: 1},
+	$.post('WekaServlet', { sliderValue: value, clusterInfo: info, ajaxUpdate: 1 },
 		function(response) {
-		   updateChart(response.tableName, response.yName, response.xNames, response.yValues, response.yMax, 450);
-			
+			updateChart(response.tableName, response.yName, response.xNames, response.yValues, response.yMax, 200);
+
 		}).
 		fail(function() {
 			console.log('Error:', error);
@@ -62,68 +62,50 @@ function loadData(value, info) {
 }
 
 //dropdown2 Funtionalität
-var kundengruppenLink = document.getElementById('kundengruppen-link');
-var dropdown = document.getElementById('drop2');
+if (document.getElementById('kundengruppen-link') != null) {
+	var kundengruppenLink = document.getElementById('kundengruppen-link');
+	var dropdown = document.getElementById('drop2');
 
-kundengruppenLink.addEventListener('mouseenter', function() {
-	dropdown.style.display = 'block';
-});
+	kundengruppenLink.addEventListener('mouseenter', function() {
+		dropdown.style.display = 'block';
+	});
 
-kundengruppenLink.addEventListener('mouseleave', function() {
-	dropdown.style.display = 'none';
-});
+	kundengruppenLink.addEventListener('mouseleave', function() {
+		dropdown.style.display = 'none';
+	});
 
-dropdown.addEventListener('mouseenter', function() {
-	dropdown.style.display = 'block';
-});
+	dropdown.addEventListener('mouseenter', function() {
+		dropdown.style.display = 'block';
+	});
 
-dropdown.addEventListener('mouseleave', function() {
-	dropdown.style.display = 'none';
-});
-
-
-const loading = document.getElementById('loading');
-const loadingimg = document.getElementById('loadingimg');
-console.log(loadingimg);
-
-/* beim drücken von "zurueck" im browser wird die Sanduhr versteckt */
-window.addEventListener("pageshow", function(event) {
-	var historyTraversal = event.persisted ||
-		(typeof window.performance != "undefined" &&
-			window.performance.navigation.type === 2);
-	if (historyTraversal) {
-		loading.style.display = "none";
-		loadingimg.style.display = "none";
-		window.location.reload();
+	dropdown.addEventListener('mouseleave', function() {
+		dropdown.style.display = 'none';
+	});
+}
+/*öffnen der Textbox auf marketing.html*/
+function toggleTextBox() {
+	var textbox = document.getElementById("textbox");
+	if (textbox.style.display == "none") {
+		textbox.style.display = "block";
+	} else {
+		textbox.style.display = "none";
 	}
-});
+}
 
+//hole Textareavalue und schicke sie per POST
+function getText() {
 
-/* Lädt die Sanduhr */
-const forms = document.querySelectorAll('form');
-console.log(forms);
-forms.forEach(form => {
+	var textareaValue = document.getElementById("marketingTextbox").value;
+	var formData = new FormData();
+	formData.append("textareaContent", textareaValue);
 
-	form.addEventListener('submit', function() {
+	// hidden input field welche den Text enthält
+	var hiddenInput = document.createElement("input");
+	hiddenInput.type = "hidden";
+	hiddenInput.name = "marketingText";
+	hiddenInput.value = textareaValue;
+	document.getElementById("markForm").appendChild(hiddenInput);
 
-		event.preventDefault();
-		loading.style.display = "flex";
-		loadingimg.style.display = "flex";
-		form.submit();
-
-	});
-});
-
-
-const navbar2Buttons = document.querySelectorAll('.nav2-item');
-
-navbar2Buttons.forEach(button => {
-	button.addEventListener('click', () => {
-
-		navbar2Buttons.forEach(btn => {
-			btn.classList.remove('active');
-		});
-
-		button.classList.add('active');
-	});
-});
+	// Form abschicken
+	document.getElementById("markForm").submit();
+}

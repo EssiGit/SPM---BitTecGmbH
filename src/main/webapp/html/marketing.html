@@ -16,8 +16,8 @@
 		<div>
 
 			<!-- Marketing button -->
-			<form action="./MarketingServlet">
-				<button type="submit">Marketingmaßnahmen</button>
+			<form action="./MarketingServlet" id="marketingFrom">
+				<button type="submit" onclick="SubmitEvent('marketingFrom')">Marketingmaßnahmen</button>
 			</form>
 
 			<!-- Upload-button -->
@@ -93,32 +93,17 @@
 	</div>
 
 	<script>
-	//hole Textareavalue und schicke sie per POST
-	function getText(){
-		
-	var textareaValue = document.getElementById("marketingTextbox").value;
-	var formData = new FormData();
-	  formData.append("textareaContent", textareaValue);
-
-	  // Create a hidden input field to hold the textarea value
-	  var hiddenInput = document.createElement("input");
-	  hiddenInput.type = "hidden";
-	  hiddenInput.name = "marketingText";
-	  hiddenInput.value = textareaValue;
-	  document.getElementById("markForm").appendChild(hiddenInput);
-
-	  // Submit the form
-	  document.getElementById("markForm").submit();
-}
-	
-        function toggleTextBox() {
-            var textbox = document.getElementById("textbox");
-            if (textbox.style.display == "none") {
-                textbox.style.display = "block";
-            } else {
-                textbox.style.display = "none";
-            }
-        }
+        /* beim drücken von "zurueck" im browser wird die Sanduhr versteckt */
+        window.addEventListener("pageshow", function(event) {
+        	var historyTraversal = event.persisted ||
+        		(typeof window.performance != "undefined" &&
+        			window.performance.getEntriesByType("navigation")[0].type === "back_forward");
+        	if (historyTraversal) {
+        		loading.style.display = "none";
+        		loadingimg.style.display = "none";
+        		window.location.reload();
+        	}
+        });
     </script>
 <!-- lade domManipulation -->
 <script src="./javascript/domManipulation.js"></script>
