@@ -1,6 +1,6 @@
 package site_handling;
 
-import java.io.IOException; 
+import java.io.IOException;  
 import helpers.MarketingHelper;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -12,8 +12,8 @@ import user_handling.PasswordHasher;
 import org.thymeleaf.context.WebContext;
 
 import helpers.FileHandler;
-import helpers.SetupUser;
-import helpers.User;
+import user_handling.SetupUser;
+import user_handling.User;
 import server_conf.ThymeleafConfig;
 
 /**
@@ -38,13 +38,14 @@ public class RegisterServlet extends HttpServlet {
             request.getServletContext());
 	String name = request.getParameter("username");
 	String password = request.getParameter("password");
+	System.out.println("pw " + password);
 	name = name.toLowerCase();
-	SetupUser setup = new SetupUser(name);
-	if(setup.errorMsg().equals("none")) { //bad overhead, ugly too
-		PasswordHasher hasher = new PasswordHasher();
+	PasswordHasher hasher = new PasswordHasher();
+	SetupUser setup = new SetupUser(name,hasher.hashPassword(password));
+	if(setup.errorMsg().equals("none") && !password.equals("")) { //bad overhead, ugly too
+		
 		User user = new User(name);
 		FileHandler filehandler = new FileHandler(user);
-		System.out.println(hasher.hashPassword(password)); 
 		setup.addUser(filehandler);
 		MarketingHelper marketing = new MarketingHelper(user);
 		marketing.newMarketingFile();

@@ -1,17 +1,24 @@
-package helpers;
+package user_handling;
 
-import java.io.File;
+import java.io.File; 
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 import java.io.IOException;
+import helpers.FileHandler;
 
 public class SetupUser {
 	
-
 	UserHandler userHand = new UserHandler();
+	String csvLine;
 	String userName;
-	public SetupUser(String userName)  {
+	
+	public SetupUser(String userName, String hash)  {
 		this.userName = userName;
+		StringBuilder csvBuilder = new StringBuilder();
+		csvBuilder.append(userName);
+		csvBuilder.append(",");
+		csvBuilder.append(hash);
+		csvLine = csvBuilder.toString();
 	}
 	/**
 	 * checks if user already exists 
@@ -21,7 +28,7 @@ public class SetupUser {
 	 */
 	private boolean checkIfexists() throws IOException {
 		boolean exists = false;
-		if(new File(System.getProperty("user.home") + File.separator + "KaufDort_Userfiles"+ File.separator + "usersHandling.txt").exists()){
+		if(new File(System.getProperty("user.home") + File.separator + "KaufDort_Userfiles"+ File.separator + "usersHandling.csv").exists()){
 			exists = userHand.checkForUserName(userName);
 		}
 
@@ -56,7 +63,7 @@ public class SetupUser {
 		fileHand.writeDataFile("");
 	}
 	public void addUser(FileHandler fileHand) throws IOException {
-		userHand.addUser(userName);
+		userHand.addUser(csvLine);
 		writeNewDataFile(fileHand);
 	}
 }

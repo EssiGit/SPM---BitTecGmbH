@@ -1,41 +1,28 @@
 package weka;
 
-import java.io.BufferedReader;  
+
 import org.apache.commons.lang3.time.StopWatch;
-import helpers.UserHandler;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 import java.util.stream.IntStream;
 import weka.classifiers.rules.ZeroR;
 import weka.core.Attribute;
 import weka.core.Instances;
-import weka.core.SystemInfo;
-import weka.core.converters.ArffLoader;
-import weka.core.converters.ArffSaver;
 import weka.core.converters.CSVLoader;
 import weka.filters.Filter;
 import weka.filters.unsupervised.attribute.NumericCleaner;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import helpers.User;
+
+import user_handling.User;
 import helpers.FileHandler;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.IntStream;
-import java.util.concurrent.ConcurrentMap;
-
 public class WekaAnalyser {
 	//private static final String DIR = "src" + File.separator +"main" + File.separator+"webapp" + File.separator + "usr_data" + File.separator;
 	private WekaTools analyse = new WekaTools();
@@ -111,9 +98,6 @@ public class WekaAnalyser {
 	 * @throws Exception
 	 */
 	public ArrayList<Weka_resultFile> clusterAnalyseMulti(FileHandler fileHandler, String cluster,int clusterAnzahl) throws Exception {
-		StopWatch watch = new StopWatch();
-		watch.reset();
-		watch.start();
 		ArrayList<Weka_resultFile> wekaFiles = new ArrayList<>();
 
 
@@ -140,8 +124,6 @@ public class WekaAnalyser {
 		yValues = checkCluster(cluster,yValues);
 		xValues = setXvalues(xValues);
 		wekaFiles.add(new Weka_resultFile(cluster, xValues, yValues));
-	    watch.stop();
-	    System.out.println("time for cluster: " + watch.getTime() + "ms");
 		return wekaFiles;
 	}
 	/**
@@ -269,8 +251,6 @@ public class WekaAnalyser {
 	 * @throws FileNotFoundException 
 	 */
 	public ArrayList<Weka_resultFile> kundenhaeufigkeit(FileHandler fileHandler) throws FileNotFoundException, IOException {
-		StopWatch watch = new StopWatch();
-		watch.start();
 	    ArrayList<Weka_resultFile> wekaFiles = new ArrayList<>();
 
 	    Map<String, Integer> tage = new HashMap<>();
@@ -333,9 +313,9 @@ public class WekaAnalyser {
 
 	    for (String tag : tage) {
 	        tageZeiten.put(tag, new HashMap<>());
-	        Map<String, Integer> tagZeit = tageZeiten.get(tag);
+	        Map<String, Integer> zeitenProTag = tageZeiten.get(tag);
 	        for (String zeit : zeiten) {
-	            tagZeit.put(zeit, 0);
+	            zeitenProTag.put(zeit, 0);
 	        }
 	    }
 	    /*da Daten in loops unabhängige sind kann man gut multithreaden 
@@ -362,10 +342,11 @@ public class WekaAnalyser {
 	            .forEach(i -> {
 	                String wochentag = wochentage[i];
 	                String zeit = zeitenData[i];
-	                synchronized (tageZeiten) { 
-	                    Map<String, Integer> tagZeit = tageZeiten.get(wochentag);
+                    Map<String, Integer> zeitenProTag  = tageZeiten.get(wochentag);
+
+	                synchronized (zeitenProTag ) { 
 	                    //wildes remapping
-	                    tagZeit.compute(zeit, (k, v) -> (int) (values[i] + (v != null ? v : 0)));
+	                    zeitenProTag .compute(zeit, (k, v) -> (int) (values[i] + (v != null ? v : 0)));
 	                }
 	            });
 
@@ -389,8 +370,7 @@ public class WekaAnalyser {
 	 * @throws FileNotFoundException 
 	 */
 	public ArrayList<Weka_resultFile> umsatzstaerksteTagUhrzeit(FileHandler filehandler) throws FileNotFoundException, IOException {
-		StopWatch watch = new StopWatch();
-		watch.start();
+
 		String[] tage = {"Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag"};
 	    String[] zeiten = {"<10 Uhr", "10-12 Uhr", "12-14 Uhr", "14-17 Uhr", ">17 Uhr"};
 	    ArrayList<Weka_resultFile> wekaFiles = new ArrayList<>();
@@ -441,8 +421,6 @@ public class WekaAnalyser {
 	    // Erzeuge 2 Weka_resultFiles für Tag und Umsatz
 	    wekaFiles.add(new Weka_resultFile("Umsatz nach Uhrzeit", xValues, yValuesTime));
 	    wekaFiles.add(new Weka_resultFile("Umsatz nach Tag", tage, yValuesDay));
-	    watch.stop();
-	    System.out.println("Tag/Uhrzeit: " + watch.getTime() + " ms");
 	    return wekaFiles;
 	}
 

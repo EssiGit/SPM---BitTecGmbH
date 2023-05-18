@@ -1,9 +1,8 @@
 package site_handling;
 
 
-import java.io.File;  
+import java.io.File;   
 import java.io.IOException;
-import java.nio.file.Paths;
 import helpers.CSVCheck;
 import helpers.FileHandler;
 
@@ -16,12 +15,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
-import helpers.User;
-import helpers.UserHandler;
+import user_handling.UserHandler;
+import user_handling.User;
 import server_conf.ThymeleafConfig;
-
 import org.apache.commons.lang3.time.StopWatch;
-import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 
 @WebServlet("/main")

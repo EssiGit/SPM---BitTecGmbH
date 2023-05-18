@@ -1,6 +1,6 @@
 package site_handling;
 
-import java.io.IOException;
+import java.io.IOException; 
 import java.util.ArrayList;
 
 import javax.servlet.ServletException;
@@ -14,8 +14,7 @@ import org.thymeleaf.context.WebContext;
 
 import helpers.FileHandler;
 import helpers.MarketingHelper;
-import helpers.User;
-import helpers.UserHandler;
+import user_handling.User;
 import server_conf.ThymeleafConfig;
 
 /**

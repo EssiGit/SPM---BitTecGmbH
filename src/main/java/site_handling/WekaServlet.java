@@ -1,30 +1,20 @@
 package site_handling;
 
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.PrintWriter;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
 import server_conf.ThymeleafConfig;
 import org.thymeleaf.context.WebContext;
 import weka.WekaAnalyser;
 import weka.Weka_resultFile;
 import helpers.FileHandler;
-import helpers.User;
+import user_handling.User;
 import org.apache.commons.lang3.time.StopWatch;
 import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.Map;
 
 @WebServlet("/WekaServlet")
 public class WekaServlet extends HttpServlet {
@@ -48,7 +38,8 @@ public class WekaServlet extends HttpServlet {
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+		StopWatch watch = new StopWatch();
+		watch.start();
 		response.setCharacterEncoding("UTF-8");
 		request.setCharacterEncoding("UTF-8");
 		HttpSession session = request.getSession();
@@ -81,13 +72,8 @@ public class WekaServlet extends HttpServlet {
 	    }
 
 	    try {
-			StopWatch watch = new StopWatch();
-			watch.start();
 	        WekaAnalyser weka = new WekaAnalyser((String) session.getAttribute("filename"), user);
-	        watch.stop();
 	        ArrayList<Weka_resultFile> wekaFiles = weka.getCorrectAnalysis(filehandler, typeOfAnalysis, clusterAnzahl);
-			
-			System.out.println("Time till served: " + watch.getTime() + "ms");
 	        if (request.getParameter("ajaxUpdate") != null && request.getParameter("ajaxUpdate").equals("1")) {
 	            response.setContentType("application/json");
 	            response.setContentLength(wekaFiles.get(0).ajax().length());
@@ -108,6 +94,8 @@ public class WekaServlet extends HttpServlet {
 
 		ThymeleafConfig.getTemplateEngine().process("main.html", context, response.getWriter());
 
+	    watch.stop();
+	    System.out.println("Full time till served: " + watch.getTime() + " ms");
 
 	}
 

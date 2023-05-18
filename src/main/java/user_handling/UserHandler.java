@@ -1,13 +1,15 @@
-package helpers;
+package user_handling;
 
-import java.io.BufferedReader; 
+import java.io.BufferedReader;  
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import org.apache.commons.io.FilenameUtils;
+import user_handling.PasswordHasher;
 
 public class UserHandler {
 
@@ -53,16 +55,76 @@ public class UserHandler {
 	 * @throws IOException
 	 */
 	public boolean checkForUserName(String userLine) throws IOException {
-		File path = new File(System.getProperty("user.home") + File.separator + "KaufDort_Userfiles"+ File.separator + "usersHandling.csv");
+	    File path = new File(System.getProperty("user.home") + File.separator + "KaufDort_Userfiles" + File.separator + "usersHandling.csv");
 
-		if (path.exists()) {
-			try (BufferedReader reader = new BufferedReader(new FileReader(path))) {
-				final String finalUserLine = userLine.replace("\n", "");
-				return reader.lines().anyMatch(line -> line.equals(finalUserLine));//supposed to be fast
-			}
+	    if (path.exists()) {
+	        try (BufferedReader reader = new BufferedReader(new FileReader(path))) {
+	            final String finalUserLine = userLine;
+	            System.out.println("finalUserLine " + finalUserLine);
+	            return reader.lines()
+	                    .map(line -> line.split(",")[0]) // erste Spalte 
+	                    .anyMatch(username -> username.equals(finalUserLine));
+	        }
+	    }
+
+	    return false;
+	}
+
+	public boolean checkForPassword(String hash) throws FileNotFoundException, IOException {
+	    File path = new File(System.getProperty("user.home") + File.separator + "KaufDort_Userfiles" + File.separator + "usersHandling.csv");
+
+	    if (path.exists()) {
+	        try (BufferedReader reader = new BufferedReader(new FileReader(path))) {
+	            final String finalLine = hash;
+	            return reader.lines()
+	                    .map(line -> line.split(",")[1]) // erste Spalte 
+	                    .anyMatch(username -> username.equals(finalLine));
+	        }
+	    }
+
+	    return false;
+	}
+	
+	public String getSalt(String userName) throws IOException {
+	    File path = new File(System.getProperty("user.home") + File.separator + "KaufDort_Userfiles" + File.separator + "usersHandling.csv");
+
+	    if (path.exists()) {
+	        try (BufferedReader reader = new BufferedReader(new FileReader(path))) {
+	            final String finalUserLine = userName;
+	            return reader.lines()
+	                    .filter(line -> line.split(",")[0].equals(finalUserLine)) 
+	                    .map(line -> line.split(",")[1]) // Get salt
+	                    .findFirst() // Returned den gefundenen salt
+	                    .orElse(null); // oder null
+	        }
+	    }
+
+	    return null;
+	}
+	
+	
+	/**
+	 * checks hash and userName
+	 * @param userName
+	 * @param Password
+	 * @return
+	 * @throws IOException 
+	 */
+	public boolean checkForUser(String userName, String password) throws IOException {
+		
+		
+		boolean exists = false;
+		exists = checkForUserName(userName);
+		if(exists) {
+			String salt = getSalt(userName);
+			PasswordHasher hasher = new PasswordHasher();
+			System.out.println("salt: " + salt);
+			exists =  hasher.checkPassword(password, getSalt(userName));
+			//exists = checkForPassword(hashedPW);
 		}
+		
 
-		return false;
+		return exists;
 	}
 
 	/**
@@ -104,7 +166,7 @@ public class UserHandler {
 			}
 		}
 	}
-	
+
 	/**
 	 * creates the  user handling csv file if it didnt exist before
 	 * @throws IOException

@@ -1,7 +1,7 @@
 package site_handling;
 
 
-import java.io.IOException;  
+import java.io.IOException;   
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -13,8 +13,8 @@ import server_conf.ThymeleafConfig;
 import org.thymeleaf.context.WebContext;
 
 import helpers.FileHandler;
-import helpers.User;
-import helpers.UserHandler;
+import user_handling.UserHandler;
+import user_handling.User;
 
 
 @WebServlet("/index")
@@ -35,14 +35,14 @@ public class Index extends HttpServlet {
 		String name = request.getParameter("nutzername");
 		System.out.println("Index Name: " + name);
 
-
+		String password = request.getParameter("password");
 
 
 		name = name.toLowerCase();
 		UserHandler userHand = new UserHandler();
 
 
-		if(userHand.checkForUserName(name)) {
+		if(userHand.checkForUser(name, password)) {
 			User user = new User(name);
 			FileHandler filehandler = new FileHandler(user);
 			session.setAttribute("User", user);

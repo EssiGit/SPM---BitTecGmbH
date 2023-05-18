@@ -1,8 +1,8 @@
-package helpers;
-import java.io.File;
+package user_handling;
+import java.io.File; 
 import java.io.IOException;
 
-import helpers.UserHandler;
+import user_handling.UserHandler;
 public class User {
 	private String name;
 	UserHandler usrHandler = new UserHandler();

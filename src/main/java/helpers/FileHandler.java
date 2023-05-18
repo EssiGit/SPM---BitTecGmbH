@@ -1,5 +1,4 @@
-package helpers;
-import helpers.User; 
+package helpers; 
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -18,7 +17,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
-import helpers.UserHandler;
+import user_handling.User;
 import org.apache.commons.io.FilenameUtils;
 import java.io.BufferedWriter;
 

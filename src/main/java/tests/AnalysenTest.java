@@ -1,7 +1,7 @@
 package tests;
 
-import helpers.FileHandler; 
-import helpers.User;
+import helpers.FileHandler;  
+import user_handling.User;
 import org.apache.commons.lang3.time.StopWatch;
 import org.junit.jupiter.api.Test;
 import weka.WekaAnalyser;
