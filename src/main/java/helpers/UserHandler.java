@@ -53,7 +53,7 @@ public class UserHandler {
 	 * @throws IOException
 	 */
 	public boolean checkForUserName(String userLine) throws IOException {
-		File path = new File(System.getProperty("user.home") + File.separator + "KaufDort_Userfiles"+ File.separator + "usersHandling.txt");
+		File path = new File(System.getProperty("user.home") + File.separator + "KaufDort_Userfiles"+ File.separator + "usersHandling.csv");
 
 		if (path.exists()) {
 			try (BufferedReader reader = new BufferedReader(new FileReader(path))) {
@@ -73,7 +73,7 @@ public class UserHandler {
 	private void writeUserFile(File userDIR, String userData) {
 		try {
 			System.out.println("in Userhandler, writeUserFile :" + userDIR.getAbsolutePath());
-			FileWriter file = new FileWriter(userDIR.getAbsolutePath() +  "usersHandling.txt");
+			FileWriter file = new FileWriter(userDIR.getAbsolutePath() +  "usersHandling.csv");
 			System.out.println("before write:" + userData);
 			file.write(userData);
 			file.close();
@@ -89,7 +89,7 @@ public class UserHandler {
 	 */
 	public void addUser(String userName) throws IOException {
 		setupUserID();
-		File handlerDIR = new File(System.getProperty("user.home") + File.separator + "KaufDort_Userfiles"+ File.separator + "usersHandling.txt");
+		File handlerDIR = new File(System.getProperty("user.home") + File.separator + "KaufDort_Userfiles"+ File.separator + "usersHandling.csv");
 		if( handlerDIR.exists()) {
 			if(checkForUserName(userName) == false) {
 				try {
@@ -106,11 +106,11 @@ public class UserHandler {
 	}
 	
 	/**
-	 * creates the 200 IQ user handling txt file if it didnt exist before
+	 * creates the  user handling csv file if it didnt exist before
 	 * @throws IOException
 	 */
 	private void setupUserID() throws IOException {
-		File handlerFile = new File(System.getProperty("user.home") + File.separator + "KaufDort_Userfiles" + File.separator + "usersHandling.txt");
+		File handlerFile = new File(System.getProperty("user.home") + File.separator + "KaufDort_Userfiles" + File.separator + "usersHandling.csv");
 
 		if (!handlerFile.exists()) {
 			System.out.println("Creating new file: " + handlerFile.getAbsolutePath());
@@ -119,7 +119,7 @@ public class UserHandler {
 	}
 
 	private void setupUserID_old() throws IOException {
-		File handlerDIR = new File(System.getProperty("user.home") + File.separator + "KaufDort_Userfiles"+ File.separator + "usersHandling.txt");
+		File handlerDIR = new File(System.getProperty("user.home") + File.separator + "KaufDort_Userfiles"+ File.separator + "usersHandling.csv");
 		if(!handlerDIR.exists()) {
 			System.out.println("new FILE");
 			PrintWriter writer = new PrintWriter(handlerDIR.getAbsolutePath(), "UTF-8");
