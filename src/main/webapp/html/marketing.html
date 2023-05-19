@@ -6,10 +6,12 @@
 <link rel="stylesheet" href="css/style2.css">
 <script src="https://d3js.org/d3.v7.min.js"></script>
 
-
 </head>
 <body>
 
+	<!-- bitec Logo -->
+	<img class="bitecLogo" src="images/bitecLogo.png" alt="bitec GmbH">
+	
 	<!-- Navigationsbar -->
 	<nav class="navbar">
 		<a href="./main"><img src="images/LogoKaufDort.gif" alt="Logo"></a>
@@ -70,27 +72,24 @@
 		</div>
 	</div>
 
-
-	<!-- Marketingmaßnahmen -->
-	<div class="container">
-		<div class="box">
-			<h1 class="title">Marketingmaßnahmen</h1>
-			<div class="line"></div>
-			<ul class="list">
-				<li th:each= "item : ${items}"><span th:text="${item}"></span></li>
-			</ul>
-			<div class="button" onclick="toggleTextBox()">
-				<span>+</span>
-			</div>
-			<form action="./MarketingServlet" method="POST" id="markForm">
+<!-- Marketingmaßnahmen ripped off: https://web.dev/creative-list-styling/-->
+<div class="wrapper">
+	<h1>Marketingmaßnahmen</h1>
+	<ol role="list">
+		<li th:each= "item : ${items}"><span th:text="${item}"></span></li>
+	</ol>
+	
+	<!-- hinzufügen von Marketingmaßnahmen -->
+	<h2>Marketingmaßnahme hinzufügen:</h2>
+	<form action="./MarketingServlet" method="POST" id="markForm">
 			<div class="textbox" id="textbox">
-				<textarea rows="4" cols="50" id="marketingTextbox"></textarea>
+				<textarea rows="4" cols="50" id="marketingTextbox" placeholder="Marketingmaßnahme eintragen" required></textarea>
 				<button type="button" class="submit-button" onclick="getText()">hinzufügen</button>
 			
 			</div>
-			</form>
-		</div>
-	</div>
+	</form>
+</div>
+
 
 	<script>
         /* beim drücken von "zurueck" im browser wird die Sanduhr versteckt */
