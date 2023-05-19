@@ -1,16 +1,15 @@
-function createChart(tableName, yName, xValues, yValues, maxYvalue, bottomMargin, leftMargin) {
+function createChart(tableName, yName, xValues, yValues, maxYvalue, margin, dimension) {
 
 	//setze höhe,breite und abstaende 120 normal
-	var margin = { top: 30, right: 30, bottom: bottomMargin, left: leftMargin },
-		width = 1200 - margin.left - margin.right,
-		height = 500 - margin.top - margin.bottom;
+		width = dimension.width - margin.left - margin.right, //1200
+		height = dimension.height - margin.top - margin.bottom; //500
 
 	//Grafik an chart-container hängen
 	var svg = d3.selectAll("#my_dataviz")
 		.append("svg")
 		.attr("width", width + margin.left + margin.right)
 		.attr("height", height + margin.top + margin.bottom)
-		.style("background", "#dedede")
+		.style("background", "#f0f8ff")
 		.append("g")
 		.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
@@ -60,7 +59,7 @@ function createChart(tableName, yName, xValues, yValues, maxYvalue, bottomMargin
 		.attr("y", function(d) { return y(d) })
 		.attr("width", x.bandwidth())
 		.attr("height", function(d) { return height - y(d) })
-		.attr("fill", "#69b3a2")
+		.attr("fill", "#98d69c")
 
 	//Überschrift der Grafik
 	svg.append('text')
@@ -72,11 +71,13 @@ function createChart(tableName, yName, xValues, yValues, maxYvalue, bottomMargin
 		.style("font-size", "20px");
 }
 
-function updateChart(tableName, yName, xValues, yValues, maxYvalue, bottomMargin) {
+function updateChart(tableName, yName, xValues, yValues, maxYvalue) {
 	
 	//lösche chart
 	d3.select("#my_dataviz svg").remove();
 	
 	//erstelle neuen chart
-	createChart(tableName, yName, xValues, yValues, maxYvalue, bottomMargin, 200)
+	var margin = { top: 30, right: 30, bottom: 400, left: 400 };
+	var dimension = { width: 1200, height: 800};
+	createChart(tableName, yName, xValues, yValues, maxYvalue, margin, dimension)
 }

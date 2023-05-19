@@ -28,7 +28,7 @@
 </head>
 <body>
 
-  <form name="register" method="post" action="register">
+  <form name="register" id="registerForm" method="post" action="register" onsubmit="checkInputs(event)">
 
     <h1>Registrierung</h1>
 
@@ -38,17 +38,38 @@
         <label th:text="${errorMsg}" class="extra-bold-text"></label>
       </div>
     </th:block>
-
+    
+	<div id="errorMessage"></div>
     <label>Ihr Nutzername</label>
     <input type="text" name="username" placeholder="Username">
     <label>Passwort</label>
-    <input type="password" name="password" placeholder="Passwort">
+    <input type="password" name="password" id="pass1" placeholder="Passwort">
     <label>Passwort erneut eingeben</label>
-    <input type="password" name="passwordrepeat" placeholder="Passwort">
+    <input type="password" name="passwordrepeat" id="pass2" placeholder="Passwort">
     <a href="./index">zum Login</a>
-
+	 
     <button type="submit" class="log">registrieren</button>
+    
+    	
+	<script>
+	function checkInputs(event) {
+		  event.preventDefault(); // stoppe submit
+		  
+		  var input1 = document.getElementById("pass1").value;
+		  var input2 = document.getElementById("pass2").value;
 
+		  if (input1 === input2) {
+		    // wenn Passwörter gleich schicke form ab
+		    document.getElementById("registerForm").submit();
+		  } else {
+		    // error msg wenn passwörter !=
+		    var errorMessage = document.getElementById("errorMessage");
+		    errorMessage.textContent = "Die Passwörter stimmen nicht überein";
+		    errorMessage.style.color = "red";
+		  }
+		}
+	</script>
+	
   </form>
 
 </body>

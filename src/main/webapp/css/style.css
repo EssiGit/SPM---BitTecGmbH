@@ -6,6 +6,7 @@ body{
     align-items: center;
     height: 100vh;
     background-color: #8fb1e9;
+    
 }
 *{
     font-family: Times New Roman;
@@ -84,3 +85,4 @@ a{
   color: white;
   margin-bottom: 15px;
 }
+
