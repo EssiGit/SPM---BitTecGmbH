@@ -310,27 +310,27 @@ public class WekaAnalyser {
 		Map<String, Map<String, Integer>> tageZeiten = new ConcurrentHashMap<>();
 		ArrayList<Weka_resultFile> wekaFiles = new ArrayList<>();
 		//ForkJoinPool forkJoinPool = new ForkJoinPool();
-		
+
 		Arrays.stream(tage).parallel().forEach(tag -> {
-		    Map<String, Integer> zeitMap = new HashMap<>();
-		    zeitMap.put("<10 Uhr", 0);
-		    zeitMap.put("10-12 Uhr", 0);
-		    zeitMap.put("12-14 Uhr", 0);
-		    zeitMap.put("14-17 Uhr", 0);
-		    zeitMap.put(">17 Uhr", 0);
-		    tageZeiten.put(tag, zeitMap);
+			Map<String, Integer> zeitMap = new HashMap<>();
+			zeitMap.put("<10 Uhr", 0);
+			zeitMap.put("10-12 Uhr", 0);
+			zeitMap.put("12-14 Uhr", 0);
+			zeitMap.put("14-17 Uhr", 0);
+			zeitMap.put(">17 Uhr", 0);
+			tageZeiten.put(tag, zeitMap);
 		});
-		
+
 		//index 5 = Tag, index 6= uhrzeit, index 9 = Einkaufssumme
 		/*da Daten in loops unabhängige sind kann man gut multithreaden fucking int streams are breaking my brain 
-*/
-		
-	    IntStream.range(0, data.numInstances()).parallel().forEach(i -> {
-	        String day = data.instance(i).stringValue(5);
-	        String time = data.instance(i).stringValue(6);
-	        int moneyInt = (int)data.instance(i).value(9); 
-	        tageZeiten.get(day).merge(time, moneyInt, Integer::sum);
-	    });
+		 */
+
+		IntStream.range(0, data.numInstances()).parallel().forEach(i -> {
+			String day = data.instance(i).stringValue(5);
+			String time = data.instance(i).stringValue(6);
+			int moneyInt = (int)data.instance(i).value(9); 
+			tageZeiten.get(day).merge(time, moneyInt, Integer::sum);
+		});
 
 		for (String tag : tage) {
 			Map<String, Integer> tagZeit = tageZeiten.get(tag);
@@ -344,146 +344,64 @@ public class WekaAnalyser {
 
 		return wekaFiles;
 	}
-	
+	/**
+	 * Umsatzstärkste Einkauftage und Uhrzeiten
+	 * @throws IOException 
+	 * @throws FileNotFoundException 
+	 */
+	public ArrayList<Weka_resultFile> umsatzstaerksteTagUhrzeit(FileHandler filehandler) throws FileNotFoundException, IOException {
 
-		public ArrayList<Weka_resultFile> uhrzeitProTagOld(FileHandler filehandler) throws FileNotFoundException, IOException {
-			String[] tage = {"Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag"};
-			String[] zeiten = {"<10 Uhr", "10-12 Uhr", "12-14 Uhr", "14-17 Uhr", ">17 Uhr"};
-			Map<String, Map<String, Integer>> tageZeiten = new HashMap<>();
-			ArrayList<Weka_resultFile> wekaFiles = new ArrayList<>();
+		String[] tage = {"Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag"};
+		String[] zeiten = {"<10 Uhr", "10-12 Uhr", "12-14 Uhr", "14-17 Uhr", ">17 Uhr"};
+		ArrayList<Weka_resultFile> wekaFiles = new ArrayList<>();
+		Map<String, Map<String, AtomicInteger>> tageZeiten = new HashMap<>();
 
-
-
-				for (String tag : tage) {
-					tageZeiten.put(tag, new HashMap<>());
-					tageZeiten.get(tag).put("<10 Uhr", 0);
-					tageZeiten.get(tag).put("10-12 Uhr", 0);
-					tageZeiten.get(tag).put("12-14 Uhr", 0);
-					tageZeiten.get(tag).put("14-17 Uhr", 0);
-					tageZeiten.get(tag).put(">17 Uhr", 0);
-
-				}
-
-
-				for (int i = 0; i < data.numInstances(); i++) {
-					String wochentag = data.instance(i).stringValue(5);
-					String zeit = data.instance(i).stringValue(6);
-					Map<String, Integer> tagZeit = tageZeiten.get(wochentag);
-					System.out.println("zeit: " + tageZeiten.get(wochentag) + " " + wochentag);
-					tagZeit.put(zeit, (int) (data.instance(i).value(9) + tagZeit.get(zeit)));
-					System.out.println("zeitTag: " + tagZeit.get(zeit) + " " + wochentag);
-				}
-				String result = "";
-				Map<String,String> topDays = new HashMap<String, String>();
-				for(String tag : tage) {
-					int topTime = 0;
-					String weirdTime = "";
-					System.out.println(tag);
-					for(String zeit : zeiten) {
-						System.out.println(zeit);
-						System.out.println("TOP TIME: " + topTime);
-						System.out.println("weirdTime: " + weirdTime);
-						if( topTime<tageZeiten.get(tag).get(zeit)) {
-							topTime = tageZeiten.get(tag).get(zeit);
-							weirdTime = zeit;
-						}
-
-						System.out.println(tageZeiten.get(tage[0]).get("<10 Uhr"));
-
-						String cluster = "uhrzeitProTag";
-						String[] xValues = new String[zeiten.length];
-						String[] yValues = new String[zeiten.length];
-						System.out.println("tage len : " +tage.length);
-						System.out.println("zeiten len : " +  zeiten.length);
-						for (int i = 0; i < tage.length; i++) {
-							//int topTime = 0;
-							// String weirdTime = "";
-							for (int j = 0;j <zeiten.length;j++) {
-								System.out.println("i " + i + "j "+ j);
-								xValues[j] = zeiten[j];
-								System.out.println("zeit: " + zeiten[j] + " " + tage[i]);
-								int tmp = tageZeiten.get(tage[i]).get(zeiten[j]);
-								System.out.println("tmp: " + tmp);
-								yValues[j] = Integer.toString(tmp);
-								System.out.println("yValues " +  yValues[j]);
-								/*if (topTime < tageZeiten.get(tage[i]).get(zeit)) {
-	                topTime = tageZeiten.get(tage[i]).get(zeit);
-	                weirdTime = zeit;
-	            }*/
-							}
-							for(String tmp : yValues) {
-								System.out.println("yValues: " + tmp);
-							}
-							result = result.concat(tag + " " + weirdTime + " \n");
-							wekaFiles.add(new Weka_resultFile(tage[i], xValues, yValues));
-						}
-						System.out.println("MY TIME:");
-						System.out.println("result: \n" + result);
-						
-
-						
-					}
-				}
-			return wekaFiles;
-		}
-				/**
-				 * Umsatzstärkste Einkauftage und Uhrzeiten
-				 * @throws IOException 
-				 * @throws FileNotFoundException 
-				 */
-				public ArrayList<Weka_resultFile> umsatzstaerksteTagUhrzeit(FileHandler filehandler) throws FileNotFoundException, IOException {
-
-					String[] tage = {"Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag"};
-					String[] zeiten = {"<10 Uhr", "10-12 Uhr", "12-14 Uhr", "14-17 Uhr", ">17 Uhr"};
-					ArrayList<Weka_resultFile> wekaFiles = new ArrayList<>();
-					Map<String, Map<String, AtomicInteger>> tageZeiten = new HashMap<>();
-
-					for (String tag : tage) {
-						tageZeiten.put(tag, new HashMap<>());
-						Map<String, AtomicInteger> tagZeit = tageZeiten.get(tag);
-						for (String zeit : zeiten) {
-							tagZeit.put(zeit, new AtomicInteger(0));
-						}
-					}
-					//AtomicInteger => Es dürfen keine Befehle eine Operation an einem AtomicInteger unterbrechen
-					IntStream.range(0, data.numInstances())
-					.parallel()
-					.forEach(i -> {
-						String wochentag = data.instance(i).stringValue(5);
-						String zeit = data.instance(i).stringValue(6);
-						Map<String, AtomicInteger> tagZeit = tageZeiten.get(wochentag);
-						tagZeit.get(zeit).addAndGet((int) data.instance(i).value(9));
-					});
-
-					String[] xValues = new String[zeiten.length];
-					String[] yValuesTime = new String[zeiten.length];
-					String[] yValuesDay = new String[tage.length];
-
-					// Uhrzeiten und Umsatz
-					for (int i = 0; i < zeiten.length; i++) {
-						xValues[i] = zeiten[i];
-						int sum = 0;
-						for (String tag : tage) {
-							int currTime = tageZeiten.get(tag).get(zeiten[i]).get();
-							sum += currTime;
-						}
-						yValuesTime[i] = Integer.toString(sum);
-					}
-
-					// tage und Umsatz
-					for (int i = 0; i < tage.length; i++) {
-						int sum = 0;
-						for (String zeit : zeiten) {
-							int currTime = tageZeiten.get(tage[i]).get(zeit).get();
-							sum += currTime;
-						}
-						yValuesDay[i] = Integer.toString(sum);
-					}
-
-					// Erzeuge 2 Weka_resultFiles für Tag und Umsatz
-					wekaFiles.add(new Weka_resultFile("Umsatz nach Uhrzeit", xValues, yValuesTime));
-					wekaFiles.add(new Weka_resultFile("Umsatz nach Tag", tage, yValuesDay));
-					return wekaFiles;
-				}
-
+		for (String tag : tage) {
+			tageZeiten.put(tag, new HashMap<>());
+			Map<String, AtomicInteger> tagZeit = tageZeiten.get(tag);
+			for (String zeit : zeiten) {
+				tagZeit.put(zeit, new AtomicInteger(0));
 			}
+		}
+		//AtomicInteger => Es dürfen keine Befehle eine Operation an einem AtomicInteger unterbrechen
+		IntStream.range(0, data.numInstances())
+		.parallel()
+		.forEach(i -> {
+			String wochentag = data.instance(i).stringValue(5);
+			String zeit = data.instance(i).stringValue(6);
+			Map<String, AtomicInteger> tagZeit = tageZeiten.get(wochentag);
+			tagZeit.get(zeit).addAndGet((int) data.instance(i).value(9));
+		});
+
+		String[] xValues = new String[zeiten.length];
+		String[] yValuesTime = new String[zeiten.length];
+		String[] yValuesDay = new String[tage.length];
+
+		// Uhrzeiten und Umsatz
+		for (int i = 0; i < zeiten.length; i++) {
+			xValues[i] = zeiten[i];
+			int sum = 0;
+			for (String tag : tage) {
+				int currTime = tageZeiten.get(tag).get(zeiten[i]).get();
+				sum += currTime;
+			}
+			yValuesTime[i] = Integer.toString(sum);
+		}
+
+		// tage und Umsatz
+		for (int i = 0; i < tage.length; i++) {
+			int sum = 0;
+			for (String zeit : zeiten) {
+				int currTime = tageZeiten.get(tage[i]).get(zeit).get();
+				sum += currTime;
+			}
+			yValuesDay[i] = Integer.toString(sum);
+		}
+
+		// Erzeuge 2 Weka_resultFiles für Tag und Umsatz
+		wekaFiles.add(new Weka_resultFile("Umsatz nach Uhrzeit", xValues, yValuesTime));
+		wekaFiles.add(new Weka_resultFile("Umsatz nach Tag", tage, yValuesDay));
+		return wekaFiles;
+	}
+
+}
