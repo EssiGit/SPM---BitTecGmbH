@@ -195,7 +195,8 @@ public class WekaAnalyser {
 		ArrayList<Weka_resultFile> wekaFiles = new ArrayList<>();
 
 		Arrays.stream(tage).parallel().forEach(tag -> {
-			Map<String, Integer> zeitMap = new HashMap<>();
+			//Map<String, Integer> zeitMap = new HashMap<>(); <---- nicht für parallel geeignet
+			Map<String, Integer> zeitMap = new ConcurrentHashMap<>();
 			zeitMap.put("<10 Uhr", 0);
 			zeitMap.put("10-12 Uhr", 0);
 			zeitMap.put("12-14 Uhr", 0);
