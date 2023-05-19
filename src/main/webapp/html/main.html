@@ -127,6 +127,8 @@
 					// Initial data load
 					var cluster = /*[[${isCluster}]]*/"";
 					if (cluster) {
+						var charContainer = document.getElementById('my_dataviz');
+						charContainer.style.backgroundColor = '#f0f8ff';
 						loadData(1, type);
 					}
 					// Slider change event
@@ -139,20 +141,22 @@
 						var value = $(this).val();
 
 						$('#sliderValue').text(value);
-
+						charContainer.style.backgroundColor = '#f0f8ff';
 						loadData(value, type);
 					});
 				});
 
 				//Ergebnisse x,y Values als array
-				var marginBottom = /*[[${margin}]]*/"";
+				//var marginBottom = /*[[${margin}]]*/"";
+				var margin = { top: 30, right: 30, bottom: /*[[${margin}]]*/"", left: 130 };
+				var dimension = { width: 1200, height: 500};
 				var maxYvalue = /*[[${cluster.getYmax()}]]*/"";
 				var tableName = /*[[${cluster.tableName}]]*/"";
 				var xValues = /*[[${cluster.getXnames()}]]*/"";
 				var yValues = /*[[${cluster.getYdata()}]]*/"";
 				var yName = /*[[${cluster.getYname()}]]*/"";
 				createChart(tableName, yName, xValues, yValues, maxYvalue,
-						marginBottom, 130);
+						margin, dimension);
 				
 				
 			</script>
