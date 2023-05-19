@@ -191,16 +191,16 @@ public class WekaAnalyser {
 	public ArrayList<Weka_resultFile> uhrzeitProTag(FileHandler filehandler) throws FileNotFoundException, IOException {
 		String[] tage = {"Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag"};
 		String[] zeiten = {"<10 Uhr", "10-12 Uhr", "12-14 Uhr", "14-17 Uhr", ">17 Uhr"};
-		Map<String, Map<String, Integer>> tageZeiten = new ConcurrentHashMap<>();
+		Map<String, Map<String, AtomicInteger>> tageZeiten = new ConcurrentHashMap<>();
 		ArrayList<Weka_resultFile> wekaFiles = new ArrayList<>();
 
 		Arrays.stream(tage).parallel().forEach(tag -> {
-			Map<String, Integer> zeitMap = new HashMap<>();
-			zeitMap.put("<10 Uhr", 0);
-			zeitMap.put("10-12 Uhr", 0);
-			zeitMap.put("12-14 Uhr", 0);
-			zeitMap.put("14-17 Uhr", 0);
-			zeitMap.put(">17 Uhr", 0);
+			Map<String, AtomicInteger> zeitMap = new HashMap<>();
+			zeitMap.put("<10 Uhr", new AtomicInteger(0));
+			zeitMap.put("10-12 Uhr", new AtomicInteger(0));
+			zeitMap.put("12-14 Uhr", new AtomicInteger(0));
+			zeitMap.put("14-17 Uhr", new AtomicInteger(0));
+			zeitMap.put(">17 Uhr", new AtomicInteger(0));
 			tageZeiten.put(tag, zeitMap);
 		});
 
@@ -210,21 +210,21 @@ public class WekaAnalyser {
 
 		IntStream.range(0, data.numInstances()).parallel().forEach(i -> {
 			String day = data.instance(i).stringValue(5);
-			String time = data.instance(i).stringValue(6);
-			int moneyInt = (int)data.instance(i).value(9); 
-			tageZeiten.get(day).merge(time, moneyInt, Integer::sum);
+			String time = data.instance(i).stringValue(6); 
+			Map<String, AtomicInteger> tagZeit = tageZeiten.get(day);
+			tagZeit.get(time).addAndGet((int) data.instance(i).value(9));
 		});
+
 		
 		//TODO cleanup
-		for (String tag : tage) {
-			Map<String, Integer> tagZeit = tageZeiten.get(tag);
-			String[] xValues = zeiten.clone();
+		for (int j = 0;j<tage.length;j++) {
 			String[] yValues = new String[zeiten.length];
 			for (int i = 0; i < zeiten.length; i++) {
-				yValues[i] = Integer.toString(tagZeit.get(zeiten[i]));
+				yValues[i] = Integer.toString(tageZeiten.get(tage[j]).get(zeiten[i]).intValue());
 			}
-			wekaFiles.add(new Weka_resultFile(tag, xValues, yValues));
+			wekaFiles.add(new Weka_resultFile(tage[j], zeiten, yValues));
 		}
+		
 
 		return wekaFiles;
 	}
