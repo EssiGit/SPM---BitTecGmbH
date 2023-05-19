@@ -1,14 +1,16 @@
 package helpers;
 
 
-import user_handling.User;
+import user_handling.User; 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.StandardOpenOption;
 
 public class MarketingHelper {
 
@@ -43,9 +45,9 @@ public class MarketingHelper {
  * @throws IOException
  */
     public void addToMarketingFile(String text) throws IOException {
-        FileWriter writer = new FileWriter(marketingFile.getAbsolutePath(), true);
-        writer.write(text + "\n");
-        writer.close();
+    	List<String> lines = Collections.singletonList(text);
+        Files.write(marketingFile.toPath(), lines, StandardCharsets.UTF_8, StandardOpenOption.APPEND);
+
     }
 /**
  * returned alle Zeilen des Marketing Files

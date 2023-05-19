@@ -85,7 +85,7 @@ public class UserHandler {
 	    return false;
 	}
 	
-	public String getSalt(String userName) throws IOException {
+	public String getHash(String userName) throws IOException {
 	    File path = new File(System.getProperty("user.home") + File.separator + "KaufDort_Userfiles" + File.separator + "usersHandling.csv");
 
 	    if (path.exists()) {
@@ -116,10 +116,10 @@ public class UserHandler {
 		boolean exists = false;
 		exists = checkForUserName(userName);
 		if(exists) {
-			String salt = getSalt(userName);
+			String salt = getHash(userName);
 			PasswordHasher hasher = new PasswordHasher();
-			System.out.println("salt: " + salt);
-			exists =  hasher.checkPassword(password, getSalt(userName));
+			System.out.println("hash: " + salt);
+			exists =  hasher.checkPassword(password, getHash(userName));
 			//exists = checkForPassword(hashedPW);
 		}
 		

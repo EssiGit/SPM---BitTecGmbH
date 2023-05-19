@@ -1,24 +1,24 @@
 package helpers; 
 
 import java.io.BufferedReader;
+
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-
+import java.nio.charset.StandardCharsets;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
 import user_handling.User;
-import org.apache.commons.io.FilenameUtils;
 import java.io.BufferedWriter;
 
 public class FileHandler {
@@ -44,7 +44,7 @@ public class FileHandler {
 	 * 
 	 */
 	public String[] getFileNames() throws IOException {
-		BufferedReader reader = new BufferedReader(new FileReader(fileDataPath));
+		BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(fileDataPath), StandardCharsets.UTF_8));
 		String line;
 		String[] lines = new String[5];
 		int i = 0;
@@ -105,7 +105,7 @@ public class FileHandler {
 	 * ex: C:\ users\ username\ KaufDort_Userfiles\ user1\
 	 */
 	public void setUpDIR() {
-		File tmp = new File(System.getProperty("user.home") + File.separator + "KaufDort_Userfiles"+ File.separator + "users" + File.separator + user.getName() + File.separator + "Result_Files"+ File.separator);
+		File tmp = new File(BASE_DIR.getAbsolutePath()+ File.separator + "users" + File.separator + user.getName() + File.separator + "Result_Files"+ File.separator);
 		if(!(tmp.exists())) {
 			System.out.println("in mkdir");
 
@@ -121,8 +121,8 @@ public class FileHandler {
 	 */
 	public void deleteOldFile(String file) {
 	    String arffFile = file.replace(".csv", ".csv.arff");
-	    File tmpArffFile = new File(System.getProperty("user.home") + File.separator + "KaufDort_Userfiles" + File.separator + "users" + File.separator + user.getName() + File.separator + arffFile);
-	    File tmpFile = new File(System.getProperty("user.home") + File.separator + "KaufDort_Userfiles" + File.separator + "users" + File.separator + user.getName() + File.separator + file);        
+	    File tmpArffFile = new File(BASE_DIR.getAbsolutePath() + File.separator + "users" + File.separator + user.getName() + File.separator + arffFile);
+	    File tmpFile = new File(BASE_DIR.getAbsolutePath() + File.separator + "users" + File.separator + user.getName() + File.separator + file);        
 	    tmpArffFile.delete();
 	    tmpFile.delete();
 	}
@@ -138,7 +138,7 @@ public class FileHandler {
 	    try {
 	        if (fileDataPath.exists()) {
 	            List<String> lines = Collections.singletonList(fileName);
-	            Files.write(fileDataPath.toPath(), lines, StandardOpenOption.APPEND);
+	            Files.write(fileDataPath.toPath(), lines, StandardCharsets.UTF_8, StandardOpenOption.APPEND); //append zum am ende anfügen
 	        } else {
 	            System.out.println("first"); // file hat vorher nicht existiert
 	            String[] lines = {""};
@@ -150,6 +150,7 @@ public class FileHandler {
 	        e.printStackTrace();
 	    }
 	}
+	
 	public void writeDataFile_old(String fileName) throws IOException {
 		try {
 			if(fileDataPath.exists()) {

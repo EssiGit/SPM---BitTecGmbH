@@ -36,11 +36,12 @@ public class MarketingServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		WebContext context = new WebContext(request, response,
-				request.getServletContext());
 		response.setCharacterEncoding("UTF-8");
 		request.setCharacterEncoding("UTF-8");
+		
+		WebContext context = new WebContext(request, response,
+				request.getServletContext());
+
 		HttpSession session = request.getSession();
 		User user = (User)session.getAttribute("User");
 	    if (user == null) {
@@ -65,15 +66,16 @@ public class MarketingServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		String values = request.getParameter("marketingText");
-		WebContext context = new WebContext(request, response,
-				request.getServletContext());
 		response.setCharacterEncoding("UTF-8");
 		request.setCharacterEncoding("UTF-8");
+		
+		String values = request.getParameter("marketingText");
+		System.out.println("marketing values: " +values);
+		WebContext context = new WebContext(request, response,
+				request.getServletContext());
+
 		HttpSession session = request.getSession();
 		User user = (User)session.getAttribute("User");
-		System.err.println("marketing doPost");
 	    if (user == null) {
 	        response.sendRedirect("index"); // Weiterleitung zum "index" Servlet
 	        return;
