@@ -47,7 +47,108 @@ public class WekaTools {
             executor.shutdown();
         }
     }
+	/**
+	 * Sets up the Name for the Frontend
+	 * @param xValues
+	 * @return
+	 */
+	public String[] setXvalues(String[] xValues) {
+		for(int i = 0;i<xValues.length;i++) {
+			if(xValues[i].contains("m,")) {
+				xValues[i] = xValues[i].replaceFirst("m,", " Männlich, Alter: ");
+			}else {
+				xValues[i] = xValues[i].replaceFirst("w,", " Weiblich, Alter: ");
+			}
+			if(xValues[i].contains(",nein")) {
+				xValues[i] = xValues[i].replaceFirst(",nein", ", keine Kinder \n");
+			}else {
+				xValues[i] = xValues[i].replaceFirst(",ja", ", Kinder \n");
+			}
+			if(xValues[i].contains(",ledig")) {
+				xValues[i] = xValues[i].replaceFirst(",ledig", ", ledig");
+			}else {
+				xValues[i] = xValues[i].replaceFirst(",Partnerschaft", ", Partnerschaft");
+			}
+			if(xValues[i].contains(",ja")) {
+				xValues[i] = xValues[i].replaceFirst(",ja", ", Berufstaetig");
+			}else {
+				xValues[i] = xValues[i].replaceFirst(",nein", ", Arbeitslos");
+			}
+		}
+		return xValues;
+	}
 
+	/**
+	 * 
+	 * checks which kind of cluster analysis
+	 * @param cluster
+	 * @param yValues
+	 * @return
+	 */
+	public String[] checkCluster(String cluster, String[] yValues) {
+		if (cluster.equals("Einkaufsuhrzeit")) {
+			for (int i = 0; i < yValues.length; i++) {
+				yValues[i] = changeTime(yValues[i]);
+			}
+		} else if (cluster.equals("Wohnort")) {
+			for (int i = 0; i < yValues.length; i++) {
+				yValues[i] = changeWohnort(yValues[i]);
+			}
+		} else if (cluster.equals("Haushaltsnettoeinkommen")) {
+			for (int i = 0; i < yValues.length; i++) {
+				yValues[i] = changeEinkommen(yValues[i]);
+			}
+		}
+		return yValues;
+	}
+
+	public String changeTime(String time) {
+		switch (time) {
+		case "'<10 Uhr'":
+			return "9";
+		case "'10-12 Uhr'":
+			return "11";
+		case "'12-14 Uhr'":
+			return "13";
+		case "'14-17 Uhr'":
+			return "15";
+		case "'>17 Uhr'":
+			return "18";
+		default:
+			System.out.println("error Zeit");
+			return ""; 
+		}
+	}
+	public String changeWohnort(String ort) {
+		System.out.println(ort);
+		switch (ort) {
+		case "'< 10 km'":
+			return "9";
+		case "'10 - 25 km'":
+			return "18";
+		case "'> 25 km'":
+			return "30";
+		default:
+			System.out.println("error Wohnort");
+			return ""; // Rückgabe eines leeren Strings für den Fall, dass der Wert von "time" nicht erkannt wird
+		}
+	}
+	public String changeEinkommen(String einkommen) {
+		switch (einkommen) {
+		case "3200-<4500":
+			return "4000";
+		case "<1000":
+			return "900";
+		case "1000-<2000":
+			return "1500";	
+		case "2000-<3200":
+			return "2750";
+		case ">4500":
+			return "5800";
+		default:
+			return ""; // Rückgabe eines leeren Strings für den Fall, dass der Wert von "time" nicht erkannt wird
+		}
+	}
 
     // Hilfsmethode, um fuer die Auswertung unnoetige Angaben rauszuloeschen
     private String clearAprioriList(String oneRule) {
