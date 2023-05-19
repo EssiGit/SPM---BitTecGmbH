@@ -10,7 +10,7 @@ function createChart(tableName, yName, xValues, yValues, maxYvalue, bottomMargin
 		.append("svg")
 		.attr("width", width + margin.left + margin.right)
 		.attr("height", height + margin.top + margin.bottom)
-		.style("background", "#dedede")
+		.style("background", "#f0f8ff")
 		.append("g")
 		.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
@@ -60,7 +60,7 @@ function createChart(tableName, yName, xValues, yValues, maxYvalue, bottomMargin
 		.attr("y", function(d) { return y(d) })
 		.attr("width", x.bandwidth())
 		.attr("height", function(d) { return height - y(d) })
-		.attr("fill", "#69b3a2")
+		.attr("fill", "#98d69c")
 
 	//Überschrift der Grafik
 	svg.append('text')
