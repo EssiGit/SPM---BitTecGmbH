@@ -309,7 +309,6 @@ public class WekaAnalyser {
 		String[] zeiten = {"<10 Uhr", "10-12 Uhr", "12-14 Uhr", "14-17 Uhr", ">17 Uhr"};
 		Map<String, Map<String, Integer>> tageZeiten = new ConcurrentHashMap<>();
 		ArrayList<Weka_resultFile> wekaFiles = new ArrayList<>();
-		//ForkJoinPool forkJoinPool = new ForkJoinPool();
 
 		Arrays.stream(tage).parallel().forEach(tag -> {
 			Map<String, Integer> zeitMap = new HashMap<>();
@@ -331,7 +330,8 @@ public class WekaAnalyser {
 			int moneyInt = (int)data.instance(i).value(9); 
 			tageZeiten.get(day).merge(time, moneyInt, Integer::sum);
 		});
-
+		
+		//TODO cleanup
 		for (String tag : tage) {
 			Map<String, Integer> tagZeit = tageZeiten.get(tag);
 			String[] xValues = zeiten.clone();
@@ -344,6 +344,7 @@ public class WekaAnalyser {
 
 		return wekaFiles;
 	}
+	
 	/**
 	 * Umsatzstärkste Einkauftage und Uhrzeiten
 	 * @throws IOException 
