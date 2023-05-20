@@ -1,7 +1,7 @@
 package site_handling;
 
 
-   
+
 import java.io.IOException;
 
 import javax.servlet.RequestDispatcher;
@@ -44,9 +44,8 @@ public class Main extends HttpServlet {
 
 		FileHandler filehandler = new FileHandler(user);
 
-		setButtonValues(context, filehandler);
+		context.setVariable("buttons", filehandler.getFileNames());
 
-		
 		System.out.println("main do get");
 		ThymeleafConfig.getTemplateEngine().process("main.html", context, response.getWriter());
 	}
@@ -58,7 +57,7 @@ public class Main extends HttpServlet {
 		request.setCharacterEncoding("UTF-8");
 		System.out.println("main do post");
 		HttpSession session = request.getSession();
-		
+
 		User user = (User)session.getAttribute("User");
 		if(redirect(user,response)) {
 			return;
@@ -70,50 +69,39 @@ public class Main extends HttpServlet {
 		Part filePart = request.getPart("file-input");
 
 		String fileName = filePart.getSubmittedFileName();
-	    try {
-			try {
-				processFileUpload(filehandler, fileName, request, response, session);
-			} catch (ServletException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (JAXBException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	    
-	    watch.stop();
-        System.out.println("time in main: " + watch.getTime() + " ms");
+		processFileUpload(filehandler, fileName, request, response, session);
+
+
+
+		watch.stop();
+		System.out.println("time in main: " + watch.getTime() + " ms");
 	}
-	
-    private void setButtonValues(WebContext context, FileHandler filehandler) throws IOException {
+
+
+	/**
+	 * uploads file to File DIR
+	 * @param fileHandler current users filehandler
+	 * @param fileName
+	 * @param request
+	 * @param response
+	 * @param session
+	 */
+	private void processFileUpload(FileHandler fileHandler, String fileName, HttpServletRequest request, HttpServletResponse response, HttpSession session) {
 		try {
-			context.setVariable("buttons", filehandler.getFileNames());
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (JAXBException e) {
-			// TODO Auto-generated catch block
+			if (fileHandler.uploadFile(fileName, request)) {
+				RequestDispatcher dispatcher = request.getRequestDispatcher("/WekaServlet");
+				session.setAttribute("filename", fileName);
+
+				dispatcher.forward(request, response);
+			} else {
+				request.setAttribute("error", ".csv Datei enthält Fehler, upload abgebrochen!");
+				this.doGet(request, response);
+				fileHandler.deleteOldFile(fileName);
+			}
+		} catch (IOException | ServletException | JAXBException e) {
+			request.setAttribute("error", ".csv Datei enthält Fehler, upload abgebrochen!");
 			e.printStackTrace();
 		}
-    }
-	private void processFileUpload(FileHandler fileHandler, String fileName, HttpServletRequest request, HttpServletResponse response, HttpSession session) throws ServletException, IOException, JAXBException {
-	    if (fileHandler.uploadFile(fileName, request)) {
-	        RequestDispatcher dispatcher = request.getRequestDispatcher("/WekaServlet");
-	        session.setAttribute("filename", fileName);
-	        
-	        dispatcher.forward(request, response);
-	    } else {
-	    	request.setAttribute("error", ".csv file format is not correct, upload canceled!");
-	        this.doGet(request, response);
-	        fileHandler.deleteOldFile(fileName);
-	    }
 	}
 	/**
 	 * redirects to Index Servlet

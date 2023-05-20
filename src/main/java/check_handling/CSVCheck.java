@@ -67,6 +67,7 @@ public class CSVCheck {
 
 			executor.shutdown(); 
 		} catch (IOException e) {
+			returnVal.set(false);
 			e.printStackTrace();
 		}
 

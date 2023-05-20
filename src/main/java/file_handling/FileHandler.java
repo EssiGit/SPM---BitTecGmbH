@@ -46,13 +46,21 @@ public class FileHandler {
 	 * @throws IOException
 	 * @throws JAXBException 
 	 */
-	public void setupForLogin() throws IOException, JAXBException {
-		UserHandler userHand = new UserHandler();
-		MarketingHelper marked = new MarketingHelper(user);
-		setUpDIR();
-		marked.newMarketingFile();
-		keepFilesEqualToDIR();
-		userHand.setupUser(user.getName());
+	public boolean setupForLogin() {
+		try {
+			UserHandler userHand = new UserHandler();
+			MarketingHelper marked = new MarketingHelper(user);
+
+			setUpDIR();
+
+			marked.newMarketingFile();
+			keepFilesEqualToDIR();
+			userHand.setupUser(user.getName());
+		} catch (IOException | JAXBException e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
 	}
 
 	/** Returns all file names in order from oldest added at [0] to newest at max length.
@@ -62,8 +70,8 @@ public class FileHandler {
 	 * 
 	 * 
 	 */
-	public String[] getFileNames() throws IOException, JAXBException {
-		
+	public String[] getFileNames(){
+
 		List<String> fileNames = readDataFile(fileDataPath).getFileNames();
 		String[] lines = new String[MAX_FILES];
 
@@ -218,7 +226,7 @@ public class FileHandler {
 		FileData fileData;
 
 		createDataFile();
-		
+
 		System.out.println("filename: " + fileName);
 		fileData = readDataFile(fileDataPath);
 		List<String> fileNames = fileData.getFileNames();
@@ -234,7 +242,7 @@ public class FileHandler {
 		fileData.setFileNames(fileNames);
 		writeDataFile(fileDataPath, fileData);
 	}
-	
+
 	public void createDataFile() throws IOException {
 		if (!fileDataPath.exists()) {
 			fileDataPath.createNewFile();
@@ -248,17 +256,25 @@ public class FileHandler {
 	 * @throws IOException
 	 * @throws JAXBException
 	 */
-	private FileData readDataFile(File fileDataFile) throws IOException, JAXBException {
-	    if (fileDataFile.length() > 0) {
-	        JAXBContext jaxbContext = JAXBContext.newInstance(FileData.class);
-	        Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-	        return (FileData) jaxbUnmarshaller.unmarshal(fileDataFile);
-	    } else {
-	        List<String> fileNames = new ArrayList<>();
-	        FileData fileData = new FileData();
-	        fileData.setFileNames(fileNames);
-	        return fileData;
-	    }
+	private FileData readDataFile(File fileDataFile) {
+		if (fileDataFile.length() > 0) {
+			try {
+				JAXBContext jaxbContext = JAXBContext.newInstance(FileData.class);
+				Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+				return (FileData) jaxbUnmarshaller.unmarshal(fileDataFile);
+			} catch (JAXBException e) {
+				List<String> fileNames = new ArrayList<>();
+				FileData fileData = new FileData();
+				fileData.setFileNames(fileNames);
+				e.printStackTrace();
+				return fileData;
+			}
+		} else {
+			List<String> fileNames = new ArrayList<>();
+			FileData fileData = new FileData();
+			fileData.setFileNames(fileNames);
+			return fileData;
+		}
 	}
 	/**
 	 * helper to check that current files stay less than 6. In case of more than 5 files, oldest will be delted

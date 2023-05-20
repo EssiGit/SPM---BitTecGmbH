@@ -2,6 +2,7 @@ package weka;
 
 import java.io.File;   
 import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -27,7 +28,7 @@ public class WekaTools {
 	 * @return
 	 * @throws Exception
 	 */
-	String findClusterMulti(final Instances daten, final int clusterIndex, final int number) throws Exception {
+	public String findClusterMulti(final Instances daten, final int clusterIndex, final int number) {
 		ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 		try {
 			Callable<String> task = new Callable<String>() {
@@ -47,11 +48,20 @@ public class WekaTools {
 			};
 
 			Future<String> future = executor.submit(task);
-			String result = future.get();
-			return result + "\n";
+			String result;
+			try {
+				result = future.get();
+				return result + "\n";
+			} catch (InterruptedException | ExecutionException e) {
+				
+				executor.shutdown();
+				e.printStackTrace();
+				return "error";
+			}
 		} finally {
 			executor.shutdown();
 		}
+		
 	}
 	/**
 	 * Sets up the Name for the Frontend
@@ -134,12 +144,10 @@ public class WekaTools {
 		case "'>17 Uhr'":
 			return "18";
 		default:
-			System.out.println("error Zeit");
 			return ""; 
 		}
 	}
 	public String changeWohnort(String ort) {
-		System.out.println(ort);
 		switch (ort) {
 		case "'< 10 km'":
 			return "9";
@@ -148,7 +156,6 @@ public class WekaTools {
 		case "'> 25 km'":
 			return "30";
 		default:
-			System.out.println("error Wohnort");
 			return ""; // Rückgabe eines leeren Strings für den Fall, dass der Wert von "time" nicht erkannt wird
 		}
 	}

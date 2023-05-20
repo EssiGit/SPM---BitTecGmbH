@@ -31,7 +31,7 @@ public class WekaAnalyser {
 	private String fileName;
 	private File DIR;
 	private User user;
-	public WekaAnalyser(String filePassed, User user) throws Exception {
+	public WekaAnalyser(String filePassed, User user)  {
 		this.user= user;
 		fileName = filePassed;
 		DIR = new File(System.getProperty("user.home") + File.separator + "KaufDort_Userfiles" + File.separator + "users" + File.separator + user.getName() + File.separator  + "Files" + File.separator +  fileName);
@@ -39,16 +39,29 @@ public class WekaAnalyser {
 
 
 		CSVLoader loader = new CSVLoader();
-		loader.setSource(DIR);
-		data = loader.getDataSet();
+		try {
+			loader.setSource(DIR);
+			data = loader.getDataSet();
+		} catch (IOException e) {
+			e.printStackTrace();
+			return;
+			
+		}
+		
 
 		// 0 durch ? ersetzen, um fuer die Auswertung nur die Waren zu
 		// beruecksichtigen, die gekauft wurden
 		NumericCleaner nc = new NumericCleaner();
 		nc.setMinThreshold(1.0); // Schwellwert auf 1 setzen
 		nc.setMinDefault(Double.NaN); // alles unter 1 durch ? ersetzen
-		nc.setInputFormat(data);
-		data = Filter.useFilter(data, nc); // Filter anwenden
+		try {
+			nc.setInputFormat(data);
+			data = Filter.useFilter(data, nc);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return;
+		}
+		 // Filter anwenden
 		
 		//arff Datei brauchen wir nicht für unsere analysen
 
@@ -66,7 +79,7 @@ public class WekaAnalyser {
 	}
 
 
-	public ArrayList<Weka_resultFile> getCorrectAnalysis(FileHandler filehandler, String analName, int clusterAnzahl) throws Exception {
+	public ArrayList<Weka_resultFile> getCorrectAnalysis(FileHandler filehandler, String analName, int clusterAnzahl) {
 		ArrayList<Weka_resultFile> wekaFiles = new ArrayList<>();
 		switch (analName) {
 		case "Umsatzstärkstertag/Uhrzeit":
@@ -98,7 +111,7 @@ public class WekaAnalyser {
 	 * @return
 	 * @throws Exception
 	 */
-	public ArrayList<Weka_resultFile> clusterAnalyseMulti(FileHandler fileHandler, String cluster,int clusterAnzahl) throws Exception {
+	public ArrayList<Weka_resultFile> clusterAnalyseMulti(FileHandler fileHandler, String cluster,int clusterAnzahl) {
 		ArrayList<Weka_resultFile> wekaFiles = new ArrayList<>();
 
 
@@ -109,7 +122,6 @@ public class WekaAnalyser {
 		} else {
 			index = 0; // Attribut nicht gefunden
 		}
-		System.out.println("INDEX: " + index);
 		String clusterResult = analyse.findClusterMulti(data, index, clusterAnzahl);
 		String[] values = clusterResult.split("\n");
 		String[] xValues = new String[values.length];
@@ -135,7 +147,7 @@ public class WekaAnalyser {
 	 * @throws IOException 
 	 * @throws FileNotFoundException 
 	 */
-	public ArrayList<Weka_resultFile> kundenhaeufigkeit(FileHandler fileHandler) throws FileNotFoundException, IOException {
+	public ArrayList<Weka_resultFile> kundenhaeufigkeit(FileHandler fileHandler){
 		ArrayList<Weka_resultFile> wekaFiles = new ArrayList<>();
 
 		Map<String, Integer> tage = new HashMap<>();
@@ -190,7 +202,7 @@ public class WekaAnalyser {
 	 * @throws FileNotFoundException 
 	 */
 
-	public ArrayList<Weka_resultFile> uhrzeitProTag(FileHandler filehandler) throws FileNotFoundException, IOException {
+	public ArrayList<Weka_resultFile> uhrzeitProTag(FileHandler filehandler){
 		String[] tage = {"Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag"};
 		String[] zeiten = {"<10 Uhr", "10-12 Uhr", "12-14 Uhr", "14-17 Uhr", ">17 Uhr"};
 		Map<String, Map<String, AtomicInteger>> tageZeiten = new ConcurrentHashMap<>();
@@ -236,7 +248,7 @@ public class WekaAnalyser {
 	 * @throws IOException 
 	 * @throws FileNotFoundException 
 	 */
-	public ArrayList<Weka_resultFile> umsatzstaerksteTagUhrzeit(FileHandler filehandler) throws FileNotFoundException, IOException {
+	public ArrayList<Weka_resultFile> umsatzstaerksteTagUhrzeit(FileHandler filehandler){
 
 		String[] tage = {"Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag"};
 		String[] zeiten = {"<10 Uhr", "10-12 Uhr", "12-14 Uhr", "14-17 Uhr", ">17 Uhr"};

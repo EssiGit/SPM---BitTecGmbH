@@ -1,8 +1,6 @@
 package weka;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.ArrayList;
+
 import java.util.Arrays;
 
 
@@ -15,7 +13,7 @@ public class Weka_resultFile {
 	private int yMax;
 
 	//TODO make dynmaic y and x axis
-	public Weka_resultFile(String yName, String[] xData, String[] yData) throws FileNotFoundException, IOException {
+	public Weka_resultFile(String yName, String[] xData, String[] yData){
 		this.xData = xData;
 		this.yData = new int[yData.length];
 		int yMaxTmp = 0;
