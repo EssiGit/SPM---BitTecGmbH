@@ -1,14 +1,16 @@
 package site_handling;
 
-import java.io.IOException;
+import java.io.IOException; 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.bind.JAXBException;
+
 import org.thymeleaf.context.WebContext;
 import helpers.FileHandler;
-import helpers.MarketingHelper;
+import marketing.MarketingHelper;
 import user_handling.PasswordHasher;
 import user_handling.SetupUser;
 import user_handling.User;
@@ -36,16 +38,24 @@ public class RegisterServlet extends HttpServlet {
         
         User user = new User(name);
         FileHandler fileHandler = new FileHandler(user);
-        if (setup.addUser(fileHandler)) {
-        	
-            MarketingHelper marketing = new MarketingHelper(user);
-            marketing.newMarketingFile();
-            response.sendRedirect("index");
-            
-        } else {
-            context.setVariable("error", "1");
-            context.setVariable("errorMsg", setup.getErrorMsg());
-            ThymeleafConfig.getTemplateEngine().process("register.html", context, response.getWriter());
-        }
+        try {
+			if (setup.addUser(fileHandler)) {
+				
+			    MarketingHelper marketing = new MarketingHelper(user);
+			    marketing.newMarketingFile();
+			    response.sendRedirect("index");
+			    
+			} else {
+			    context.setVariable("error", "1");
+			    context.setVariable("errorMsg", setup.getErrorMsg());
+			    ThymeleafConfig.getTemplateEngine().process("register.html", context, response.getWriter());
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JAXBException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
 }

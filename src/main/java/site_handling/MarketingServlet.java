@@ -1,6 +1,6 @@
 package site_handling;
 
-import java.io.IOException;
+import java.io.IOException; 
 import java.util.ArrayList;
 
 import javax.servlet.ServletException;
@@ -9,11 +9,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.xml.bind.JAXBException;
 
 import org.thymeleaf.context.WebContext;
 
 import helpers.FileHandler;
-import helpers.MarketingHelper;
+import marketing.MarketingHelper;
 import user_handling.User;
 import server_conf.ThymeleafConfig;
 
@@ -35,8 +36,19 @@ public class MarketingServlet extends HttpServlet {
         FileHandler fileHandler = new FileHandler(user);
         MarketingHelper marketingHelper = new MarketingHelper(user);
 
-        ArrayList<String> items = marketingHelper.getValues();
-        context.setVariable("items", items);
+        ArrayList<String> items;
+        
+		try {
+			items = marketingHelper.getValues();
+			context.setVariable("items", items);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JAXBException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        
 
         String[] buttonVal = fileHandler.getFileNames();
         context.setVariable("buttons", buttonVal);
@@ -60,9 +72,16 @@ public class MarketingServlet extends HttpServlet {
 
         FileHandler fileHandler = new FileHandler(user);
         MarketingHelper marketingHelper = new MarketingHelper(user);
-        marketingHelper.addToMarketingFile(values);
-        ArrayList<String> items = marketingHelper.getValues();
-        context.setVariable("items", items);
+        try {
+			marketingHelper.addToMarketingFile(values);
+			ArrayList<String> items = marketingHelper.getValues();
+			context.setVariable("items", items);
+		} catch (IOException | JAXBException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        
+        
 
         String[] buttonVal = fileHandler.getFileNames();
         context.setVariable("buttons", buttonVal);

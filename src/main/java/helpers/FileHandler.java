@@ -1,6 +1,6 @@
 package helpers; 
 
-import java.io.BufferedReader; 
+import java.io.BufferedReader;  
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -15,9 +15,11 @@ import java.nio.charset.StandardCharsets;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.Part;
+import javax.xml.bind.JAXBException;
+
 import user_handling.User;
 import user_handling.UserHandler;
-import helpers.MarketingHelper;
+import marketing.MarketingHelper;
 public class FileHandler {
 	private User user;
 	private static final int MAX_FILES = 5;
@@ -38,8 +40,9 @@ public class FileHandler {
 	 * sets everything up for login, so that even in case Data gets lost there will be no errors
 	 * 
 	 * @throws IOException
+	 * @throws JAXBException 
 	 */
-	public void setupForLogin() throws IOException {
+	public void setupForLogin() throws IOException, JAXBException {
 		UserHandler userHand = new UserHandler();
 		MarketingHelper marked = new MarketingHelper(user);
 		setUpDIR();

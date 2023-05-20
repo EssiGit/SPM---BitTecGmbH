@@ -2,6 +2,9 @@ package user_handling;
 
 import java.io.File;  
 import java.util.regex.Pattern;
+
+import javax.xml.bind.JAXBException;
+
 import java.util.regex.Matcher;
 import java.io.IOException;
 import helpers.FileHandler;
@@ -106,8 +109,9 @@ public class SetupUser {
 	 * @param fileHand
 	 * @return true if user was added, false if not
 	 * @throws IOException
+	 * @throws JAXBException 
 	 */
-	public boolean addUser(FileHandler fileHand) throws IOException {
+	public boolean addUser(FileHandler fileHand) throws IOException, JAXBException {
 		if(isSetupValid()) {
 		fileHand.setupForLogin();
 		userHand.addUser(csvLine);
