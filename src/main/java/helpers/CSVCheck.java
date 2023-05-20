@@ -1,8 +1,8 @@
 package helpers;
-import org.apache.commons.csv.CSVFormat; 
+
+import org.apache.commons.csv.CSVFormat;  
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
-import org.apache.commons.lang3.time.StopWatch;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.HashMap;
 import java.io.FileReader;
@@ -32,6 +32,12 @@ public class CSVCheck {
 
 			List<CSVRecord> records = csvParser.getRecords();
 			int numRecords = records.size();
+			
+	        if (numRecords <= 1) {//kurzer check ob die Datei leer ist oder nicht
+	            System.out.println("CSV file ist leer oder hat nur header line");
+	            return false;
+	        }
+	        
 			int numThreads = Runtime.getRuntime().availableProcessors();
 			ExecutorService executor = Executors.newFixedThreadPool(numThreads);
 			List<Future<Boolean>> futures = new ArrayList<>();

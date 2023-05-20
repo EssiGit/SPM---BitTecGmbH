@@ -138,11 +138,15 @@ public class UserHandler {
 	 * @throws IOException
 	 */
 	private void setupUserID() throws IOException {
+	    if (!handling_DIR.exists()) {
+	        System.out.println("Creating new file: " + handling_DIR.getAbsolutePath());
+	        handling_DIR.createNewFile();
 
-		if (!handling_DIR.exists()) {
-			System.out.println("Creating new file: " + handling_DIR.getAbsolutePath());
-			handling_DIR.createNewFile();
-		}
+	        // header line
+	        FileWriter fileWriter = new FileWriter(handling_DIR, true);
+	        fileWriter.write("names, hash\n");
+	        fileWriter.close();
+	    }
 	}
 
 

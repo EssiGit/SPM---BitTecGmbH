@@ -16,10 +16,10 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.Part;
 import javax.xml.bind.JAXBException;
-
 import user_handling.User;
 import user_handling.UserHandler;
 import marketing.MarketingHelper;
+
 public class FileHandler {
 	private User user;
 	private static final int MAX_FILES = 5;
