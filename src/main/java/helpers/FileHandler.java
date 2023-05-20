@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.Part;
 import user_handling.User;
 import user_handling.UserHandler;
-
+import helpers.MarketingHelper;
 public class FileHandler {
 	private User user;
 	private static final int MAX_FILES = 5;
@@ -41,6 +41,8 @@ public class FileHandler {
 	 */
 	public void setupForLogin() throws IOException {
 		UserHandler userHand = new UserHandler();
+		MarketingHelper marked = new MarketingHelper(user);
+		marked.newMarketingFile();
 		setUpDIR();
 		keepFilesEqualToDIR();
 		userHand.setupUser(user.getName());
