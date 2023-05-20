@@ -59,6 +59,8 @@ public class CSVCheck {
 
 					}
 				} catch (InterruptedException | ExecutionException e) {
+					returnVal.set(false);
+					executor.shutdown();
 					e.printStackTrace();
 				}
 			}
