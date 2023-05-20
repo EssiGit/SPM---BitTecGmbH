@@ -5,9 +5,10 @@ import java.util.regex.Pattern;
 
 import javax.xml.bind.JAXBException;
 
+import file_handling.FileHandler;
+
 import java.util.regex.Matcher;
 import java.io.IOException;
-import helpers.FileHandler;
 
 public class SetupUser {
     private static final String USERS_HANDLING_FILE_PATH = System.getProperty("user.home") + File.separator + "KaufDort_Userfiles" + File.separator + "usersHandling.csv";
@@ -99,9 +100,10 @@ public class SetupUser {
 	 * writes new fileData.txt for User
 	 * @param fileHand
 	 * @throws IOException
+	 * @throws JAXBException 
 	 */
-	private void writeNewDataFile(FileHandler fileHand) throws IOException{
-		fileHand.writeDataFile("");
+	private void writeNewDataFile(FileHandler fileHand) throws IOException, JAXBException{
+		fileHand.createDataFile();
 	}
 	
 	/**

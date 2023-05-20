@@ -13,7 +13,7 @@ import javax.xml.bind.JAXBException;
 import server_conf.ThymeleafConfig;
 import org.thymeleaf.context.WebContext;
 
-import helpers.FileHandler;
+import file_handling.FileHandler;
 import user_handling.UserHandler;
 import user_handling.User;
  

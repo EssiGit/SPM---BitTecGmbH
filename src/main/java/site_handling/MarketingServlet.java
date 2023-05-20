@@ -13,7 +13,7 @@ import javax.xml.bind.JAXBException;
 
 import org.thymeleaf.context.WebContext;
 
-import helpers.FileHandler;
+import file_handling.FileHandler;
 import marketing.MarketingHelper;
 import user_handling.User;
 import server_conf.ThymeleafConfig;
@@ -50,8 +50,7 @@ public class MarketingServlet extends HttpServlet {
 		}
         
 
-        String[] buttonVal = fileHandler.getFileNames();
-        context.setVariable("buttons", buttonVal);
+		 setButtonValues(context, fileHandler);
 
         ThymeleafConfig.getTemplateEngine().process("marketing.html", context, response.getWriter());
     }
@@ -83,8 +82,7 @@ public class MarketingServlet extends HttpServlet {
         
         
 
-        String[] buttonVal = fileHandler.getFileNames();
-        context.setVariable("buttons", buttonVal);
+        setButtonValues(context, fileHandler);
 
         ThymeleafConfig.getTemplateEngine().process("marketing.html", context, response.getWriter());
     }
@@ -96,6 +94,18 @@ public class MarketingServlet extends HttpServlet {
         } else {
             return false;
         }
+    }
+    
+    private void setButtonValues(WebContext context, FileHandler filehandler) throws IOException {
+		try {
+			context.setVariable("buttons", filehandler.getFileNames());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JAXBException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
 }
 

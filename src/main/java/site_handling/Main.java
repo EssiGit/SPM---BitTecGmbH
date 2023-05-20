@@ -3,7 +3,7 @@ package site_handling;
 
    
 import java.io.IOException;
-import helpers.FileHandler;
+
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -13,10 +13,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
+import javax.xml.bind.JAXBException;
+
 import user_handling.User;
 import server_conf.ThymeleafConfig;
 import org.apache.commons.lang3.time.StopWatch;
 import org.thymeleaf.context.WebContext;
+
+import file_handling.FileHandler;
 
 @WebServlet("/main")
 @MultipartConfig(
@@ -40,9 +44,9 @@ public class Main extends HttpServlet {
 
 		FileHandler filehandler = new FileHandler(user);
 
-		String[] buttonVal = filehandler.getFileNames();
+		setButtonValues(context, filehandler);
 
-		context.setVariable("buttons",buttonVal);
+		
 		System.out.println("main do get");
 		ThymeleafConfig.getTemplateEngine().process("main.html", context, response.getWriter());
 	}
@@ -66,13 +70,40 @@ public class Main extends HttpServlet {
 		Part filePart = request.getPart("file-input");
 
 		String fileName = filePart.getSubmittedFileName();
-	    processFileUpload(filehandler, fileName, request, response, session);
+	    try {
+			try {
+				processFileUpload(filehandler, fileName, request, response, session);
+			} catch (ServletException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (JAXBException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	    
 	    watch.stop();
         System.out.println("time in main: " + watch.getTime() + " ms");
 	}
 	
-	
-	private void processFileUpload(FileHandler fileHandler, String fileName, HttpServletRequest request, HttpServletResponse response, HttpSession session) throws ServletException, IOException {
+    private void setButtonValues(WebContext context, FileHandler filehandler) throws IOException {
+		try {
+			context.setVariable("buttons", filehandler.getFileNames());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JAXBException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    }
+	private void processFileUpload(FileHandler fileHandler, String fileName, HttpServletRequest request, HttpServletResponse response, HttpSession session) throws ServletException, IOException, JAXBException {
 	    if (fileHandler.uploadFile(fileName, request)) {
 	        RequestDispatcher dispatcher = request.getRequestDispatcher("/WekaServlet");
 	        session.setAttribute("filename", fileName);

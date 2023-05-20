@@ -7,11 +7,14 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.xml.bind.JAXBException;
+
 import server_conf.ThymeleafConfig;
 import org.thymeleaf.context.WebContext;
+
+import file_handling.FileHandler;
 import weka.WekaAnalyser;
 import weka.Weka_resultFile;
-import helpers.FileHandler;
 import user_handling.User;
 import org.apache.commons.lang3.time.StopWatch;
 import java.util.ArrayList;
@@ -34,8 +37,7 @@ public class WekaServlet extends HttpServlet {
 
         FileHandler filehandler = new FileHandler(user);
         System.out.println("WekaServlet doGet");
-        String[] buttonVal = filehandler.getFileNames();
-        context.setVariable("buttons", buttonVal);
+        setButtonValues(context, filehandler);
         ThymeleafConfig.getTemplateEngine().process("main.html", context, response.getWriter());
     }
 
@@ -109,8 +111,16 @@ public class WekaServlet extends HttpServlet {
     }
 
     private void setButtonValues(WebContext context, FileHandler filehandler) throws IOException {
-        String[] buttonVal = filehandler.getFileNames();
-        context.setVariable("buttons", buttonVal);
+		try {
+			context.setVariable("buttons", filehandler.getFileNames());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JAXBException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        
     }
 
     private int getClusterAnzahl(HttpServletRequest request) {
@@ -127,7 +137,15 @@ public class WekaServlet extends HttpServlet {
     }
 
     private void setAnalysisVariables(WebContext context, FileHandler filehandler, String typeOfAnalysis, ArrayList<Weka_resultFile> wekaFiles) throws IOException {
-        context.setVariable("buttons", filehandler.getFileNames());
+		try {
+			context.setVariable("buttons", filehandler.getFileNames());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JAXBException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         context.setVariable("isCluster", !(typeOfAnalysis.equals("Umsatzstärkstertag/Uhrzeit") ||
                 typeOfAnalysis.equals("Kundenhäufigkeit") ||
                 typeOfAnalysis.equals("uhrzeitProTag")));

@@ -9,6 +9,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.IntStream;
+
+import file_handling.FileHandler;
 import weka.core.Attribute;
 import weka.core.Instances;
 import weka.core.converters.CSVLoader;
@@ -17,7 +19,7 @@ import weka.filters.unsupervised.attribute.NumericCleaner;
 import java.util.ArrayList;
 import java.util.Arrays;
 import user_handling.User;
-import helpers.FileHandler;
+
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

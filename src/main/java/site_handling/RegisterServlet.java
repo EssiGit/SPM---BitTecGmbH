@@ -9,7 +9,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.xml.bind.JAXBException;
 
 import org.thymeleaf.context.WebContext;
-import helpers.FileHandler;
+
+import file_handling.FileHandler;
 import marketing.MarketingHelper;
 import user_handling.PasswordHasher;
 import user_handling.SetupUser;

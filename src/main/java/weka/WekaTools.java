@@ -1,6 +1,6 @@
 package weka;
 
-import java.io.File;  
+import java.io.File;   
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -10,7 +10,6 @@ import weka.associations.Apriori;
 import weka.associations.AssociationRule;
 import weka.classifiers.rules.ZeroR;
 import weka.clusterers.SimpleKMeans;
-import weka.core.Instance;
 import weka.core.Instances;
 import weka.filters.Filter;
 import weka.filters.unsupervised.attribute.Remove;
