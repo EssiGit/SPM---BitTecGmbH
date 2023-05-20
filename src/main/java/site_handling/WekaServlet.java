@@ -1,6 +1,6 @@
 package site_handling;
 
-import java.io.IOException;
+import java.io.IOException; 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -18,86 +18,122 @@ import java.util.ArrayList;
 
 @WebServlet("/WekaServlet")
 public class WekaServlet extends HttpServlet {
-	private static final long serialVersionUID = 1L;
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		HttpSession session = request.getSession();
-		WebContext context = new WebContext(request, response,
-				request.getServletContext());
-		response.setCharacterEncoding("UTF-8");
-		request.setCharacterEncoding("UTF-8");
-		User user = (User)session.getAttribute("User");
-	    if (user == null) {
-	        response.sendRedirect("index"); // Weiterleitung zum "index" Servlet
-	        return;
-	    }
-		FileHandler filehandler = new FileHandler((User)session.getAttribute("User"));
-		System.out.println("WekaServlet doGet");
-		String[] buttonVal = filehandler.getFileNames();
-		context.setVariable("buttons",buttonVal);
-		ThymeleafConfig.getTemplateEngine().process("main.html", context, response.getWriter());
-	}
+    private static final long serialVersionUID = 1L;
 
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		StopWatch watch = new StopWatch();
-		watch.start();
-		response.setCharacterEncoding("UTF-8");
-		request.setCharacterEncoding("UTF-8");
-		HttpSession session = request.getSession();
-	    User user = (User) session.getAttribute("User");
-	    if (user == null) {
-	        response.sendRedirect("index"); // Redirect to the "index" servlet
-	        return;
-	    }
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("User");
 
+        if (redirect(user, response)) {
+            return;
+        }
 
-	    WebContext context = new WebContext(request, response, request.getServletContext());
-	    FileHandler filehandler = new FileHandler(user);
+        WebContext context = new WebContext(request, response, request.getServletContext());
+        response.setCharacterEncoding("UTF-8");
+        request.setCharacterEncoding("UTF-8");
 
-	    String buttonValue = request.getParameter("selectedButton");
-		String[] buttonVal = filehandler.getFileNames();
-		context.setVariable("buttons",buttonVal);
-		if(buttonValue != null) {
-			System.out.println("buttonValue != null");
-			System.out.println(buttonValue);
-			session.setAttribute("filename", buttonValue);
-		}
-	    String typeOfAnalysis = request.getParameter("clusterInfo");
-	    if (typeOfAnalysis == null) {
-	        typeOfAnalysis = "Umsatzstärkstertag/Uhrzeit";
-	    }
+        FileHandler filehandler = new FileHandler(user);
+        System.out.println("WekaServlet doGet");
+        String[] buttonVal = filehandler.getFileNames();
+        context.setVariable("buttons", buttonVal);
+        ThymeleafConfig.getTemplateEngine().process("main.html", context, response.getWriter());
+    }
 
-	    int clusterAnzahl = 8;
-	    if (request.getParameter("sliderValue") != null) {
-	        clusterAnzahl = Integer.parseInt(request.getParameter("sliderValue"));
-	    }
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        StopWatch watch = new StopWatch();
+        watch.start();
+        response.setCharacterEncoding("UTF-8");
+        request.setCharacterEncoding("UTF-8");
+        HttpSession session = request.getSession();
 
-	    try {
-	        WekaAnalyser weka = new WekaAnalyser((String) session.getAttribute("filename"), user);
-	        ArrayList<Weka_resultFile> wekaFiles = weka.getCorrectAnalysis(filehandler, typeOfAnalysis, clusterAnzahl);
-	        if (request.getParameter("ajaxUpdate") != null && request.getParameter("ajaxUpdate").equals("1")) {
-	            response.setContentType("application/json");
-	            response.setContentLength(wekaFiles.get(0).ajax().length());
-	            response.getWriter().write(wekaFiles.get(0).ajax());
-	            return;
-	        }
+        User user = (User) session.getAttribute("User");
+        if (redirect(user, response)) {
+            return;
+        }
 
-	        context.setVariable("buttons", filehandler.getFileNames());
-	        context.setVariable("isCluster", !(typeOfAnalysis.equals("Umsatzstärkstertag/Uhrzeit") || 
-	                                           typeOfAnalysis.equals("Kundenhäufigkeit") ||
-	                                           typeOfAnalysis.equals("uhrzeitProTag")));
-	        context.setVariable("margin", 120);
-	        context.setVariable("typeOfAnalysis", typeOfAnalysis);
-	        context.setVariable("results", wekaFiles);
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	    }
+        WebContext context = new WebContext(request, response, request.getServletContext());
+        FileHandler filehandler = new FileHandler(user);
 
-		ThymeleafConfig.getTemplateEngine().process("main.html", context, response.getWriter());
+        setButtonValues(context, filehandler);
 
-	    watch.stop();
-	    System.out.println("Full time till served: " + watch.getTime() + " ms");
+        String buttonValue = request.getParameter("selectedButton");
+        if (buttonValue != null) {
+            System.out.println("buttonValue != null");
+            System.out.println(buttonValue);
+            session.setAttribute("filename", buttonValue);
+        }
 
-	}
+        String typeOfAnalysis = request.getParameter("clusterInfo");
+        if (typeOfAnalysis == null) {
+            typeOfAnalysis = "Umsatzstärkstertag/Uhrzeit";
+        }
 
+        int clusterAnzahl = getClusterAnzahl(request);
 
+        try {
+            WekaAnalyser weka = new WekaAnalyser((String) session.getAttribute("filename"), user);
+            ArrayList<Weka_resultFile> wekaFiles = weka.getCorrectAnalysis(filehandler, typeOfAnalysis, clusterAnzahl);
+            if (isAjaxUpdate(request)) {
+                response.setContentType("application/json");
+                response.setContentLength(wekaFiles.get(0).ajax().length());
+                response.getWriter().write(wekaFiles.get(0).ajax());
+                return;
+            }
+
+            setAnalysisVariables(context, filehandler, typeOfAnalysis, wekaFiles);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        ThymeleafConfig.getTemplateEngine().process("main.html", context, response.getWriter());
+
+        watch.stop();
+        System.out.println("Full time till served: " + watch.getTime() + " ms");
+    }
+
+    /**
+     * Redirects to Index Servlet
+     *
+     * @param user     the User object
+     * @param response the HttpServletResponse object
+     * @return true if redirection occurs, false otherwise
+     * @throws IOException
+     */
+    public boolean redirect(User user, HttpServletResponse response) throws IOException {
+        if (user == null) {
+            response.sendRedirect("index");
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private void setButtonValues(WebContext context, FileHandler filehandler) throws IOException {
+        String[] buttonVal = filehandler.getFileNames();
+        context.setVariable("buttons", buttonVal);
+    }
+
+    private int getClusterAnzahl(HttpServletRequest request) {
+        String sliderValue = request.getParameter("sliderValue");
+        int clusterAnzahl = 8;
+        if (sliderValue != null) {
+            clusterAnzahl = Integer.parseInt(sliderValue);
+        }
+        return clusterAnzahl;
+    }
+
+    private boolean isAjaxUpdate(HttpServletRequest request) {
+        return request.getParameter("ajaxUpdate") != null && request.getParameter("ajaxUpdate").equals("1");
+    }
+
+    private void setAnalysisVariables(WebContext context, FileHandler filehandler, String typeOfAnalysis, ArrayList<Weka_resultFile> wekaFiles) throws IOException {
+        context.setVariable("buttons", filehandler.getFileNames());
+        context.setVariable("isCluster", !(typeOfAnalysis.equals("Umsatzstärkstertag/Uhrzeit") ||
+                typeOfAnalysis.equals("Kundenhäufigkeit") ||
+                typeOfAnalysis.equals("uhrzeitProTag")));
+        context.setVariable("margin", 120);
+        context.setVariable("typeOfAnalysis", typeOfAnalysis);
+        context.setVariable("results", wekaFiles);
+    }
 }
+

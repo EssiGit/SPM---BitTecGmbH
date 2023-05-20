@@ -1,6 +1,6 @@
 package site_handling;
 
-import java.io.IOException; 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.servlet.ServletException;
@@ -17,80 +17,66 @@ import helpers.MarketingHelper;
 import user_handling.User;
 import server_conf.ThymeleafConfig;
 
-/**
- * Servlet implementation class marketing
- */
 @WebServlet("/MarketingServlet")
 public class MarketingServlet extends HttpServlet {
-	private static final long serialVersionUID = 1L;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public MarketingServlet() {
-        super();
-        // TODO Auto-generated constructor stub
+    private static final long serialVersionUID = 1L;
+
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setCharacterEncoding("UTF-8");
+        request.setCharacterEncoding("UTF-8");
+        WebContext context = new WebContext(request, response, request.getServletContext());
+
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("User");
+        if (redirect(user, response)) {
+            return;
+        }
+
+        FileHandler fileHandler = new FileHandler(user);
+        MarketingHelper marketingHelper = new MarketingHelper(user);
+
+        ArrayList<String> items = marketingHelper.getValues();
+        context.setVariable("items", items);
+
+        String[] buttonVal = fileHandler.getFileNames();
+        context.setVariable("buttons", buttonVal);
+
+        ThymeleafConfig.getTemplateEngine().process("marketing.html", context, response.getWriter());
     }
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		response.setCharacterEncoding("UTF-8");
-		request.setCharacterEncoding("UTF-8");
-		
-		WebContext context = new WebContext(request, response,
-				request.getServletContext());
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setCharacterEncoding("UTF-8");
+        request.setCharacterEncoding("UTF-8");
+        String values = request.getParameter("marketingText");
+        System.out.println("marketing values: " + values);
 
-		HttpSession session = request.getSession();
-		User user = (User)session.getAttribute("User");
-	    if (user == null) {
-	        response.sendRedirect("index"); // Weiterleitung zum "index" Servlet
-	        return;
-	    }
-	    System.err.println("marketing doget");
-		FileHandler filehandler = new FileHandler(user);
-		MarketingHelper marketing = new MarketingHelper(user);
-		
-		ArrayList<String> items = marketing.getValues();
+        WebContext context = new WebContext(request, response, request.getServletContext());
 
-		context.setVariable("items",items);
-		
-		String[] buttonVal = filehandler.getFileNames();
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("User");
+        if (redirect(user, response)) {
+            return;
+        }
 
-		context.setVariable("buttons",buttonVal);
-		ThymeleafConfig.getTemplateEngine().process("marketing.html", context, response.getWriter());
-	}
+        FileHandler fileHandler = new FileHandler(user);
+        MarketingHelper marketingHelper = new MarketingHelper(user);
+        marketingHelper.addToMarketingFile(values);
+        ArrayList<String> items = marketingHelper.getValues();
+        context.setVariable("items", items);
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		response.setCharacterEncoding("UTF-8");
-		request.setCharacterEncoding("UTF-8");
-		
-		String values = request.getParameter("marketingText");
-		System.out.println("marketing values: " +values);
-		WebContext context = new WebContext(request, response,
-				request.getServletContext());
+        String[] buttonVal = fileHandler.getFileNames();
+        context.setVariable("buttons", buttonVal);
 
-		HttpSession session = request.getSession();
-		User user = (User)session.getAttribute("User");
-	    if (user == null) {
-	        response.sendRedirect("index"); // Weiterleitung zum "index" Servlet
-	        return;
-	    }
-		FileHandler filehandler = new FileHandler(user);
-		MarketingHelper marketing = new MarketingHelper(user);
-		marketing.addToMarketingFile(values);
-		ArrayList<String> items = marketing.getValues();
-		
-		context.setVariable("items",items);
-		
-		String[] buttonVal = filehandler.getFileNames();
+        ThymeleafConfig.getTemplateEngine().process("marketing.html", context, response.getWriter());
+    }
 
-		context.setVariable("buttons",buttonVal);
-		ThymeleafConfig.getTemplateEngine().process("marketing.html", context, response.getWriter());
-	}
-
+    public boolean redirect(User user, HttpServletResponse response) throws IOException {
+        if (user == null) {
+            response.sendRedirect("index");
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
+

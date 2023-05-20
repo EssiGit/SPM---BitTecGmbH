@@ -1,9 +1,6 @@
 package weka;
 
-import java.io.BufferedReader; 
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,10 +10,8 @@ public class Weka_resultFile {
 
 	private String[] xData;
 	private int[] yData;
-	private ArrayList<String> xNames = new ArrayList<>();
 	private String yName;
 	public String tableName;
-	private int lineNumber;
 	private int yMax;
 
 	//TODO make dynmaic y and x axis
@@ -31,27 +26,28 @@ public class Weka_resultFile {
 			}
 		}
 		yMax = yMaxTmp;
-		
-		
+
+
 		this.yName = yName;
 
 	}
-	
-	public int getYmax(){
 
+	public int getYmax(){
 		return yMax;
 	}
-	
+
 	public String[] getXnames(){
 		return xData;
 	}
+	
 	public int[] getYdata(){
-		
 		return yData;
 	}
+	
 	public String getYname(){
 		return yName;
 	}
+	
 	public String getTableName() {
 		return tableName;
 	}
@@ -59,13 +55,13 @@ public class Weka_resultFile {
 
 	//(nikok) get Json of Result
 	public String ajax() {
-		
+
 		String xNames = "";
-		
+
 		for (int i = 0; i < getXnames().length; i++) {
 			xNames += getXnames()[i] + "\",\"";
 		}
-		
+
 		xNames = "[\""+ xNames.substring(0, xNames.length()-3)+ "\"]";
 		xNames = xNames.replace("\n", "\\n").replace("ä", "ae");
 		return "{\"xNames\": " +       xNames

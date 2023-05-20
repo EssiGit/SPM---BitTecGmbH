@@ -1,11 +1,9 @@
 package site_handling;
 
 
-import java.io.File;   
+   
 import java.io.IOException;
-import helpers.CSVCheck;
 import helpers.FileHandler;
-
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -15,7 +13,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
-import user_handling.UserHandler;
 import user_handling.User;
 import server_conf.ThymeleafConfig;
 import org.apache.commons.lang3.time.StopWatch;
@@ -37,12 +34,10 @@ public class Main extends HttpServlet {
 		response.setCharacterEncoding("UTF-8");
 		HttpSession session = request.getSession();
 		User user = (User)session.getAttribute("User");
-		if (user == null) {
-			response.sendRedirect("index"); // Weiterleitung zum "index" Servlet
+		if(redirect(user,response)) {
 			return;
 		}
-		UserHandler userHand = new UserHandler();
-		System.out.println("TEST " + user.getName());
+
 		FileHandler filehandler = new FileHandler(user);
 
 		String[] buttonVal = filehandler.getFileNames();
@@ -59,49 +54,49 @@ public class Main extends HttpServlet {
 		request.setCharacterEncoding("UTF-8");
 		System.out.println("main do post");
 		HttpSession session = request.getSession();
+		
 		User user = (User)session.getAttribute("User");
-		if (user == null) {
-			response.sendRedirect("index"); // Weiterleitung zum "index" Servlet
+		if(redirect(user,response)) {
 			return;
 		}
+
+
 		FileHandler filehandler = new FileHandler(user);
-		System.out.println(request.getContentType());
-		System.out.println(request.getParameter("file-input"));
 
 		Part filePart = request.getPart("file-input");
 
-		System.out.println(filePart.getSize());
-
 		String fileName = filePart.getSubmittedFileName();
-
-
-		File DIR = new File(System.getProperty("user.home") + File.separator + "KaufDort_Userfiles" + File.separator + "users" + File.separator + user.getName() + File.separator + fileName);
-
-
-		//TMP solution:
-		System.out.println("filename in doPost " + fileName);
-		filehandler.setUpFILE(DIR, request);
-		CSVCheck csvchecker = new CSVCheck();
-		boolean csv = csvchecker.checkCSV(DIR.getAbsolutePath());
-		System.out.println("csv bool false = error" + csv);
-		String buttonValue = request.getParameter("selectedButton");
-		System.out.println("context: " + buttonValue);
-		session.setAttribute("filename", fileName);
-		RequestDispatcher dispatcher = request.getRequestDispatcher("/WekaServlet");
-		watch.stop();
-		System.out.println("main setup : " + watch.getTime() + " ms");
-		watch.reset();
-		watch.start();
-		if(csvchecker.checkCSV(DIR.getAbsolutePath())){
-			watch.stop();
-			System.out.println("time: " + watch.getTime() +" ms");
-			dispatcher.forward(request, response);
+	    processFileUpload(filehandler, fileName, request, response, session);
+	    watch.stop();
+        System.out.println("time in main: " + watch.getTime() + " ms");
+	}
+	
+	
+	private void processFileUpload(FileHandler fileHandler, String fileName, HttpServletRequest request, HttpServletResponse response, HttpSession session) throws ServletException, IOException {
+	    if (fileHandler.uploadFile(fileName, request)) {
+	        RequestDispatcher dispatcher = request.getRequestDispatcher("/WekaServlet");
+	        session.setAttribute("filename", fileName);
+	        
+	        dispatcher.forward(request, response);
+	    } else {
+	    	request.setAttribute("error", ".csv file format is not correct, upload canceled!");
+	        this.doGet(request, response);
+	        fileHandler.deleteOldFile(fileName);
+	    }
+	}
+	/**
+	 * redirects to Index Servlet
+	 * @param user
+	 * @param response
+	 * @return
+	 * @throws IOException
+	 */
+	public boolean redirect(User user,HttpServletResponse response) throws IOException {
+		if (user == null) {
+			response.sendRedirect("index"); 
+			return true;
 		}else {
-			System.out.println("time: " + watch.getTime() +" ms");
-			watch.stop();
-			request.setAttribute("error", ".csv file format is not correct, upload canceled!");
-			this.doGet(request, response);
-			filehandler.deleteOldFile(fileName);
+			return false;
 		}
 	}
 }

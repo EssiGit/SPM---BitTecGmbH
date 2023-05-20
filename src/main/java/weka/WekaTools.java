@@ -18,35 +18,42 @@ import weka.filters.unsupervised.attribute.NumericCleaner;
 import weka.filters.unsupervised.attribute.NumericToNominal;
 
 public class WekaTools {
-	
-	
 
-    String findClusterMulti(final Instances daten, final int clusterIndex, final int number) throws Exception {
-        ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
-        try {
-            Callable<String> task = new Callable<String>() {
-                public String call() throws Exception {
-                    SimpleKMeans model = new SimpleKMeans();
-                    model.setNumClusters(number);
-                    Remove attributeFilter = new Remove();
-                    attributeFilter.setAttributeIndicesArray(new int[]{0,1, 2, 3, 4, clusterIndex});
-                    attributeFilter.setInvertSelection(true);
-                    attributeFilter.setInputFormat(daten);
-                    Instances filteredData = Filter.useFilter(daten, attributeFilter);
-                    model.buildClusterer(filteredData);
-                    
-                    String[] result = model.getClusterCentroids().toString().split("@data\n");//cluster centroids holen
-                    return result[1];
-                }
-            };
 
-            Future<String> future = executor.submit(task);
-            String result = future.get();
-            return result + "\n";
-        } finally {
-            executor.shutdown();
-        }
-    }
+	/**
+	 * Cluster analyse
+	 * @param daten
+	 * @param clusterIndex
+	 * @param number
+	 * @return
+	 * @throws Exception
+	 */
+	String findClusterMulti(final Instances daten, final int clusterIndex, final int number) throws Exception {
+		ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+		try {
+			Callable<String> task = new Callable<String>() {
+				public String call() throws Exception {
+					SimpleKMeans model = new SimpleKMeans();
+					model.setNumClusters(number);
+					Remove attributeFilter = new Remove();
+					attributeFilter.setAttributeIndicesArray(new int[]{0,1, 2, 3, 4, clusterIndex}); //columns die wir behalten
+					attributeFilter.setInvertSelection(true);
+					attributeFilter.setInputFormat(daten);
+					Instances filteredData = Filter.useFilter(daten, attributeFilter);
+					model.buildClusterer(filteredData);
+
+					String[] result = model.getClusterCentroids().toString().split("@data\n");//cluster centroids holen
+					return result[1];
+				}
+			};
+
+			Future<String> future = executor.submit(task);
+			String result = future.get();
+			return result + "\n";
+		} finally {
+			executor.shutdown();
+		}
+	}
 	/**
 	 * Sets up the Name for the Frontend
 	 * @param xValues
@@ -55,7 +62,7 @@ public class WekaTools {
 	public String[] setXvalues(String[] xValues) {
 		for(int i = 0;i<xValues.length;i++) {
 			if(xValues[i].contains("m,")) {
-				xValues[i] = xValues[i].replaceFirst("m,", " Männlich, Alter: ");
+				xValues[i] = xValues[i].replaceFirst("m,", " Maennlich, Alter: ");
 			}else {
 				xValues[i] = xValues[i].replaceFirst("w,", " Weiblich, Alter: ");
 			}
@@ -94,12 +101,25 @@ public class WekaTools {
 			for (int i = 0; i < yValues.length; i++) {
 				yValues[i] = changeWohnort(yValues[i]);
 			}
-		} else if (cluster.equals("Haushaltsnettoeinkommen")) {
+		} else if (cluster.equals("Haushaltsnettoeinkommen")) { 
 			for (int i = 0; i < yValues.length; i++) {
 				yValues[i] = changeEinkommen(yValues[i]);
 			}
 		}
 		return yValues;
+	}
+	public String getClusterName(String cluster) {
+		switch (cluster) {
+		case "Einkaufsuhrzeit":
+			return "Einkaufsuhrzeit"; 
+		case "Wohnort":
+			return "Entfernung zum Kunden in km";
+		case "Haushaltsnettoeinkommen":
+			return "Haushaltsnettoeinkommen in €";
+		default:
+			return "Einkaufssumme in €"; // in €
+		}
+
 	}
 
 	public String changeTime(String time) {
@@ -150,104 +170,104 @@ public class WekaTools {
 		}
 	}
 
-    // Hilfsmethode, um fuer die Auswertung unnoetige Angaben rauszuloeschen
-    private String clearAprioriList(String oneRule) {
-        String temp = "";
+	// Hilfsmethode, um fuer die Auswertung unnoetige Angaben rauszuloeschen
+	private String clearAprioriList(String oneRule) {
+		String temp = "";
 
-        // Weka-blabla raus loeschen
-        for (int i = 0; i < oneRule.length(); i++) {
-            Character a = oneRule.charAt(i);
-            if ((Character.isLetter(a)) || (a == ',')) {
-                temp = temp + a;
-            }
-        }
-        
-        return temp;
-    }
+		// Weka-blabla raus loeschen
+		for (int i = 0; i < oneRule.length(); i++) {
+			Character a = oneRule.charAt(i);
+			if ((Character.isLetter(a)) || (a == ',')) {
+				temp = temp + a;
+			}
+		}
 
-    
-   String[] makeApriori(Instances daten) throws Exception {
+		return temp;
+	}
 
-       // umwandeln in gekauft / nicht gekauft (0/1)
-       NumericCleaner nc = new NumericCleaner();
-       nc.setMaxThreshold(1.0); // Schwellwert auf 1 setzen
-       nc.setMaxDefault(1.0); // alles ueber Schwellwert durch 1 ersetzen
-       nc.setInputFormat(daten);
-       daten = Filter.useFilter(daten, nc); // Filter anwenden.
 
-       // Die Daten als nominale und nicht als numerische Daten setzen
-       NumericToNominal num2nom = new NumericToNominal();
-       num2nom.setAttributeIndices("first-last");
-       num2nom.setInputFormat(daten);
-       daten = Filter.useFilter(daten, num2nom);
+	String[] makeApriori(Instances daten) throws Exception {
 
-       Apriori model = new Apriori();
-       model.buildAssociations(daten);
+		// umwandeln in gekauft / nicht gekauft (0/1)
+		NumericCleaner nc = new NumericCleaner();
+		nc.setMaxThreshold(1.0); // Schwellwert auf 1 setzen
+		nc.setMaxDefault(1.0); // alles ueber Schwellwert durch 1 ersetzen
+		nc.setInputFormat(daten);
+		daten = Filter.useFilter(daten, nc); // Filter anwenden.
 
-       List<AssociationRule> rulesA = model.getAssociationRules().getRules();
-       int anzRules = rulesA.size();
+		// Die Daten als nominale und nicht als numerische Daten setzen
+		NumericToNominal num2nom = new NumericToNominal();
+		num2nom.setAttributeIndices("first-last");
+		num2nom.setInputFormat(daten);
+		daten = Filter.useFilter(daten, num2nom);
 
-       String[] tmp = new String[anzRules];
+		Apriori model = new Apriori();
+		model.buildAssociations(daten);
 
-       // Ergebnis huebsch zusammensetzen
-       for (int i = 0; i < anzRules; i++) {
-           tmp[i] = clearAprioriList(rulesA.get(i).getPremise().toString()) + " ==> "
-                   + clearAprioriList(rulesA.get(i).getConsequence().toString());
-       }
-       return tmp;
-   }
+		List<AssociationRule> rulesA = model.getAssociationRules().getRules();
+		int anzRules = rulesA.size();
 
-   /**
-    * liefert den haeufigsten Wert eines Attributs zurueck benutzt ZeroR, eine
-    * Wekafunktion fuer das haeufigste Element der nominalen Attribute, bei
-    * numerischen Werten wird der Mittelwert geliefert!
-    *
-    * @param daten Hier wichtig: Daten im <b>arffFormat!</b>
-    *
-    * @param index - Fuer welches Attribut soll das Maximum bestimmt werden (0..9
-    *              hier sinnvoll, da nur diese Daten nominal sind)
-    * @return haeufigstes Element als String
-    * @throws Exception Fehlerbehandlung muss noch erledigt werden
-    */
-   String findMaximum(Instances daten, int index) throws Exception {
-       String[] max;
+		String[] tmp = new String[anzRules];
 
-       ZeroR za = new ZeroR(); // wekafunktion
+		// Ergebnis huebsch zusammensetzen
+		for (int i = 0; i < anzRules; i++) {
+			tmp[i] = clearAprioriList(rulesA.get(i).getPremise().toString()) + " ==> "
+					+ clearAprioriList(rulesA.get(i).getConsequence().toString());
+		}
+		return tmp;
+	}
 
-       daten.setClass(daten.attribute(index)); // Attribut dessen Maximum
-       // ermittelt werden soll
-       za.buildClassifier(daten);
+	/**
+	 * liefert den haeufigsten Wert eines Attributs zurueck benutzt ZeroR, eine
+	 * Wekafunktion fuer das haeufigste Element der nominalen Attribute, bei
+	 * numerischen Werten wird der Mittelwert geliefert!
+	 *
+	 * @param daten Hier wichtig: Daten im <b>arffFormat!</b>
+	 *
+	 * @param index - Fuer welches Attribut soll das Maximum bestimmt werden (0..9
+	 *              hier sinnvoll, da nur diese Daten nominal sind)
+	 * @return haeufigstes Element als String
+	 * @throws Exception Fehlerbehandlung muss noch erledigt werden
+	 */
+	String findMaximum(Instances daten, int index) throws Exception {
+		String[] max;
 
-       max = za.toString().split(": "); // weka -blabla wegnehmen
+		ZeroR za = new ZeroR(); // wekafunktion
 
-       return (max[1]);
-   }
+		daten.setClass(daten.attribute(index)); // Attribut dessen Maximum
+		// ermittelt werden soll
+		za.buildClassifier(daten);
 
-   /**
-    * Verteilung der einzelnen Attribute Kundendaten und Einkaufsverhalten, als
-    * <b>absolute</b> Werte
-    *
-    * @param daten - alleDaten
-    * @param index - welches Attribut soll ausgewertet werden?
-    * @return Verteilung des Attributs
-    */
-   String attDistributionAbsolute(Instances daten, int index) {
-       int attCount;
-       int attNum = index;
-       String result;
+		max = za.toString().split(": "); // weka -blabla wegnehmen
 
-       result = daten.attribute(attNum).name() + ": ";
+		return (max[1]);
+	}
 
-       // Anzahl der moeglichen Werte
-       attCount = daten.attributeStats(attNum).distinctCount;
+	/**
+	 * Verteilung der einzelnen Attribute Kundendaten und Einkaufsverhalten, als
+	 * <b>absolute</b> Werte
+	 *
+	 * @param daten - alleDaten
+	 * @param index - welches Attribut soll ausgewertet werden?
+	 * @return Verteilung des Attributs
+	 */
+	String attDistributionAbsolute(Instances daten, int index) {
+		int attCount;
+		int attNum = index;
+		String result;
 
-       for (int i = 0; i < attCount; i++) {
-           result += "\"" + daten.attribute(attNum).value(i) + "\"" + " = "
-                   + daten.attributeStats(attNum).nominalCounts[i] + "  ";
-       }
+		result = daten.attribute(attNum).name() + ": ";
 
-       return result;
-   }
+		// Anzahl der moeglichen Werte
+		attCount = daten.attributeStats(attNum).distinctCount;
+
+		for (int i = 0; i < attCount; i++) {
+			result += "\"" + daten.attribute(attNum).value(i) + "\"" + " = "
+					+ daten.attributeStats(attNum).nominalCounts[i] + "  ";
+		}
+
+		return result;
+	}
 
 
 }

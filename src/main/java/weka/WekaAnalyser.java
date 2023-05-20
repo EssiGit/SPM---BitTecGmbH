@@ -2,14 +2,13 @@ package weka;
 
 
 
-import java.io.File;
+import java.io.File; 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.IntStream;
-import weka.classifiers.rules.ZeroR;
 import weka.core.Attribute;
 import weka.core.Instances;
 import weka.core.converters.CSVLoader;
@@ -22,8 +21,8 @@ import helpers.FileHandler;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 public class WekaAnalyser {
-	//private static final String DIR = "src" + File.separator +"main" + File.separator+"webapp" + File.separator + "usr_data" + File.separator;
 	private WekaTools analyse = new WekaTools();
 	Instances data;
 	Instances arffDaten;
@@ -33,7 +32,7 @@ public class WekaAnalyser {
 	public WekaAnalyser(String filePassed, User user) throws Exception {
 		this.user= user;
 		fileName = filePassed;
-		DIR = new File(System.getProperty("user.home") + File.separator + "KaufDort_Userfiles" + File.separator + "users" + File.separator + user.getName() + File.separator +  fileName);
+		DIR = new File(System.getProperty("user.home") + File.separator + "KaufDort_Userfiles" + File.separator + "users" + File.separator + user.getName() + File.separator  + "Files" + File.separator +  fileName);
 
 
 
@@ -48,6 +47,7 @@ public class WekaAnalyser {
 		nc.setMinDefault(Double.NaN); // alles unter 1 durch ? ersetzen
 		nc.setInputFormat(data);
 		data = Filter.useFilter(data, nc); // Filter anwenden
+		
 		//arff Datei brauchen wir nicht für unsere analysen
 
 		//String arffDat = DIR + ".arff";
@@ -78,7 +78,7 @@ public class WekaAnalyser {
 			break;
 
 		default:
-			// Aktion für andere Fälle
+			// wenn nichts davon, dann cluster
 			wekaFiles = clusterAnalyseMulti(filehandler, analName, clusterAnzahl);
 			break;
 		}
@@ -122,7 +122,7 @@ public class WekaAnalyser {
 		}
 		yValues = analyse.checkCluster(cluster,yValues);
 		xValues = analyse.setXvalues(xValues);
-		wekaFiles.add(new Weka_resultFile(cluster, xValues, yValues));
+		wekaFiles.add(new Weka_resultFile(analyse.getClusterName(cluster), xValues, yValues));
 		return wekaFiles;
 	}
 
@@ -165,7 +165,7 @@ public class WekaAnalyser {
 		for (int i = 0; i < xValues.length; i++) {
 			yValues[i] = Integer.toString(tage.get(xValues[i]));
 		}
-		wekaFiles.add(new Weka_resultFile("Kunden nach Tagen", xValues, yValues));
+		wekaFiles.add(new Weka_resultFile("Kundenanzahl nach Tagen", xValues, yValues));
 
 		String[] xValues2 = {"<10 Uhr", "10-12 Uhr", "12-14 Uhr", "14-17 Uhr", ">17 Uhr"};
 		String[] yValues2 = new String[5];
@@ -173,7 +173,7 @@ public class WekaAnalyser {
 			yValues2[i] = Integer.toString(zeiten.get(xValues2[i]));
 		}
 
-		wekaFiles.add(new Weka_resultFile("Kunden nach Uhrzeit", xValues2, yValues2));
+		wekaFiles.add(new Weka_resultFile("Kundenanzahl nach Uhrzeit", xValues2, yValues2));
 
 		return wekaFiles;
 	}
@@ -195,7 +195,7 @@ public class WekaAnalyser {
 		ArrayList<Weka_resultFile> wekaFiles = new ArrayList<>();
 
 		Arrays.stream(tage).parallel().forEach(tag -> {
-			Map<String, AtomicInteger> zeitMap = new HashMap<>();
+			Map<String, AtomicInteger> zeitMap = new ConcurrentHashMap<>();
 			zeitMap.put("<10 Uhr", new AtomicInteger(0));
 			zeitMap.put("10-12 Uhr", new AtomicInteger(0));
 			zeitMap.put("12-14 Uhr", new AtomicInteger(0));
@@ -222,7 +222,7 @@ public class WekaAnalyser {
 			for (int i = 0; i < zeiten.length; i++) {
 				yValues[i] = Integer.toString(tageZeiten.get(tage[j]).get(zeiten[i]).intValue());
 			}
-			wekaFiles.add(new Weka_resultFile(tage[j], zeiten, yValues));
+			wekaFiles.add(new Weka_resultFile(tage[j].concat(" in €"), zeiten, yValues));
 		}
 		
 
@@ -284,8 +284,8 @@ public class WekaAnalyser {
 		}
 
 		// Erzeuge 2 Weka_resultFiles für Tag und Umsatz
-		wekaFiles.add(new Weka_resultFile("Umsatz nach Uhrzeit", xValues, yValuesTime));
-		wekaFiles.add(new Weka_resultFile("Umsatz nach Tag", tage, yValuesDay));
+		wekaFiles.add(new Weka_resultFile("Umsatz nach Uhrzeit \n in €", xValues, yValuesTime));
+		wekaFiles.add(new Weka_resultFile("Umsatz nach Tag \n in €", tage, yValuesDay));
 		return wekaFiles;
 	}
 

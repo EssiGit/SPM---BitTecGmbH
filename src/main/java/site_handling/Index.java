@@ -27,36 +27,35 @@ public class Index extends HttpServlet {
 		ThymeleafConfig.getTemplateEngine().process("index.html", context, response.getWriter());
 	}
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		response.setCharacterEncoding("UTF-8");
-		request.setCharacterEncoding("UTF-8");
-		WebContext context = new WebContext(request, response,
-				request.getServletContext());
-		HttpSession session = request.getSession();
-		String name = request.getParameter("nutzername");
-		System.out.println("Index Name: " + name);
-
-		String password = request.getParameter("password");
-
-
-		name = name.toLowerCase();
-		UserHandler userHand = new UserHandler();
-
-
-		if(userHand.checkForUser(name, password)) {
-			User user = new User(name);
-			FileHandler filehandler = new FileHandler(user);
-			session.setAttribute("User", user);
-
-			String[] buttonVal = filehandler.getFileNames();
-			context.setVariable("buttons",buttonVal);
-			response.sendRedirect("main");
-
-		}else {
-
-			context.setVariable("error", "1");
-			ThymeleafConfig.getTemplateEngine().process("index.html", context, response.getWriter());
-
-		}
+	    response.setCharacterEncoding("UTF-8");
+	    request.setCharacterEncoding("UTF-8");
+	    handleLogin(request, response);
 	}
+	
+	private void handleLogin(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	    String name = request.getParameter("nutzername");
+	    String password = request.getParameter("password");
+	    name = name.toLowerCase();
+
+	    UserHandler userHand = new UserHandler();
+	    if (userHand.checkForUser(name, password)) {
+	        User user = new User(name);
+	        
+	        FileHandler filehandler = new FileHandler(user);
+	        HttpSession session = request.getSession();
+	        session.setAttribute("User", user);
+	        filehandler.setupForLogin();
+	        String[] buttonVal = filehandler.getFileNames();
+	        WebContext context = new WebContext(request, response, request.getServletContext());
+	        context.setVariable("buttons", buttonVal);
+	        response.sendRedirect("main");
+	    } else {
+	        WebContext context = new WebContext(request, response, request.getServletContext());
+	        context.setVariable("error", "1");
+	        ThymeleafConfig.getTemplateEngine().process("index.html", context, response.getWriter());
+	    }
+	}
+
+	
 
 }

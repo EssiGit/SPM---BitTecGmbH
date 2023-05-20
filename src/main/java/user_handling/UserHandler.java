@@ -14,7 +14,7 @@ import user_handling.PasswordHasher;
 public class UserHandler {
 
 	private static File DIR = new File(System.getProperty("user.home") + File.separator + "KaufDort_Userfiles"+ File.separator + "users" + File.separator );
-
+	private static final File handling_DIR =  new File(System.getProperty("user.home") + File.separator + "KaufDort_Userfiles"+ File.separator + "usersHandling.csv");
 
 
 
@@ -28,26 +28,20 @@ public class UserHandler {
 		return path;
 	}
 
+	/**
+	 * sets up User folder
+	 * @param name
+	 * @throws IOException
+	 */
 	public void setupUser(String name) throws IOException {
-		File userDIR = new File(getUserPath(name)  + "Result_Files"+ File.separator);
+		File userDIR = new File(getUserPath(name)  + "Files"+ File.separator);
 
 		if(!(userDIR.exists())) {
 			userDIR.mkdirs();	
 		}
 
-	}
-
-
-	private ArrayList<String> getExistentUsers(File path) throws IOException {
-		ArrayList<String> result = new ArrayList<String>();
-		BufferedReader reader = new BufferedReader(new FileReader(path));
-		String line = "";
-		while(( line = reader.readLine()) != null) {
-			result.add(line);
-		}
-		return result;
-
-	}
+	}	
+	
 	/**
 	 * check the userHandling file for the given username
 	 * @param userLine name of the user 
@@ -55,10 +49,9 @@ public class UserHandler {
 	 * @throws IOException
 	 */
 	public boolean checkForUserName(String userLine) throws IOException {
-	    File path = new File(System.getProperty("user.home") + File.separator + "KaufDort_Userfiles" + File.separator + "usersHandling.csv");
 
-	    if (path.exists()) {
-	        try (BufferedReader reader = new BufferedReader(new FileReader(path))) {
+	    if (handling_DIR.exists()) {
+	        try (BufferedReader reader = new BufferedReader(new FileReader(handling_DIR))) {
 	            final String finalUserLine = userLine;
 	            System.out.println("finalUserLine " + finalUserLine);
 	            return reader.lines()
@@ -70,26 +63,17 @@ public class UserHandler {
 	    return false;
 	}
 
-	public boolean checkForPassword(String hash) throws FileNotFoundException, IOException {
-	    File path = new File(System.getProperty("user.home") + File.separator + "KaufDort_Userfiles" + File.separator + "usersHandling.csv");
 
-	    if (path.exists()) {
-	        try (BufferedReader reader = new BufferedReader(new FileReader(path))) {
-	            final String finalLine = hash;
-	            return reader.lines()
-	                    .map(line -> line.split(",")[1]) // erste Spalte 
-	                    .anyMatch(username -> username.equals(finalLine));
-	        }
-	    }
-
-	    return false;
-	}
-	
+	/**
+	 * searches for the hash that belongs to the passed Username
+	 * @param userName
+	 * @return the hash that belongs to the given username
+	 * @throws IOException
+	 */
 	public String getHash(String userName) throws IOException {
-	    File path = new File(System.getProperty("user.home") + File.separator + "KaufDort_Userfiles" + File.separator + "usersHandling.csv");
 
-	    if (path.exists()) {
-	        try (BufferedReader reader = new BufferedReader(new FileReader(path))) {
+	    if (handling_DIR.exists()) {
+	        try (BufferedReader reader = new BufferedReader(new FileReader(handling_DIR))) {
 	            final String finalUserLine = userName;
 	            return reader.lines()
 	                    .filter(line -> line.split(",")[0].equals(finalUserLine)) 
@@ -118,7 +102,6 @@ public class UserHandler {
 		if(exists) {
 			String salt = getHash(userName);
 			PasswordHasher hasher = new PasswordHasher();
-			System.out.println("hash: " + salt);
 			exists =  hasher.checkPassword(password, getHash(userName));
 			//exists = checkForPassword(hashedPW);
 		}
@@ -127,23 +110,7 @@ public class UserHandler {
 		return exists;
 	}
 
-	/**
-	 * writes a new user handling file
-	 * @param userDIR
-	 * @param userData
-	 */
-	private void writeUserFile(File userDIR, String userData) {
-		try {
-			System.out.println("in Userhandler, writeUserFile :" + userDIR.getAbsolutePath());
-			FileWriter file = new FileWriter(userDIR.getAbsolutePath() +  "usersHandling.csv");
-			System.out.println("before write:" + userData);
-			file.write(userData);
-			file.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+
 	/**
 	 * adds user to user handling file
 	 * @param userName
@@ -151,12 +118,11 @@ public class UserHandler {
 	 */
 	public void addUser(String userName) throws IOException {
 		setupUserID();
-		File handlerDIR = new File(System.getProperty("user.home") + File.separator + "KaufDort_Userfiles"+ File.separator + "usersHandling.csv");
-		if( handlerDIR.exists()) {
+		if( handling_DIR.exists()) {
 			if(checkForUserName(userName) == false) {
 				try {
-					System.out.println("in Userhandler, writeUserFile :" + handlerDIR.getAbsolutePath());
-					FileWriter file = new FileWriter(handlerDIR.getAbsolutePath(), true);
+					System.out.println("in Userhandler, writeUserFile :" + handling_DIR.getAbsolutePath());
+					FileWriter file = new FileWriter(handling_DIR.getAbsolutePath(), true);
 					file.write(userName + System.lineSeparator());
 					file.close();
 				} catch (IOException e) {
@@ -172,22 +138,13 @@ public class UserHandler {
 	 * @throws IOException
 	 */
 	private void setupUserID() throws IOException {
-		File handlerFile = new File(System.getProperty("user.home") + File.separator + "KaufDort_Userfiles" + File.separator + "usersHandling.csv");
 
-		if (!handlerFile.exists()) {
-			System.out.println("Creating new file: " + handlerFile.getAbsolutePath());
-			handlerFile.createNewFile();
+		if (!handling_DIR.exists()) {
+			System.out.println("Creating new file: " + handling_DIR.getAbsolutePath());
+			handling_DIR.createNewFile();
 		}
 	}
 
-	private void setupUserID_old() throws IOException {
-		File handlerDIR = new File(System.getProperty("user.home") + File.separator + "KaufDort_Userfiles"+ File.separator + "usersHandling.csv");
-		if(!handlerDIR.exists()) {
-			System.out.println("new FILE");
-			PrintWriter writer = new PrintWriter(handlerDIR.getAbsolutePath(), "UTF-8");
-			writer.print("");
-			writer.close();
-		}
-	}
+
 }
 
