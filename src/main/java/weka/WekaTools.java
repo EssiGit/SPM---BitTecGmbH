@@ -115,9 +115,9 @@ public class WekaTools {
 		case "Wohnort":
 			return "Entfernung zum Kunden in km";
 		case "Haushaltsnettoeinkommen":
-			return "Haushaltsnettoeinkommen in €";
+			return "Haushaltsnettoeinkommen in Euro";
 		default:
-			return "Einkaufssumme in €"; // in €
+			return "Einkaufssumme in Euro"; //  € buggs clusters, dunno why
 		}
 
 	}

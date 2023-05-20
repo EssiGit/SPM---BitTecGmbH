@@ -222,7 +222,7 @@ public class WekaAnalyser {
 			for (int i = 0; i < zeiten.length; i++) {
 				yValues[i] = Integer.toString(tageZeiten.get(tage[j]).get(zeiten[i]).intValue());
 			}
-			wekaFiles.add(new Weka_resultFile(tage[j].concat(" in €"), zeiten, yValues));
+			wekaFiles.add(new Weka_resultFile(tage[j].concat(" in Euro"), zeiten, yValues));
 		}
 		
 
@@ -284,8 +284,8 @@ public class WekaAnalyser {
 		}
 
 		// Erzeuge 2 Weka_resultFiles für Tag und Umsatz
-		wekaFiles.add(new Weka_resultFile("Umsatz nach Uhrzeit \n in €", xValues, yValuesTime));
-		wekaFiles.add(new Weka_resultFile("Umsatz nach Tag \n in €", tage, yValuesDay));
+		wekaFiles.add(new Weka_resultFile("Umsatz nach Uhrzeit in €", xValues, yValuesTime));
+		wekaFiles.add(new Weka_resultFile("Umsatz nach Tag in €", tage, yValuesDay));
 		return wekaFiles;
 	}
 
