@@ -109,6 +109,7 @@ public class SetupUser {
 	 */
 	public boolean addUser(FileHandler fileHand) throws IOException {
 		if(isSetupValid()) {
+		fileHand.setupForLogin();
 		userHand.addUser(csvLine);
 		userHand.setupUser(userName);
 		writeNewDataFile(fileHand);

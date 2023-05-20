@@ -42,8 +42,8 @@ public class FileHandler {
 	public void setupForLogin() throws IOException {
 		UserHandler userHand = new UserHandler();
 		MarketingHelper marked = new MarketingHelper(user);
-		marked.newMarketingFile();
 		setUpDIR();
+		marked.newMarketingFile();
 		keepFilesEqualToDIR();
 		userHand.setupUser(user.getName());
 	}
