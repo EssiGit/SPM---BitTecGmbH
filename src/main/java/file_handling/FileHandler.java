@@ -106,29 +106,6 @@ public class FileHandler {
 		return files != null ? files : new String[0];
 	}
 
-	/** Sets up Button Values.
-	 * If passed Array value is empty, button value will be set to "Empty"
-	 * @param  files Array with Button values. If longer than 5, rest will be ignored
-	 * 
-	 * 
-	 * 
-	 */
-	private String[] setButtonValues(String[] files) {
-		String[] file = new String[5];
-		System.out.println(files.length);
-		for(int i = 0; i<5;i++) {
-			if(files[i] != null) {
-				file[i] = files[i];
-			}else {
-				file[i] = "Empty";
-			}	
-
-		}
-
-		return file;
-	}
-
-
 
 	/**
 	 * writes a new File to the current Users DIR only if it contains no errors.
@@ -144,7 +121,10 @@ public class FileHandler {
 		setUpDIR();
 		File newFile = new File(FILE_DIR.getAbsolutePath() + File.separator + filename);
 
-		if (!newFile.exists()) {
+		if (newFile.exists()) {
+			deleteOldFile(filename);
+			
+		}
 			for (Part part : request.getParts()) {
 				part.write(newFile.getAbsolutePath());
 			}
@@ -156,7 +136,6 @@ public class FileHandler {
 				fileUploaded = false;
 				deleteOldFile(filename);
 			}
-		}
 
 		return fileUploaded;
 	}
@@ -216,10 +195,8 @@ public class FileHandler {
 	/**
 	 * writes new IDFile to organize the user uploads. 
 	 * 
-	 * @param file the file path with user path
-	 * @param lines with names of the already existing files
+	 * @param filename to add
 	 * @throws IOException
-	 * TODO: FIX AFTER 5 STACK
 	 * @throws JAXBException 
 	 */
 	public void writeNewDataFile(String fileName) throws IOException, JAXBException {
@@ -232,11 +209,14 @@ public class FileHandler {
 		List<String> fileNames = fileData.getFileNames();
 
 		if (fileNames.contains(fileName)) {
-			return; // File already exists in the list, no need to write
+			fileNames.remove(fileName); //File already existed, old file removed to keep order
+			fileNames.add(fileNames.size(), fileName); //new file added at the end
+		}else {
+			fileNames.add(fileName);
 		}
-
-		fileNames.add(fileName);
-
+		
+		
+		
 		checkFilesMoreThanMax(fileNames);
 
 		fileData.setFileNames(fileNames);
