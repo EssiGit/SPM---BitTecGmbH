@@ -79,22 +79,22 @@ public class WekaAnalyser {
 	}
 
 
-	public ArrayList<Weka_resultFile> getCorrectAnalysis(FileHandler filehandler, String analName, int clusterAnzahl) {
+	public ArrayList<Weka_resultFile> getCorrectAnalysis( String analName, int clusterAnzahl) {
 		ArrayList<Weka_resultFile> wekaFiles = new ArrayList<>();
 		switch (analName) {
 		case "Umsatzstärkstertag/Uhrzeit":
-			wekaFiles = umsatzstaerksteTagUhrzeit(filehandler);
+			wekaFiles = umsatzstaerksteTagUhrzeit();
 			break;
 		case "Kundenhäufigkeit":
-			wekaFiles = kundenhaeufigkeit(filehandler);
+			wekaFiles = kundenhaeufigkeit();
 			break;
 		case "uhrzeitProTag":
-			wekaFiles = uhrzeitProTag(filehandler);
+			wekaFiles = uhrzeitProTag();
 			break;
 
 		default:
 			// wenn nichts davon, dann cluster
-			wekaFiles = clusterAnalyseMulti(filehandler, analName, clusterAnzahl);
+			wekaFiles = clusterAnalyseMulti( analName, clusterAnzahl);
 			break;
 		}
 
@@ -106,12 +106,11 @@ public class WekaAnalyser {
 
 	/**
 	 * cluster analyse multithreaded
-	 * @param fileHandler
 	 * @param cluster der Name des Attributes, nach dem geclustered wird. Bsp "Einkaufssumme"
 	 * @return
 	 * @throws Exception
 	 */
-	public ArrayList<Weka_resultFile> clusterAnalyseMulti(FileHandler fileHandler, String cluster,int clusterAnzahl) {
+	public ArrayList<Weka_resultFile> clusterAnalyseMulti( String cluster,int clusterAnzahl) {
 		ArrayList<Weka_resultFile> wekaFiles = new ArrayList<>();
 
 
@@ -147,7 +146,7 @@ public class WekaAnalyser {
 	 * @throws IOException 
 	 * @throws FileNotFoundException 
 	 */
-	public ArrayList<Weka_resultFile> kundenhaeufigkeit(FileHandler fileHandler){
+	public ArrayList<Weka_resultFile> kundenhaeufigkeit(){
 		ArrayList<Weka_resultFile> wekaFiles = new ArrayList<>();
 
 		Map<String, Integer> tage = new HashMap<>();
@@ -202,7 +201,7 @@ public class WekaAnalyser {
 	 * @throws FileNotFoundException 
 	 */
 
-	public ArrayList<Weka_resultFile> uhrzeitProTag(FileHandler filehandler){
+	public ArrayList<Weka_resultFile> uhrzeitProTag(){
 		String[] tage = {"Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag"};
 		String[] zeiten = {"<10 Uhr", "10-12 Uhr", "12-14 Uhr", "14-17 Uhr", ">17 Uhr"};
 		Map<String, Map<String, AtomicInteger>> tageZeiten = new ConcurrentHashMap<>();
@@ -248,7 +247,7 @@ public class WekaAnalyser {
 	 * @throws IOException 
 	 * @throws FileNotFoundException 
 	 */
-	public ArrayList<Weka_resultFile> umsatzstaerksteTagUhrzeit(FileHandler filehandler){
+	public ArrayList<Weka_resultFile> umsatzstaerksteTagUhrzeit(){
 
 		String[] tage = {"Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag"};
 		String[] zeiten = {"<10 Uhr", "10-12 Uhr", "12-14 Uhr", "14-17 Uhr", ">17 Uhr"};
@@ -301,6 +300,13 @@ public class WekaAnalyser {
 		wekaFiles.add(new Weka_resultFile("Umsatz nach Uhrzeit in €", xValues, yValuesTime));
 		wekaFiles.add(new Weka_resultFile("Umsatz nach Tag in €", tage, yValuesDay));
 		return wekaFiles;
+	}
+	public boolean dataNotNull() {
+		if(data == null) {
+			return false;
+		}else {
+			return true;
+		}
 	}
 
 }

@@ -7,6 +7,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.HashMap;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -29,8 +30,15 @@ public class CSVCheck {
 
 		try (FileReader reader = new FileReader(csvFilePath);
 				CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT)) {
-
-			List<CSVRecord> records = csvParser.getRecords();
+			List<CSVRecord> records;
+			
+			try {
+			 records = csvParser.getRecords();
+			}catch(UncheckedIOException e) {
+				return false;
+			}
+			
+			
 			int numRecords = records.size();
 			
 	        if (numRecords <= 1) {//kurzer check ob die Datei leer ist oder nicht
@@ -53,7 +61,6 @@ public class CSVCheck {
 			for (Future<Boolean> future : futures) {
 				try {
 					if (future.get() == false) {// tasks fertig werden lassen und wenn return wert false war es ein error
-						System.out.println("Falsches CSV Format in .get()");
 						returnVal.set(false);
 						executor.shutdown();
 

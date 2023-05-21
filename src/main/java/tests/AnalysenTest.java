@@ -31,10 +31,9 @@ public class AnalysenTest {
 		String fileName = "kd100.csv";
 
 		User user = new User("testuser");
-		FileHandler filehandler = new FileHandler(user);
 		WekaAnalyser analyser = new WekaAnalyser(fileName, user);
 		System.out.println("watch time testUmsatzstaerksteTagUhrzeit1: " + watch.getTime());
-		ArrayList<Weka_resultFile> wekaFiles = analyser.umsatzstaerksteTagUhrzeit(filehandler);
+		ArrayList<Weka_resultFile> wekaFiles = analyser.umsatzstaerksteTagUhrzeit();
 		
 		assertEquals(1933, wekaFiles.get(1).getYdata()[0]);
 		assertEquals(1182, wekaFiles.get(1).getYdata()[1]);
@@ -59,10 +58,9 @@ public class AnalysenTest {
 		String fileName = "kd100.csv";
 
 		User user = new User("testuser");
-		FileHandler filehandler = new FileHandler(user);
 		WekaAnalyser analyser = new WekaAnalyser(fileName, user);
 
-		ArrayList<Weka_resultFile> wekaFiles = analyser.uhrzeitProTag(filehandler);
+		ArrayList<Weka_resultFile> wekaFiles = analyser.uhrzeitProTag();
 
 		assertEquals(287, wekaFiles.get(0).getYdata()[0]);
 		assertEquals(613, wekaFiles.get(0).getYdata()[1]);
@@ -110,9 +108,8 @@ public class AnalysenTest {
 		String fileName = "kd100.csv";
 
 		User user = new User("testuser");
-		FileHandler filehandler = new FileHandler(user);
 		WekaAnalyser analyser = new WekaAnalyser(fileName, user);
-		ArrayList<Weka_resultFile> wekaFiles = analyser.kundenhaeufigkeit(filehandler);
+		ArrayList<Weka_resultFile> wekaFiles = analyser.kundenhaeufigkeit();
 
 		// Überprüfe die Kundenmengen nach Tagen
 		assertEquals(13, wekaFiles.get(0).getYdata()[0]);

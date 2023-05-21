@@ -65,9 +65,14 @@ public class Main extends HttpServlet {
 
 
 		FileHandler filehandler = new FileHandler(user);
-
-		Part filePart = request.getPart("file-input");
-
+		Part filePart;
+		try {
+		filePart = request.getPart("file-input");
+		}catch(IllegalStateException e) {
+			request.setAttribute("error", "Datei zu groß, upload abgebrochen!");
+			this.doGet(request, response);
+			return;
+		}
 		String fileName = filePart.getSubmittedFileName();
 		processFileUpload(filehandler, fileName, request, response, session);
 
@@ -94,12 +99,12 @@ public class Main extends HttpServlet {
 
 				dispatcher.forward(request, response);
 			} else {
-				request.setAttribute("error", ".csv Datei enthält Fehler, upload abgebrochen!");
+				request.setAttribute("error", "Datei enthält Fehler, upload abgebrochen!");
 				this.doGet(request, response);
 				fileHandler.deleteOldFile(fileName);
 			}
 		} catch (IOException | ServletException | JAXBException e) {
-			request.setAttribute("error", ".csv Datei enthält Fehler, upload abgebrochen!");
+			request.setAttribute("error", "Datei enthält Fehler, upload abgebrochen!");
 			e.printStackTrace();
 		}
 	}

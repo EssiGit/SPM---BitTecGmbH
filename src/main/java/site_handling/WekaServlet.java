@@ -66,9 +66,15 @@ public class WekaServlet extends HttpServlet {
 			typeOfAnalysis = "Umsatzstärkstertag/Uhrzeit";
 		}
 
+		
 		int clusterAnzahl = getClusterAnzahl(request);
 		WekaAnalyser weka = new WekaAnalyser((String) session.getAttribute("filename"), user);
-		ArrayList<Weka_resultFile> wekaFiles = weka.getCorrectAnalysis(filehandler, typeOfAnalysis, clusterAnzahl);
+		
+		
+		if(!checkForFile(weka,request,response,context,filehandler)) {
+			return;
+		}
+		ArrayList<Weka_resultFile> wekaFiles = weka.getCorrectAnalysis(typeOfAnalysis, clusterAnzahl);
 		if (isAjaxUpdate(request)) {
 			sendAjaxResponse(response, wekaFiles);
 			return;
@@ -80,6 +86,36 @@ public class WekaServlet extends HttpServlet {
 		System.out.println("Full time till served: " + watch.getTime() + " ms");
 	}
 
+	/**
+	 * checks if the data Object for Weka exists. If not, it should handle it. 
+	 * Example: For some reason a local .csv got deleted by accident.
+	 * @param weka
+	 * @param request
+	 * @param response
+	 * @param context
+	 * @param filehandler
+	 * @return
+	 * @throws IOException
+	 */
+	private boolean checkForFile(WekaAnalyser weka,HttpServletRequest request, HttpServletResponse response,WebContext context,FileHandler filehandler) throws IOException{
+		if(!weka.dataNotNull()) {
+			System.out.println("its null");
+			request.setAttribute("error", "Datei enthält Fehler oder existiert nicht!");
+			try {
+				filehandler.keepFilesEqualToDIR();
+				context.setVariable("buttons", filehandler.getFileNames());
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (JAXBException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			ThymeleafConfig.getTemplateEngine().process("main.html", context, response.getWriter());
+			return false;
+		}
+		return true;
+	}
 	/**
 	 * Redirects to Index Servlet
 	 *

@@ -88,13 +88,15 @@ public class FileHandler {
 	/*
 	 * check if DIR has same Files as fileData.xml
 	 */
-	public boolean verifyFilesWithDataFile() throws IOException, JAXBException {
-		String[] filesInDIR = getFilenamesInDIR();
+	private boolean verifyFilesWithDataFile() throws IOException, JAXBException {
+		String[] filesInDIR = fillWithEmpty(getFilenamesInDIR());
 		String[] filesInData = getFileNames();
+		
 		Arrays.sort(filesInDIR);
 		Arrays.sort(filesInData);
 		return Arrays.equals(filesInDIR, filesInData);
 	}
+
 
 	/**
 	 * this method is to check the actually existing filenames in the FILE_DIR
@@ -144,13 +146,31 @@ public class FileHandler {
 	 * to avoid bugs
 	 * @throws IOException
 	 */
-	private void keepFilesEqualToDIR() throws IOException, JAXBException {
+	public void keepFilesEqualToDIR() throws IOException, JAXBException {
 		if (!verifyFilesWithDataFile()) {
+			System.out.println("not the same");
 			String[] filenames = getFilenamesInDIR();
 			FileData fileData = new FileData();
 			fileData.setFileNames(new ArrayList<>(Arrays.asList(filenames)));
 			writeDataFile(fileDataPath, fileData);
 		}
+	}
+	
+	/**
+	 * takes an array and fills it up with "Empty" for every empty index smaller than max_files
+	 * @param array to fill
+	 * @return
+	 */
+	private String[] fillWithEmpty(String[] array) {
+		String[] dirFilledWithEmpty = new String[MAX_FILES];
+		for(int i = 0;i<MAX_FILES;i++) {
+			if (i < array.length) {
+				dirFilledWithEmpty[i] = array[i];
+			} else {
+				dirFilledWithEmpty[i] = "Empty";
+			}
+		}
+		return dirFilledWithEmpty;
 	}
 
 	/**
