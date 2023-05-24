@@ -1,15 +1,11 @@
 package user_handling;
 
-import java.io.BufferedReader;  
+import java.io.BufferedReader;   
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.ArrayList;
-import org.apache.commons.io.FilenameUtils;
-import user_handling.PasswordHasher;
+
 
 public class UserHandler {
 
@@ -100,7 +96,6 @@ public class UserHandler {
 		boolean exists = false;
 		exists = checkForUserName(userName);
 		if(exists) {
-			String salt = getHash(userName);
 			PasswordHasher hasher = new PasswordHasher();
 			exists =  hasher.checkPassword(password, getHash(userName));
 			//exists = checkForPassword(hashedPW);

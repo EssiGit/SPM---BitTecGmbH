@@ -1,10 +1,8 @@
 package tests;
 
-import user_handling.User;
+import user_handling.User; 
 import org.apache.commons.lang3.time.StopWatch;
 import org.junit.jupiter.api.Test;
-
-import file_handling.FileHandler;
 import weka.WekaAnalyser;
 import weka.Weka_resultFile;
 import java.util.ArrayList;

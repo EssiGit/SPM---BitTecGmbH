@@ -1,6 +1,6 @@
 package site_handling;
 
-import java.io.IOException; 
+import java.io.IOException;  
 import java.util.ArrayList;
 
 import javax.servlet.ServletException;

@@ -2,7 +2,7 @@ package weka;
 
 
 
-import java.io.File; 
+import java.io.File;  
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
@@ -10,7 +10,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.IntStream;
 
-import file_handling.FileHandler;
 import weka.core.Attribute;
 import weka.core.Instances;
 import weka.core.converters.CSVLoader;
